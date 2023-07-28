@@ -9,7 +9,9 @@ services:
       POSTGRES_USER: ubuntu  
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} 
       POSTGRES_DB: orb
-    env_file:
-      - .env
     volumes:
-      - /var/lib/postgresql
+      - orb:/var/lib/postgresql
+
+volumes: 
+  orb:
+    external: false
