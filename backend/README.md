@@ -26,8 +26,7 @@ docker compose up db
 Certifique-se de criar o diretório **bin**. Compile o backend com o seguinte comando: 
 
 ```
-cd src/
-go build -o ../bin/server .
+go build -o /bin/server .
 ```
 
 Para rodar o servidor:
