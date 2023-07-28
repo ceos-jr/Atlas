@@ -1,0 +1,5 @@
+# ignore .env files
+.env
+
+# ignore bin directory, which should contains go binaries
+/bin
