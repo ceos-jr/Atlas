@@ -2,14 +2,17 @@ package main
 
 import (
   "github.com/gofiber/fiber/v2"
+  "orb-api/controllers"
+  "orb-api/config"
 )
 
 func main() {
   server := fiber.New()
 
-  server.Get("/", func(context *fiber.Ctx) error {
-    return context.SendString("Orb API is running")
-  })
+  repository := config.SetupDB() 
+  handler := controllers.NewBaseHandler(repository)
+  
+  server.Get("/", handler.HandleHello)
 
   server.Listen(":8000")
 }
