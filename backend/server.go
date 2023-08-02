@@ -1,18 +1,18 @@
 package main
 
 import (
-  "github.com/gofiber/fiber/v2"
-  "orb-api/controllers"
-  "orb-api/config"
+	"github.com/gofiber/fiber/v2"
+	"orb-api/config"
+	"orb-api/controllers"
 )
 
 func main() {
-  server := fiber.New()
+	server := fiber.New()
 
-  repository := config.SetupDB() 
-  handler := controllers.NewBaseHandler(repository)
-  
-  server.Get("/", handler.HandleHello)
+	repository, _ := config.SetupDB()
+	handler := controllers.NewBaseHandler(repository)
 
-  server.Listen(":8000")
+	server.Get("/", handler.HandleHello)
+
+	server.Listen(":8000")
 }
