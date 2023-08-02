@@ -22,9 +22,9 @@ type DBConfig struct {
 	SLLMode  string
 }
 
-func LoadEnv() *utils.CustomError {
+func LoadEnv(path string) *utils.CustomError {
 	loadEnvErrorLabel := "Load env error"
-	envError := godotenv.Load(".env")
+	envError := godotenv.Load(path)
 
 	if envError != nil {
 		return utils.NewError(loadEnvErrorLabel, envError)
@@ -53,7 +53,7 @@ func CreateDBConnection(config DBConfig) (*gorm.DB, *utils.CustomError) {
 func SetupDB() (*Repository, *utils.CustomError) {
 	setupDBErrorLabel := "SetupDB Error"
 
-	if dbEnvError := LoadEnv(); dbEnvError != nil {
+	if dbEnvError := LoadEnv(".env"); dbEnvError != nil {
 		dbEnvError.AddLabel(setupDBErrorLabel)
 		return nil, dbEnvError
 	}

@@ -12,8 +12,7 @@ import (
 // TestUserCRUD tests the CRUD operations for the User model.
 func TestUserCRUD(t *testing.T) {
 	ErrorLabel := "Test"
-
-	if envError := LoadEnv(); envError != nil {
+	if envError := LoadEnv(".env"); envError != nil {
 		envError.AddLabel(ErrorLabel)
 		t.Fatalf(envError.Error())
 	}
@@ -119,7 +118,7 @@ func TestCreateDBConnection(t *testing.T) {
 	}{
 		{
 			name:     "create connection",
-			envError: LoadEnv(),
+			envError: LoadEnv(".env"),
 			dbConfig: DBConfig{
 				Host:     os.Getenv("POSTGRES_HOST"),
 				Port:     os.Getenv("POSTGRES_PORT"),
@@ -158,7 +157,7 @@ func TestLoadEnv(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := LoadEnv(); !reflect.DeepEqual(got, tt.want) {
+			if got := LoadEnv(".env"); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("LoadEnv() = %v, want %v", got, tt.want)
 			}
 		})
