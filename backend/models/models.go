@@ -17,14 +17,14 @@ type User struct {
 	Name			string 		`json:"name" gorm:"size:128;not null;"`
 	Email			string 		`json:"email" gorm:"size:128;not null;"`
 	Status    uint		  `json:"status"`
-	Password  string	  `json:"-"` 
+  Password  string	  `json:"-" gorm:"not null"` 
 	UpdatedAt time.Time `json:"updated_at" gorm:"autoCreateTime:false"`
 }
 
 type Role struct {
 	Id				  uint		`json:"id" gorm:"primaryKey"`
 	Name			  string	`json:"name" gorm:"size:128;not null;"`
-	Description	string	`json:"description" gorm:""`
+	Description	string	`json:"description" gorm:"not null"`
 }
 
 type UserRole struct {
@@ -47,16 +47,16 @@ type Relation struct {
 
 type Task struct {
 	gorm.Model
-	Description 	string	  `json:"description"`
-	AssignedTo		uint		  `json:"assigned_to"`
-	CreatedBy		  uint		  `json:"created_by"`
+  Description 	string	  `json:"description" gorm:"not null"`
+  AssignedTo		uint		  `json:"assigned_to" gorm:"not null"`
+  CreatedBy		  uint		  `json:"created_by"  gorm:"not null"`
 	Status			  string	  `json:"status"`
 	UpdatedAt 		time.Time `json:"updated_at" gorm:"autoCreateTime:false"`
 }
 
 type Message struct {		// CreatedAt <-> SendAt
   gorm.Model	
-	Sender 		uint    `json:"sender"`
-	Receiver	uint 		`json:"receiver"`
-	Data			string 	`json:"data"`
+  Sender 		uint    `json:"sender" gorm:"not null"`
+  Receiver	uint 		`json:"receiver" gorm:"not null"`
+  Content		string 	`json:"content" gorm:"not null"`
 }
