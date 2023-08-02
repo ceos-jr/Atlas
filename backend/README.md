@@ -34,3 +34,12 @@ Para rodar o servidor:
 ```
 ./bin/server
 ```
+
+## Formatação 
+
+Para manter o padrão do código durante o desenvolvimento utilizamos o linter **revive**
+
+Para formatar o código use:
+```
+revive -config revive.toml -formatter friendly .
+```
