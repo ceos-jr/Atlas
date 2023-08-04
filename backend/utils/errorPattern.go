@@ -11,9 +11,8 @@ func NewError(errorLabel string, referenceError error) *CustomError {
 		return &CustomError{
 			Message: fmt.Sprintf("%s: %v", errorLabel, referenceError),
 		}
-	} else {
-		return nil
 	}
+  return nil
 }
 
 func (c *CustomError) AddLabel(adicionalLabel string) {

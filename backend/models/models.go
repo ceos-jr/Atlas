@@ -5,12 +5,6 @@ import (
 	"time"
 )
 
-// Model -> gorm.Model definition
-type Model struct{
-	Id 				  uint		  `json:"id" gorm:"primaryKey"` 
-	CreatedAt		time.Time `json:"created_at" gorm:"autoCreateTime:true"`
-}
-
 // `json:"-"` Hide from JSON (not exposed)
 type User struct {
 	gorm.Model 					`json:"gorm_._model"`
@@ -22,27 +16,27 @@ type User struct {
 }
 
 type Role struct {
-	Id				  uint		`json:"id" gorm:"primaryKey"`
+	ID				  uint		`json:"id" gorm:"primaryKey"`
 	Name			  string	`json:"name" gorm:"size:128;not null;"`
 	Description	string	`json:"description" gorm:"not null"`
 }
 
 type UserRole struct {
-	Id		  uint	`json:"id" gorm:"primaryKey"`
-	UserId 	uint	`json:"user_id"`
-	RoleId 	uint 	`json:"role_id"`
+	ID		  uint	`json:"id" gorm:"primaryKey"`
+	UserID 	uint	`json:"user_id"`
+	RoleID 	uint 	`json:"role_id"`
 }
 
 // side -> embedded in Relation
 type side struct {
-	id uint
-	positionType string
+	ID uint
+	PositionType string
 }
 
 type Relation struct {
-	Id 			uint	`json:"id" gorm:"primaryKey"`
-	SideA		side	`json:"side-a" gorm:"embedded"`
-	SideB		side	`json:"side-b" gorm:"embedded"`
+	ID 			uint	`json:"id" gorm:"primaryKey"`
+  Right		side	`json:"right" gorm:"embedded; embeddedPrefix:right_"`
+	Left		side	`json:"left" gorm:"embedded; embeddedPrefix:left_"`
 }
 
 type Task struct {

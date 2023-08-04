@@ -2,7 +2,8 @@ package config
 
 import (
 	"errors"
-	"orb-api/utils"
+	"orb-api/models"
+  "orb-api/utils"
 	"os"
 	"reflect"
 	"testing"
@@ -34,13 +35,13 @@ func TestUserCRUD(t *testing.T) {
 	}
 
 	// Auto-migrate the User model
-	migrateError := utils.NewError(ErrorLabel, db.AutoMigrate(&User{}))
+	migrateError := utils.NewError(ErrorLabel, db.AutoMigrate(&models.User{}))
 	if migrateError != nil {
 		t.Fatalf(migrateError.Error())
 	}
 
 	// Create a new user and save it in the database
-	user := User{
+	user := models.User{
 		Name:      "John Doe",
 		Email:     "john@example.com",
 		Status:    1,
@@ -55,7 +56,7 @@ func TestUserCRUD(t *testing.T) {
 	}
 
 	// Read the user from the database
-	var retrievedUser User
+	var retrievedUser models.User
 	readError := db.First(&retrievedUser, user.ID).Error
 	if readError != nil {
 		readError = utils.NewError(ErrorLabel, readError)
@@ -81,7 +82,7 @@ func TestUserCRUD(t *testing.T) {
 	}
 
 	// Read the user again to check the update
-	var updatedUser User
+	var updatedUser models.User
 	readUpdatedUserError := db.First(&updatedUser, user.ID).Error
 	if readUpdatedUserError != nil {
 		readUpdatedUserError = utils.NewError(ErrorLabel, readUpdatedUserError)
@@ -134,12 +135,18 @@ func TestCreateDBConnection(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			if !reflect.DeepEqual(tt.envError, tt.want) {
-				t.Errorf("CreateDBConnection() envErrOR = %v, want %v", tt.envError, tt.want)
+				t.Errorf("CreateDBConnection() envErrOR = %v, want %v", 
+          tt.envError, 
+          tt.want,
+        )
 			}
 
 			_, createError := CreateDBConnection(tt.dbConfig)
 			if !reflect.DeepEqual(createError, tt.want) {
-				t.Errorf("CreateDBConnection() createError = %v, want %v", createError, tt.want)
+				t.Errorf("CreateDBConnection() createError = %v, want %v", 
+          createError,
+          tt.want,
+        )
 			}
 		})
 	}
