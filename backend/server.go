@@ -12,16 +12,11 @@ func main() {
 
 	repository, setupError := config.SetupDB()
   
-  defer func () {
-    if setupError != nil {
-      return 
-    }
-    repository.CloseDB()
-  }()
-
   if setupError != nil {
     log.Fatal(setupError)
   }
+
+  defer repository.CloseDB()
 
   handler := controllers.NewBaseHandler(repository)
 

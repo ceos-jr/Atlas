@@ -7,12 +7,9 @@ type CustomError struct {
 }
 
 func NewError(errorLabel string, referenceError error) *CustomError {
-	if referenceError != nil {
-		return &CustomError{
-			Message: fmt.Sprintf("%s: %v", errorLabel, referenceError),
-		}
+  return &CustomError{
+		Message: fmt.Sprintf("%s: %v", errorLabel, referenceError),
 	}
-  return nil
 }
 
 func (c *CustomError) AddLabel(adicionalLabel string) {
