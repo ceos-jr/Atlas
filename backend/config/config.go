@@ -6,6 +6,7 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"orb-api/utils"
+  "orb-api/models"
 	"os"
 )
 
@@ -34,7 +35,7 @@ func LoadEnv(path string) *utils.CustomError {
 }
 
 func CreateDBConnection(config DBConfig) (*gorm.DB, *utils.CustomError) {
-	createDBConnectionErrorLabel := "Connection Error"
+	connectionErrorLabel := "Connection Error"
 
 	DataSourceName := fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s port=%s sslmode=%s",
@@ -44,10 +45,34 @@ func CreateDBConnection(config DBConfig) (*gorm.DB, *utils.CustomError) {
 	connection, dbOpenError := gorm.Open(postgres.Open(DataSourceName), &gorm.Config{})
 
 	if dbOpenError != nil {
-		return nil, utils.NewError(createDBConnectionErrorLabel, dbOpenError)
+		return nil, utils.NewError(connectionErrorLabel, dbOpenError)
 	}
 
 	return connection, nil
+}
+
+func MigrateDB(database *gorm.DB) *utils.CustomError {
+  migrateDBErrorLabel := "Migration Error"
+  
+  // Skip migration
+  if os.Getenv("MIGRATE") == "false" {
+    return nil
+  }
+
+  migrationError := database.Migrator().AutoMigrate(
+    &models.User{}, 
+    &models.Role{},
+    &models.UserRole{},
+    &models.Relation{},
+    &models.Task{},
+    &models.Message{},
+  )
+
+  if migrationError != nil {
+    return utils.NewError(migrateDBErrorLabel, migrationError) 
+  }
+
+  return nil 
 }
 
 func SetupDB() (*Repository, *utils.CustomError) {
@@ -67,12 +92,19 @@ func SetupDB() (*Repository, *utils.CustomError) {
 		SLLMode:  os.Getenv("POSTGRES_SLL_MODE"),
 	}
 
-	connection, dbConfigError := CreateDBConnection(config)
+	connection, connectionError := CreateDBConnection(config)
 
-	if dbConfigError != nil {
-		dbConfigError.AddLabel(setupDBErrorLabel)
-		return nil, dbConfigError
+	if connectionError != nil {
+		connectionError.AddLabel(setupDBErrorLabel)
+		return nil, connectionError
 	}
+
+  migrationError := MigrateDB(connection) 
+
+  if migrationError != nil {
+    migrationError.AddLabel(setupDBErrorLabel)
+    return nil, migrationError 
+  }
 
 	return &Repository{
 		DB: connection,
