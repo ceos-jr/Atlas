@@ -12,7 +12,12 @@ func main() {
 
 	repository, setupError := config.SetupDB()
   
-  defer repository.CloseDB()
+  defer func () {
+    if setupError != nil {
+      return 
+    }
+    repository.CloseDB()
+  }()
 
   if setupError != nil {
     log.Fatal(setupError)
