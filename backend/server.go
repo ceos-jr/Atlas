@@ -1,16 +1,22 @@
 package main
 
 import (
-	"github.com/gofiber/fiber/v2"
+	"log"
 	"orb-api/config"
 	"orb-api/controllers"
+	"github.com/gofiber/fiber/v2"
 )
 
 func main() {
 	server := fiber.New()
 
-	repository, _ := config.SetupDB()
-	handler := controllers.NewBaseHandler(repository)
+	repository, setupError := config.SetupDB()
+	
+  if setupError != nil {
+    log.Fatal(setupError)
+  }
+
+  handler := controllers.NewBaseHandler(repository)
 
 	server.Get("/", handler.HandleHello)
 
