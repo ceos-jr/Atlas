@@ -2,12 +2,12 @@ package config
 
 import (
 	"fmt"
+	"orb-api/models"
+	"orb-api/utils"
+	"os"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"orb-api/utils"
-  "orb-api/models"
-	"os"
 )
 
 type Repository struct {
@@ -25,9 +25,8 @@ type DBConfig struct {
 
 func LoadEnv(path string) *utils.CustomError {
 	loadEnvErrorLabel := "Load env error"
-	envError := godotenv.Load(path)
-
-	if envError != nil {
+	
+	if envError := godotenv.Load(path); envError != nil {
 		return utils.NewError(loadEnvErrorLabel, envError)
 	}
 
@@ -39,10 +38,17 @@ func CreateDBConnection(config DBConfig) (*gorm.DB, *utils.CustomError) {
 
 	DataSourceName := fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s port=%s sslmode=%s",
-		config.Host, config.User, config.Password, config.DBName, config.Port, config.SLLMode,
+		config.Host, 
+    config.User, 
+    config.Password, 
+    config.DBName, 
+    config.Port, 
+    config.SLLMode,
 	)
 
-	connection, dbOpenError := gorm.Open(postgres.Open(DataSourceName), &gorm.Config{})
+	connection, dbOpenError := gorm.Open(
+    postgres.Open(DataSourceName), &gorm.Config{},
+  )
 
 	if dbOpenError != nil {
 		return nil, utils.NewError(connectionErrorLabel, dbOpenError)
@@ -109,4 +115,28 @@ func SetupDB() (*Repository, *utils.CustomError) {
 	return &Repository{
 		DB: connection,
 	}, nil
+}
+
+func (repository *Repository) CloseDB() (*utils.CustomError) {
+  closeDBErrorLabel := "Close DB error" 
+
+  sqlDB, _ := repository.DB.DB()
+  
+  if closeError := sqlDB.Close(); closeError != nil {
+    return utils.NewError(closeDBErrorLabel, closeError) 
+  }
+  
+  return nil
+}  
+
+func (repository *Repository) PingDB() (*utils.CustomError) {
+  pingDBErrorLabel := "Ping DB error" 
+
+  sqlDB, _ := repository.DB.DB()
+  
+  if pingError := sqlDB.Ping(); pingError != nil {
+    return utils.NewError(pingDBErrorLabel, pingError) 
+  }
+  
+  return nil
 }
