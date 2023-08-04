@@ -43,3 +43,12 @@ Para formatar o código use:
 ```
 revive -config revive.toml -formatter friendly **/*.go
 ```
+
+## Testes 
+
+Testes são essenciais para garantir que o código funciona da maneira que esperamos 
+
+Para rodar os unitários testes use:
+```
+go test -v ./tests/unit/
+```
