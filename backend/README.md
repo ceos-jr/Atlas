@@ -41,5 +41,5 @@ Para manter o padrão do código durante o desenvolvimento utilizamos o linter *
 
 Para formatar o código use:
 ```
-revive -config revive.toml -formatter friendly .
+revive -config revive.toml -formatter friendly **/*.go
 ```
