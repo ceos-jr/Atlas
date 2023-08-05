@@ -2,11 +2,11 @@ package config
 
 import (
 	"fmt"
+	"orb-api/models"
+	"os"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"orb-api/utils"
-	"os"
 )
 
 type Repository struct {
@@ -22,39 +22,50 @@ type DBConfig struct {
 	SLLMode  string
 }
 
-func LoadEnv(path string) *utils.CustomError {
-	loadEnvErrorLabel := "Load env error"
-	envError := godotenv.Load(path)
-
-	if envError != nil {
-		return utils.NewError(loadEnvErrorLabel, envError)
-	}
-
-	return nil
+func LoadEnv(path string) error {
+	return godotenv.Load(path) 
 }
 
-func CreateDBConnection(config DBConfig) (*gorm.DB, *utils.CustomError) {
-	createDBConnectionErrorLabel := "Connection Error"
-
+func CreateDBConnection(config DBConfig) (*gorm.DB, error) {
 	DataSourceName := fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s port=%s sslmode=%s",
-		config.Host, config.User, config.Password, config.DBName, config.Port, config.SLLMode,
+		config.Host, 
+    config.User, 
+    config.Password, 
+    config.DBName, 
+    config.Port, 
+    config.SLLMode,
 	)
 
-	connection, dbOpenError := gorm.Open(postgres.Open(DataSourceName), &gorm.Config{})
+	connection, dbOpenError := gorm.Open(
+    postgres.Open(DataSourceName), &gorm.Config{},
+  )
 
 	if dbOpenError != nil {
-		return nil, utils.NewError(createDBConnectionErrorLabel, dbOpenError)
+		return nil, dbOpenError 
 	}
 
 	return connection, nil
 }
 
-func SetupDB() (*Repository, *utils.CustomError) {
-	setupDBErrorLabel := "SetupDB Error"
+func MigrateDB(database *gorm.DB) error {
+  // Skip migration
+  if os.Getenv("MIGRATE") == "false" {
+    return nil
+  }
 
+  return database.Migrator().AutoMigrate(
+    &models.User{}, 
+    &models.Role{},
+    &models.UserRole{},
+    &models.Relation{},
+    &models.Task{},
+    &models.Message{},
+  )
+}
+
+func SetupDB() (*Repository, error) {
 	if dbEnvError := LoadEnv(".env"); dbEnvError != nil {
-		dbEnvError.AddLabel(setupDBErrorLabel)
 		return nil, dbEnvError
 	}
 
@@ -67,14 +78,29 @@ func SetupDB() (*Repository, *utils.CustomError) {
 		SLLMode:  os.Getenv("POSTGRES_SLL_MODE"),
 	}
 
-	connection, dbConfigError := CreateDBConnection(config)
+	connection, connectionError := CreateDBConnection(config)
 
-	if dbConfigError != nil {
-		dbConfigError.AddLabel(setupDBErrorLabel)
-		return nil, dbConfigError
+	if connectionError != nil {
+		return nil, connectionError
 	}
+
+  if migrationError := MigrateDB(connection); migrationError != nil {
+    return nil, migrationError 
+  }
 
 	return &Repository{
 		DB: connection,
 	}, nil
+}
+
+func (repository *Repository) CloseDB() error {
+  sqlDB, _ := repository.DB.DB()
+  
+  return sqlDB.Close() 
+}  
+
+func (repository *Repository) PingDB() error {
+  sqlDB, _ := repository.DB.DB()
+  
+  return sqlDB.Ping() 
 }

@@ -13,6 +13,7 @@ require (
 	github.com/BurntSushi/toml v1.3.2 // indirect
 	github.com/andybalholm/brotli v1.0.5 // indirect
 	github.com/chavacava/garif v0.0.0-20230608123814-4bd63c2919ab // indirect
+	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fatih/color v1.15.0 // indirect
 	github.com/fatih/structtag v1.2.0 // indirect
 	github.com/google/uuid v1.3.0 // indirect
@@ -30,7 +31,9 @@ require (
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/olekukonko/tablewriter v0.0.5 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rivo/uniseg v0.4.4 // indirect
+	github.com/stretchr/objx v0.5.0 // indirect
 	github.com/stretchr/testify v1.8.4 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.48.0 // indirect
@@ -39,4 +42,5 @@ require (
 	golang.org/x/sys v0.10.0 // indirect
 	golang.org/x/text v0.11.0 // indirect
 	golang.org/x/tools v0.11.1 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
