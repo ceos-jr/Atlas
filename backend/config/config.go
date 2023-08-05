@@ -3,7 +3,6 @@ package config
 import (
 	"fmt"
 	"orb-api/models"
-	"orb-api/utils"
 	"os"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
@@ -23,19 +22,11 @@ type DBConfig struct {
 	SLLMode  string
 }
 
-func LoadEnv(path string) *utils.CustomError {
-	loadEnvErrorLabel := "Load env error"
-	
-	if envError := godotenv.Load(path); envError != nil {
-		return utils.NewError(loadEnvErrorLabel, envError)
-	}
-
-	return nil
+func LoadEnv(path string) error {
+	return godotenv.Load(path) 
 }
 
-func CreateDBConnection(config DBConfig) (*gorm.DB, *utils.CustomError) {
-	connectionErrorLabel := "Connection Error"
-
+func CreateDBConnection(config DBConfig) (*gorm.DB, error) {
 	DataSourceName := fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s port=%s sslmode=%s",
 		config.Host, 
@@ -51,21 +42,19 @@ func CreateDBConnection(config DBConfig) (*gorm.DB, *utils.CustomError) {
   )
 
 	if dbOpenError != nil {
-		return nil, utils.NewError(connectionErrorLabel, dbOpenError)
+		return nil, dbOpenError 
 	}
 
 	return connection, nil
 }
 
-func MigrateDB(database *gorm.DB) *utils.CustomError {
-  migrateDBErrorLabel := "Migration Error"
-  
+func MigrateDB(database *gorm.DB) error {
   // Skip migration
   if os.Getenv("MIGRATE") == "false" {
     return nil
   }
 
-  migrationError := database.Migrator().AutoMigrate(
+  return database.Migrator().AutoMigrate(
     &models.User{}, 
     &models.Role{},
     &models.UserRole{},
@@ -73,19 +62,10 @@ func MigrateDB(database *gorm.DB) *utils.CustomError {
     &models.Task{},
     &models.Message{},
   )
-
-  if migrationError != nil {
-    return utils.NewError(migrateDBErrorLabel, migrationError) 
-  }
-
-  return nil 
 }
 
-func SetupDB() (*Repository, *utils.CustomError) {
-	setupDBErrorLabel := "SetupDB Error"
-
+func SetupDB() (*Repository, error) {
 	if dbEnvError := LoadEnv(".env"); dbEnvError != nil {
-		dbEnvError.AddLabel(setupDBErrorLabel)
 		return nil, dbEnvError
 	}
 
@@ -101,14 +81,10 @@ func SetupDB() (*Repository, *utils.CustomError) {
 	connection, connectionError := CreateDBConnection(config)
 
 	if connectionError != nil {
-		connectionError.AddLabel(setupDBErrorLabel)
 		return nil, connectionError
 	}
 
-  migrationError := MigrateDB(connection) 
-
-  if migrationError != nil {
-    migrationError.AddLabel(setupDBErrorLabel)
+  if migrationError := MigrateDB(connection); migrationError != nil {
     return nil, migrationError 
   }
 
@@ -117,26 +93,14 @@ func SetupDB() (*Repository, *utils.CustomError) {
 	}, nil
 }
 
-func (repository *Repository) CloseDB() (*utils.CustomError) {
-  closeDBErrorLabel := "Close DB error" 
-
+func (repository *Repository) CloseDB() error {
   sqlDB, _ := repository.DB.DB()
   
-  if closeError := sqlDB.Close(); closeError != nil {
-    return utils.NewError(closeDBErrorLabel, closeError) 
-  }
-  
-  return nil
+  return sqlDB.Close() 
 }  
 
-func (repository *Repository) PingDB() (*utils.CustomError) {
-  pingDBErrorLabel := "Ping DB error" 
-
+func (repository *Repository) PingDB() error {
   sqlDB, _ := repository.DB.DB()
   
-  if pingError := sqlDB.Ping(); pingError != nil {
-    return utils.NewError(pingDBErrorLabel, pingError) 
-  }
-  
-  return nil
+  return sqlDB.Ping() 
 }
