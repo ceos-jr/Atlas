@@ -1,32 +1,47 @@
-package userRoleRepository
+package UserRolesRepo
 
 import (
-	"gorm.io/gorm"
 	"orb-api/models"
+	"orb-api/repositories"
 )
 
-type UserRepository struct {
-	db *gorm.DB
+type RUserRole struct {
+	repo *repositories.Repository
 }
 
-func (i UserRepository) ReadAll() IReadResultUserRole {
-	var userRoleArray []models.UserRole
-	result := i.db.Find(&userRoleArray)
-	return IReadResultUserRole{
-		data:   &userRoleArray,
-		status: result.Error,
+func Setup(repo *repositories.Repository) RUserRole {
+	return RUserRole{
+		repo: repo,
 	}
 }
 
-func (i UserRepository) ReadByUser(readUser IReadByUser) IReadResultUserRole {
+func (r RUserRole) ReadAll() (*[]models.UserRole, error) {
+	var readError error
 	var userRoleArray []models.UserRole
-	result := i.db.Where(
+
+	readError = nil
+	result := r.repo.DB.Find(&userRoleArray)
+
+	if result.Error != nil {
+		readError = result.Error
+	}
+
+	return &userRoleArray, readError
+}
+
+func (r RUserRole) ReadByUser(readUser IReadByUser) (*[]models.UserRole, error) {
+	var readError error
+	var userRoleArray []models.UserRole
+
+	readError = nil
+	result := r.repo.DB.Where(
 		map[string]interface{}{
-			"id": readUser.userId,
+			"id": readUser.UserId,
 		}).Find(&userRoleArray)
 
-	return IReadResultUserRole{
-		data:   &userRoleArray,
-		status: result.Error,
+	if result.Error != nil {
+		readError = result.Error
 	}
+
+	return &userRoleArray, readError
 }

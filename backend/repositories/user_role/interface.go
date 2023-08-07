@@ -1,42 +1,37 @@
-package userRoleRepository
+package UserRolesRepo
 
 import (
 	"orb-api/models"
 )
 
 type (
-	IReadResultUserRole struct {
-		data   *[]models.UserRole
-		status error
-	}
-
 	ICreateUserRole struct {
-		roleId uint
-		userId uint
+		RoleId uint
+		UserId uint
 	}
 
 	IReadByUser struct {
-		userId uint
+		UserId uint
 	}
 
 	IReadByRole struct {
-		roleId uint
+		RoleId uint
 	}
 
 	IUpdateUserRole struct {
-		userRoleId uint
+		UserRoleId uint
 	}
 
 	IDeleteUserRole struct {
-		userRoleId uint
+		UserRoleId uint
 	}
 
 	IUserRepository interface {
-		ReadAll() IReadResultUserRole
-		ReadByRole(IReadByRole) IReadResultUserRole
-		ReadByUser(IReadByUser) IReadResultUserRole
-		Update(IUpdateUserRole) error
 		Create(ICreateUserRole) error
+		ReadAll() (*[]models.UserRole, error)
+		ReadByRole(IReadByRole) (*[]models.UserRole, error)
+		ReadByUser(IReadByUser) (*[]models.UserRole, error)
+		Update(IUpdateUserRole) error
 		Delete(IDeleteUserRole) error
 	}
 )
