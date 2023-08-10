@@ -21,7 +21,7 @@ func CreateRole(repository *config.Repository, name string, description string) 
 }
 
 
-func GetAllRoles(repository *config.Repository)(allRoles []models.Role){
+func GetAllRoles(repository *config.Repository)([]models.Role){
 	var roles []models.Role
 	repository.DB.Find(&roles)
 	return roles
