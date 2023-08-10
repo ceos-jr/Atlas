@@ -1,15 +1,15 @@
 package controllers
 
 import (
-	"orb-api/config"
+	"orb-api/repositories"
 	"github.com/gofiber/fiber/v2"
 )
 
 type BaseHandler struct {
-  Repository *config.Repository
+  Repository *repository.Repository
 }
 
-func NewBaseHandler(repository *config.Repository) *BaseHandler {
+func NewBaseHandler(repository *repository.Repository) *BaseHandler {
   return &BaseHandler{
     Repository: repository,
   }

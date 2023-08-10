@@ -1,4 +1,4 @@
-package unit_test
+package unit 
 
 import (
 	"github.com/stretchr/testify/assert"
@@ -93,8 +93,8 @@ func TestSetupDB(test *testing.T) {
 	assert.Nil(setupError, "Setup error should be nil")
 
 	if assert.NotNil(repository) {
-		defer repository.CloseDB()
+		defer config.CloseDB(repository)
 
-		assert.Nil(repository.PingDB(), "Connection should be active")
+		assert.Nil(config.PingDB(repository), "Connection should be active")
 	}
 }
