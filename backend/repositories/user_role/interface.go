@@ -1,7 +1,9 @@
-package UserRolesRepo
+package userRole
 
 import (
+	"gorm.io/gorm"
 	"orb-api/models"
+	"orb-api/repositories"
 )
 
 type (
@@ -10,27 +12,30 @@ type (
 		UserId uint
 	}
 
-	IReadByUser struct {
-		UserId uint
-	}
-
-	IReadByRole struct {
-		RoleId uint
+	IReadBy struct {
+		RoleId *uint
+		UserId *uint
 	}
 
 	IUpdateUserRole struct {
 		UserRoleId uint
+		newUserId  *uint
+		newRoleId  *uint
 	}
 
 	IDeleteUserRole struct {
 		UserRoleId uint
 	}
 
-	IUserRepository interface {
+	RUserRole struct {
+		repo *repositories.Repository
+	}
+
+	RIUserRole interface {
+		Setup(*gorm.DB) RUserRole
 		Create(ICreateUserRole) error
 		ReadAll() (*[]models.UserRole, error)
-		ReadByRole(IReadByRole) (*[]models.UserRole, error)
-		ReadByUser(IReadByUser) (*[]models.UserRole, error)
+		ReadBy(by IReadBy) (*[]models.UserRole, error)
 		Update(IUpdateUserRole) error
 		Delete(IDeleteUserRole) error
 	}

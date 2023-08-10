@@ -7,19 +7,19 @@ import (
 
 type Repository struct {
 	DB       *gorm.DB
-	UserRole UserRolesRepo.RUserRole
+	UserRole userRole.RUserRole
 }
 
 func SetupRepository(db *gorm.DB) Repository {
 	var repo Repository
 	repo = Repository{
 		DB:       db,
-		UserRole: UserRolesRepo.Setup(&repo),
+		UserRole: userRole.Setup(&repo),
 	}
 
 	// call exemple:
 	//	repo.UserRole.ReadByUser(
-	//		UserRolesRepo.IReadByUser{
+	//		userRole.IReadByUser{
 	//			UserId: 10,
 	//		})
 
