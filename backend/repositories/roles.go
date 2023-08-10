@@ -33,7 +33,7 @@ func GetAllRoles(repository *config.Repository)([]models.Role, error){
 
 func GetRoleByID(repository *config.Repository, id uint) (*models.Role, error){
 	role := &models.Role{ID : id}
-	result := repository.DB.Where(&role)
+	result := repository.DB.Find(&models.Role{ID: role.ID,})
 
 	if result.Error != nil{
 		return nil, result.Error
