@@ -5,6 +5,41 @@ import (
 	"orb-api/models"
 )
 
+func CreateRole(repository *config.Repository, name string, description string) (*models.Role, error) {
+	newRole := &models.Role{
+		Name: name,
+		Description: description,
+	}
+
+	result := repository.DB.Create(newRole)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return newRole, nil
+}
+
+
+func GetAllRoles(repository *config.Repository)(allRoles []models.Role){
+	var roles []models.Role
+	repository.DB.Find(&roles)
+	return roles
+}
+
+func GetRoleByID(repository *config.Repository, id uint) (*models.Role, error){
+	role := &models.Role{ID : id}
+	result := repository.DB.Where(&role)
+
+	if result.Error != nil{
+		return nil, result.Error
+	}
+
+	return role, nil
+
+}
+
+
 func GetRoleByName(repository *config.Repository, name string) (*models.Role, error) {
 
 	role := &models.Role{Name: name}
