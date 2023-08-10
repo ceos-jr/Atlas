@@ -16,14 +16,14 @@ type (
 	}
 
 	IReadBy struct {
-		RoleID *uint
-		UserID *uint
+		RoleID uint
+		UserID uint
 	}
 
 	IUpdateUserRole struct {
 		UserRoleID uint
-		UserID     *uint
-		RoleID     *uint
+		UserID     uint
+		RoleID     uint
 	}
 
 	IDeleteUserRole struct {
@@ -32,8 +32,8 @@ type (
 
 	UserRoleInterface interface {
 		Create(ICreateUserRole) error
-		ReadAll() (*[]models.UserRole, error)
-		ReadBy(by IReadBy) (*[]models.UserRole, error)
+		ReadAll() ([]models.UserRole, error)
+		ReadBy(IReadBy) ([]models.UserRole, error)
 		Update(IUpdateUserRole) error
 		Delete(IDeleteUserRole) error
 	}
