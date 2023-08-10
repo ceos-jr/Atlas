@@ -9,7 +9,7 @@ import (
 func UserRandSeed(db *gorm.DB, size int) (*[]models.User, error) {
 	var users = make([]models.User, size)
 
-	for i, _ := range users {
+	for i := range users {
 		users[i] = models.User{
 			Name:     faker.Name(),
 			Email:    faker.Email(),

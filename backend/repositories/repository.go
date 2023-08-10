@@ -1,22 +1,18 @@
-package repositories
+package repository 
 
 import (
 	"gorm.io/gorm"
-	. "orb-api/repositories/globalInterface"
+  "orb-api/repositories/user_role"
 )
 
-func SetupRepository(db *gorm.DB) Repository {
-	var repo Repository
-	repo = Repository{
-		DB:       db,
-		UserRole: SetupUserRole(&repo),
-	}
+type Repository struct {
+  DB        *gorm.DB
+  UserRole  userrole.UserRoleRepository 
+}
 
-	// call exemple:
-	//	repo.UserRole.ReadByUser(
-	//		userRole.IReadByUser{
-	//			UserId: 10,
-	//		})
-
-	return repo
+func SetupRepository(connection *gorm.DB) *Repository {
+	return &Repository{
+    DB:       connection, 
+    UserRole: userrole.NewUserRoleRepository(connection),
+  } 
 }

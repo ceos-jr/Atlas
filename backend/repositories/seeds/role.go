@@ -9,7 +9,7 @@ import (
 func RoleRandSeed(db *gorm.DB, size int) (*[]models.Role, error) {
 	var roles = make([]models.Role, size)
 
-	for i, _ := range roles {
+	for i := range roles {
 		roles[i] = models.Role{
 			Name:        faker.Name(),
 			Description: faker.Sentence(),

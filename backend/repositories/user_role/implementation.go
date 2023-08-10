@@ -1,39 +1,42 @@
-package userRole
+package userrole
 
 import (
 	"errors"
 	"gorm.io/gorm"
 	"orb-api/models"
-	iUserRole "orb-api/repositories/user_role/user_role_interface"
 )
 
-type RUserRole struct {
-	Repo func() *gorm.DB
+func NewUserRoleRepository(connection *gorm.DB) UserRoleRepository {
+  return UserRoleRepository{
+    GetDB: func () *gorm.DB{
+      return connection
+    },  
+  }
 }
 
-func (r *RUserRole) Create(newUserRole iUserRole.ICreateUserRole) error {
+func (r *UserRoleRepository) Create(newUserRole ICreateUserRole) error {
 	var createError error = nil
 	var user models.User
 	var role models.Role
 	var userRole models.UserRole
 
-	verifyExistenceUser := r.Repo().First(&user)
+	verifyExistenceUser := r.GetDB().First(&user)
 
 	if verifyExistenceUser.Error != nil {
 		createError = verifyExistenceUser.Error
 		return createError
 	}
-	userRole.UserID = newUserRole.UserId
+	userRole.UserID = newUserRole.UserID
 
-	verifyExistenceRole := r.Repo().First(&role)
+	verifyExistenceRole := r.GetDB().First(&role)
 
 	if verifyExistenceRole.Error != nil {
 		createError = verifyExistenceRole.Error
 		return createError
 	}
-	userRole.RoleID = newUserRole.RoleId
+	userRole.RoleID = newUserRole.RoleID
 
-	result := r.Repo().Create(&userRole)
+	result := r.GetDB().Create(&userRole)
 
 	if result.Error != nil {
 		createError = result.Error
@@ -43,11 +46,11 @@ func (r *RUserRole) Create(newUserRole iUserRole.ICreateUserRole) error {
 	return nil
 }
 
-func (r *RUserRole) ReadAll() (*[]models.UserRole, error) {
+func (r *UserRoleRepository) ReadAll() (*[]models.UserRole, error) {
 	var readError error = nil
 	var userRoleArray []models.UserRole
 
-	result := r.Repo().Find(&userRoleArray)
+	result := r.GetDB().Find(&userRoleArray)
 
 	if result.Error != nil {
 		readError = result.Error
@@ -57,22 +60,22 @@ func (r *RUserRole) ReadAll() (*[]models.UserRole, error) {
 	return &userRoleArray, nil
 }
 
-func (r *RUserRole) ReadBy(readBy iUserRole.IReadBy) (*[]models.UserRole, error) {
+func (r *UserRoleRepository) ReadBy(readBy IReadBy) (*[]models.UserRole, error) {
 	var readError error = errors.New("no fields to read")
 	var readMap map[string]interface{}
 	var userRoleArray []models.UserRole
 
-	if readBy.UserId != nil {
+	if readBy.UserID != nil {
 		readError = nil
-		readMap["UserId"] = *readBy.UserId
+		readMap["UserId"] = *readBy.UserID
 	}
 
-	if readBy.RoleId != nil {
+	if readBy.RoleID != nil {
 		readError = nil
-		readMap["RoleId"] = *readBy.RoleId
+		readMap["RoleId"] = *readBy.RoleID
 	}
 
-	result := r.Repo().Where(readMap).Find(&userRoleArray)
+	result := r.GetDB().Where(readMap).Find(&userRoleArray)
 	readError = result.Error
 
 	if readError != nil {
@@ -82,26 +85,26 @@ func (r *RUserRole) ReadBy(readBy iUserRole.IReadBy) (*[]models.UserRole, error)
 	return &userRoleArray, nil
 }
 
-func (r *RUserRole) Update(newUserRoleData iUserRole.IUpdateUserRole) error {
+func (r *UserRoleRepository) Update(newUserRoleData IUpdateUserRole) error {
 	var updateError error = errors.New("no fields to update")
 	var updateMap map[string]interface{}
 	var userRole models.UserRole = models.UserRole{
-		ID: newUserRoleData.UserRoleId,
+		ID: newUserRoleData.UserRoleID,
 	}
 
-	verifyExistence := r.Repo().First(&userRole)
+	verifyExistence := r.GetDB().First(&userRole)
 
 	if verifyExistence.Error != nil {
 		updateError = verifyExistence.Error
 		return updateError
 	}
 
-	if newUserRoleData.UserId != nil {
+	if newUserRoleData.UserID != nil {
 		var user models.User = models.User{
-			ID: *newUserRoleData.UserId,
+			ID: *newUserRoleData.UserID,
 		}
 
-		verifyExistenceUser := r.Repo().First(&user)
+		verifyExistenceUser := r.GetDB().First(&user)
 
 		if verifyExistenceUser.Error != nil {
 			updateError = verifyExistenceUser.Error
@@ -111,13 +114,13 @@ func (r *RUserRole) Update(newUserRoleData iUserRole.IUpdateUserRole) error {
 		updateMap["UserID"] = user.ID
 	}
 
-	if newUserRoleData.RoleId != nil {
+	if newUserRoleData.RoleID != nil {
 		updateError = nil
 		var role models.Role = models.Role{
-			ID: *newUserRoleData.RoleId,
+			ID: *newUserRoleData.RoleID,
 		}
 
-		verifyExistenceRole := r.Repo().First(&role)
+		verifyExistenceRole := r.GetDB().First(&role)
 
 		if verifyExistenceRole.Error != nil {
 			updateError = verifyExistenceRole.Error
@@ -127,7 +130,7 @@ func (r *RUserRole) Update(newUserRoleData iUserRole.IUpdateUserRole) error {
 		updateMap["RoleID"] = role.ID
 	}
 
-	result := r.Repo().Model(&userRole).Updates(updateMap)
+	result := r.GetDB().Model(&userRole).Updates(updateMap)
 
 	if result.Error != nil {
 		updateError = result.Error
@@ -137,20 +140,20 @@ func (r *RUserRole) Update(newUserRoleData iUserRole.IUpdateUserRole) error {
 	return nil
 }
 
-func (r *RUserRole) Delete(user iUserRole.IDeleteUserRole) error {
+func (r *UserRoleRepository) Delete(user IDeleteUserRole) error {
 	var deleteError error
 	var userRole models.UserRole = models.UserRole{
 		ID: user.UserRoleId,
 	}
 
-	verifyExistence := r.Repo().First(&userRole)
+	verifyExistence := r.GetDB().First(&userRole)
 
 	if verifyExistence.Error != nil {
 		deleteError = verifyExistence.Error
 		return deleteError
 	}
 
-	result := r.Repo().Delete(&userRole)
+	result := r.GetDB().Delete(&userRole)
 
 	if result.Error != nil {
 		deleteError = result.Error
