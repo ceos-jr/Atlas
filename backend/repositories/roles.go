@@ -21,10 +21,14 @@ func CreateRole(repository *config.Repository, name string, description string) 
 }
 
 
-func GetAllRoles(repository *config.Repository)([]models.Role){
+func GetAllRoles(repository *config.Repository)([]models.Role, error){
 	var roles []models.Role
-	repository.DB.Find(&roles)
-	return roles
+	result := repository.DB.Find(&roles)
+	if result.Error != nil{
+		return nil, result.Error
+	}
+
+	return roles, nil
 }
 
 func GetRoleByID(repository *config.Repository, id uint) (*models.Role, error){
