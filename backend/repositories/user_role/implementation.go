@@ -14,29 +14,27 @@ func NewUserRoleRepository(connection *gorm.DB) UserRoleRepository {
   }
 }
 
-func (r *UserRoleRepository) Create(newUserRole ICreateUserRole) error {
-	var userRole models.UserRole = models.UserRole{
-    UserID: newUserRole.UserID,
-    RoleID: newUserRole.RoleID,
+func (r *UserRoleRepository) Create(createData ICreateUserRole) error {
+  var user = models.User { ID: createData.UserID }
+  var role = models.Role { ID: createData.RoleID }
+  var newUserRole = models.UserRole{
+    UserID: createData.UserID,
+    RoleID: createData.RoleID,
   }
-
-	verifyUserExistence := r.GetDB().First(&models.User{
-    ID: newUserRole.UserID,
-  })
+  
+	verifyUserExistence := r.GetDB().First(&user)
 
 	if verifyUserExistence.Error != nil {
 		return verifyUserExistence.Error
 	}
 
-	verifyRoleExistence := r.GetDB().First(&models.Role{
-    ID: newUserRole.RoleID,
-  })
+	verifyRoleExistence := r.GetDB().First(&role)
 
 	if verifyRoleExistence.Error != nil {
 		return verifyRoleExistence.Error
 	}
 
-	result := r.GetDB().Create(&userRole)
+	result := r.GetDB().Create(&newUserRole)
 
 	if result.Error != nil {
 		return result.Error
@@ -59,18 +57,23 @@ func (r *UserRoleRepository) ReadAll() ([]models.UserRole, error) {
 
 func (r *UserRoleRepository) ReadBy(readBy IReadBy) ([]models.UserRole, error) {
 	var userRoleArray []models.UserRole
-  var userRole models.UserRole = models.UserRole{
-    UserID: readBy.UserID,
-    RoleID: readBy.RoleID,
-  }
+  var userRoleMap map[string]interface{} 
   
   // If the function's caller pass an empty struct as argument 
   // It will return an error
-  if readBy.RoleID == 0 && readBy.UserID == 0 {
+  if readBy.RoleID == nil && readBy.UserID == nil {
     return nil, errors.New("No fields to read")
   }	
+  
+  if readBy.RoleID != nil {
+    userRoleMap["RoleID"] = *readBy.RoleID
+  }
 
-	result := r.GetDB().Where(&userRole).Find(&userRoleArray)
+  if readBy.UserID != nil {
+    userRoleMap["UserID"] = *readBy.UserID
+  }
+
+	result := r.GetDB().Where(userRoleMap).Find(&userRoleArray)
 
 	if result.Error != nil {
 		return nil, result.Error 
@@ -80,44 +83,47 @@ func (r *UserRoleRepository) ReadBy(readBy IReadBy) ([]models.UserRole, error) {
 }
 
 func (r *UserRoleRepository) Update(updateData IUpdateUserRole) error {
-	var userRole models.UserRole = models.UserRole{
-		ID: updateData.UserRoleID,
-	}
- 
-  var toUpdate models.UserRole = models.UserRole{
-    RoleID: updateData.RoleID,
-    UserID: updateData.UserID,
+  var user = models.User{ ID: *updateData.UserID }
+  var role = models.Role{ ID: *updateData.RoleID }
+  var userRole = models.UserRole{ ID: updateData.UserRoleID }
+  var updateMap map[string]interface{}
+
+  // If the function's caller pass an empty struct as argument 
+  // It will return an error
+  if updateData.UserID == nil && updateData.RoleID == nil {
+    return errors.New("No fields to update")
+  }
+  
+  if updateData.UserID != nil {
+    updateMap["UserID"] = updateData.UserID
   }
 
+  if updateData.RoleID != nil {
+    updateMap["RoleID"] = updateData.RoleID
+  }
+  
+  // Verify userRole existence
 	verifyExistence := r.GetDB().First(&userRole)
   
 	if verifyExistence.Error != nil {
 	  return verifyExistence.Error
 	}
   
-  // If the function's caller pass an empty struct as argument 
-  // It will return an error
-  if updateData.UserID == 0 && updateData.RoleID == 0 {
-    return errors.New("No fields to update")
-  }
-  
-  verifyUserExistence := r.GetDB().First(&models.User{
-    ID: updateData.UserID,
-  })
+  // Verify user existence
+  verifyUserExistence := r.GetDB().First(&user)
 
   if verifyUserExistence.Error != nil {
     return verifyUserExistence.Error
   }
-
-  verifyRoleExistence := r.GetDB().First(&models.Role{
-    ID: updateData.RoleID,
-  })
+  
+  // Verify role existence
+  verifyRoleExistence := r.GetDB().First(&role)
 
   if verifyRoleExistence.Error != nil {
     return verifyRoleExistence.Error
   }
 
-	result := r.GetDB().Model(&userRole).Updates(toUpdate)
+	result := r.GetDB().Model(&userRole).Updates(updateMap)
 
 	if result.Error != nil {
 		return result.Error
@@ -126,12 +132,11 @@ func (r *UserRoleRepository) Update(updateData IUpdateUserRole) error {
 	return nil
 }
 
-func (r *UserRoleRepository) Delete(user IDeleteUserRole) error {
-	var userRole models.UserRole = models.UserRole{
-		ID: user.UserRoleID,
-	}
-
-	verifyExistence := r.GetDB().First(&userRole)
+func (r *UserRoleRepository) Delete(deleteData IDeleteUserRole) error {
+	var userRole = models.UserRole{ ID: deleteData.UserRoleID }
+  
+  // verify userRole existence
+  verifyExistence := r.GetDB().First(&userRole)
 
 	if verifyExistence.Error != nil {
 		return verifyExistence.Error

@@ -16,14 +16,14 @@ type (
 	}
 
 	IReadBy struct {
-		RoleID uint
-		UserID uint
+		RoleID *uint
+		UserID *uint
 	}
 
 	IUpdateUserRole struct {
 		UserRoleID uint
-		UserID     uint
-		RoleID     uint
+		UserID     *uint
+		RoleID     *uint
 	}
 
 	IDeleteUserRole struct {
