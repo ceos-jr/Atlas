@@ -4,6 +4,12 @@ import (
 	"time"
 )
 
+const (
+	DisabledStatus   = 1
+	ActiveStatus     = 2
+	ProcessingStatus = 3
+)
+
 // `json:"-"` Hide from JSON (not exposed)
 type User struct {
 	ID        uint
