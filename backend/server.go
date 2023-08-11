@@ -16,7 +16,7 @@ func main() {
     log.Fatal(setupError)
   }
 
-  defer repository.CloseDB()
+  defer config.CloseDB(repository)
 
   handler := controllers.NewBaseHandler(repository)
 
