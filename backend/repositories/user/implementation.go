@@ -161,7 +161,7 @@ func (r *Repository) ReadBy(by IReadBy) ([]models.User, error) {
 }
 
 func (r *Repository) Update(update IUpdate) error {
-	var updateError error = errors.New("no fields to update")
+	var updateError = errors.New("no fields to update")
 	var result *gorm.DB
 	var fieldMap map[string]interface{}
 	var user models.User = models.User{ID: update.ID}
