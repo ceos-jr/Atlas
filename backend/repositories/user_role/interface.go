@@ -10,7 +10,7 @@ type (
 		GetDB func() *gorm.DB
 	}
 
-	ICreateUserRole struct {
+	ICreate struct {
 		RoleID uint
 		UserID uint
 	}
@@ -20,21 +20,21 @@ type (
 		UserID *uint
 	}
 
-	IUpdateUserRole struct {
+	IUpdate struct {
 		UserRoleID uint
 		UserID     *uint
 		RoleID     *uint
 	}
 
-	IDeleteUserRole struct {
+	IDelete struct {
 		UserRoleID uint
 	}
 
 	Interface interface {
-		Create(ICreateUserRole) error
+		Create(ICreate) error
 		ReadAll() ([]models.UserRole, error)
 		ReadBy(IReadBy) ([]models.UserRole, error)
-		Update(IUpdateUserRole) error
-		Delete(IDeleteUserRole) error
+		Update(IUpdate) error
+		Delete(IDelete) error
 	}
 )

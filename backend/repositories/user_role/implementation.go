@@ -14,7 +14,7 @@ func NewUserRoleRepository(connection *gorm.DB) Repository {
 	}
 }
 
-func (r *Repository) Create(createData ICreateUserRole) error {
+func (r *Repository) Create(createData ICreate) error {
 	var user = models.User{ID: createData.UserID}
 	var role = models.Role{ID: createData.RoleID}
 	var newUserRole = models.UserRole{
@@ -80,7 +80,7 @@ func (r *Repository) ReadBy(readBy IReadBy) ([]models.UserRole, error) {
 	return userRoleArray, nil
 }
 
-func (r *Repository) Update(updateData IUpdateUserRole) error {
+func (r *Repository) Update(updateData IUpdate) error {
 	var user = models.User{ID: *updateData.UserID}
 	var role = models.Role{ID: *updateData.RoleID}
 	var userRole = models.UserRole{ID: updateData.UserRoleID}
@@ -125,7 +125,7 @@ func (r *Repository) Update(updateData IUpdateUserRole) error {
 	return nil
 }
 
-func (r *Repository) Delete(deleteData IDeleteUserRole) error {
+func (r *Repository) Delete(deleteData IDelete) error {
 	var userRole = models.UserRole{ID: deleteData.UserRoleID}
 
 	verifyExistence := r.GetDB().First(&userRole)
