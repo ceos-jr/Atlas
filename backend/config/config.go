@@ -3,15 +3,12 @@ package config
 import (
 	"fmt"
 	"orb-api/models"
-	"os"
+	"orb-api/repositories"
+  "os"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
-
-type Repository struct {
-	DB *gorm.DB
-}
 
 type DBConfig struct {
 	Host     string
@@ -64,7 +61,7 @@ func MigrateDB(database *gorm.DB) error {
   )
 }
 
-func SetupDB() (*Repository, error) {
+func SetupDB() (*repository.Repository, error) {
 	if dbEnvError := LoadEnv(".env"); dbEnvError != nil {
 		return nil, dbEnvError
 	}
@@ -88,18 +85,16 @@ func SetupDB() (*Repository, error) {
     return nil, migrationError 
   }
 
-	return &Repository{
-		DB: connection,
-	}, nil
+	return repository.SetupRepository(connection), nil
 }
 
-func (repository *Repository) CloseDB() error {
+func CloseDB(repository *repository.Repository) error {
   sqlDB, _ := repository.DB.DB()
   
   return sqlDB.Close() 
 }  
 
-func (repository *Repository) PingDB() error {
+func PingDB(repository *repository.Repository) error {
   sqlDB, _ := repository.DB.DB()
   
   return sqlDB.Ping() 
