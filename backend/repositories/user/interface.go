@@ -8,7 +8,7 @@ import (
 
 const (
 	emailMaxLen    = 128
-	emailMinLen    = 5
+	emailMinLen    = 3
 	nameMaxLen     = 128
 	nameMinLen     = 5
 	passwordMinLen = 8
@@ -20,11 +20,10 @@ type (
 	}
 
 	ICreate struct {
-		Name      string
-		Email     string
-		Status    uint
-		Password  string
-		updatedAt time.Time
+		Name     string
+		Email    string
+		Status   uint
+		Password string
 	}
 
 	IReadAll struct {

@@ -7,6 +7,14 @@ import (
 	"time"
 )
 
+func NewUserRepository(db *gorm.DB) Repository {
+	return Repository{
+		GetDB: func() *gorm.DB {
+			return db
+		},
+	}
+}
+
 func (r *Repository) Create(create ICreate) error {
 	var createError error
 	var user models.User
@@ -35,11 +43,7 @@ func (r *Repository) Create(create ICreate) error {
 		return createError
 	}
 
-	if create.updatedAt.Before(time.Now()) {
-		createError = errors.New("invalid updatedAt value")
-		return createError
-	}
-	user.UpdatedAt = create.updatedAt
+	user.UpdatedAt = time.Now()
 
 	if len(create.Password) < passwordMinLen {
 		createError = errors.New("invalid password value")
