@@ -54,8 +54,8 @@ type (
 
 	Interface interface {
 		Create(ICreate) error
-		ReadAll(IReadAll) (*[]models.User, error)
-		ReadBy(IReadBy) (*[]models.User, error)
+		ReadAll(IReadAll) ([]models.User, error)
+		ReadBy(IReadBy) ([]models.User, error)
 		Update(IUpdate) error
 		Delete(IDelete) error
 	}
