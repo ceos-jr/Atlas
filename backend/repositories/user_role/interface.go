@@ -1,16 +1,16 @@
 package userrole
 
 import (
-	"orb-api/models"
 	"gorm.io/gorm"
+	"orb-api/models"
 )
 
 type (
-	UserRoleRepository struct {
-    GetDB func () *gorm.DB 
-  }  
+	Repository struct {
+		GetDB func() *gorm.DB
+	}
 
-  ICreateUserRole struct {
+	ICreateUserRole struct {
 		RoleID uint
 		UserID uint
 	}
@@ -30,7 +30,7 @@ type (
 		UserRoleID uint
 	}
 
-	UserRoleInterface interface {
+	Interface interface {
 		Create(ICreateUserRole) error
 		ReadAll() ([]models.UserRole, error)
 		ReadBy(IReadBy) ([]models.UserRole, error)
