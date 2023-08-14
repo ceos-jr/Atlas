@@ -2,25 +2,25 @@ package seeds
 
 import (
 	"github.com/bxcodec/faker/v4"
-	"gorm.io/gorm"
-	"orb-api/models"
+	repository "orb-api/repositories"
+	"orb-api/repositories/role"
 )
 
-func RoleRandSeed(db *gorm.DB, size int) (*[]models.Role, error) {
-	var roles = make([]models.Role, size)
+func RoleRandSeed(repo *repository.Repository, size int) ([]role.ICreate, error) {
+	var roles = make([]role.ICreate, size)
 
 	for i := range roles {
-		roles[i] = models.Role{
+		roles[i] = role.ICreate{
 			Name:        faker.Name(),
 			Description: faker.Sentence(),
 		}
+
+		result := repo.Role.Create(roles[i])
+
+		if result != nil {
+			return nil, result
+		}
 	}
 
-	result := db.Create(roles)
-
-	if result.Error != nil {
-		return nil, result.Error
-	}
-
-	return &roles, nil
+	return roles, nil
 }

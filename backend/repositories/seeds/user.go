@@ -2,27 +2,28 @@ package seeds
 
 import (
 	"github.com/bxcodec/faker/v4"
-	"gorm.io/gorm"
-	"orb-api/models"
+	"math/rand"
+	repository "orb-api/repositories"
+	"orb-api/repositories/user"
 )
 
-func UserRandSeed(db *gorm.DB, size int) (*[]models.User, error) {
-	var users = make([]models.User, size)
+func UserRandSeed(repo *repository.Repository, size int) ([]user.ICreate, error) {
+	var users = make([]user.ICreate, size)
 
 	for i := range users {
-		users[i] = models.User{
+		users[i] = user.ICreate{
 			Name:     faker.Name(),
 			Email:    faker.Email(),
+			Status:   uint(rand.Intn(3) + 1),
 			Password: faker.Password(),
-			Status:   1,
+		}
+
+		result := repo.User.Create(users[i])
+
+		if result != nil {
+			return nil, result
 		}
 	}
 
-	result := db.Create(users)
-
-	if result.Error != nil {
-		return nil, result.Error
-	}
-
-	return &users, nil
+	return users, nil
 }
