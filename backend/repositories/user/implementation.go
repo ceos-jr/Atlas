@@ -190,26 +190,22 @@ func (r *Repository) Update(update IUpdate) error {
 		fieldMap["Name"] = name
 	}
 
-	if update.UpdatedAt != nil {
-		updatedAt := *update.UpdatedAt
-		if updatedAt.After(time.Now()) {
-			updateError = errors.New("invalid updatedAt value")
+	user.UpdatedAt = time.Now()
+
+	if update.Status != nil {
+		var status uint = *update.Status
+
+		switch status {
+		case models.ActiveStatus:
+			fieldMap["Status"] = models.ActiveStatus
+		case models.ProcessingStatus:
+			fieldMap["Status"] = models.ProcessingStatus
+		case models.DisabledStatus:
+			fieldMap["Status"] = models.DisabledStatus
+		default:
+			updateError = errors.New("invalid status value")
 			return updateError
 		}
-
-		fieldMap["updatedAt"] = updatedAt
-	}
-
-	switch status := *update.Status; status {
-	case models.ActiveStatus:
-		fieldMap["Status"] = models.ActiveStatus
-	case models.ProcessingStatus:
-		fieldMap["Status"] = models.ProcessingStatus
-	case models.DisabledStatus:
-		fieldMap["Status"] = models.DisabledStatus
-	default:
-		updateError = errors.New("invalid status value")
-		return updateError
 	}
 
 	if len(fieldMap) == 0 {
