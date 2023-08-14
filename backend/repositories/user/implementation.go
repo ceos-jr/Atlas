@@ -16,25 +16,25 @@ func NewUserRepository(db *gorm.DB) Repository {
 }
 
 func ValidUserName(name string) bool {
-  if len(name) < nameMinLen || len(name) > nameMaxLen {
-    return false
-  }
-  return true
+	if len(name) < nameMinLen || len(name) > nameMaxLen {
+		return false
+	}
+	return true
 }
 
 func ValidUserEmail(email string) bool {
-  if len(email) < emailMinLen || len(email) > emailMaxLen {
-    return false
-  }
-  return true
+	if len(email) < emailMinLen || len(email) > emailMaxLen {
+		return false
+	}
+	return true
 }
 
 func ValidUserPassword(password string) bool {
-  if len(password) < passwordMinLen {
-    return false 
-  }
-  return true
-} 
+	if len(password) < passwordMinLen {
+		return false
+	}
+	return true
+}
 
 func ValidUserStatus(status uint) bool {
 	_, valid := models.UserStatus[status]
@@ -96,7 +96,7 @@ func (r *Repository) ReadAll(all IReadAll) ([]models.User, error) {
 func (r *Repository) ReadBy(readBy IReadBy) ([]models.User, error) {
 	var fieldMap map[string]interface{}
 	var userArray []models.User
-  var result *gorm.DB
+	var result *gorm.DB
 
 	if readBy.ID == nil &&
 		readBy.Status == nil &&
@@ -104,44 +104,44 @@ func (r *Repository) ReadBy(readBy IReadBy) ([]models.User, error) {
 		readBy.Name == nil {
 		return nil, errors.New("No fields to read")
 	}
-  
-  if readBy.ID != nil {
-    fieldMap["ID"] = *readBy.ID
-  }
 
-  if readBy.Name != nil {
-    if !ValidUserName(*readBy.Name) {
-      return nil, errors.New("Invalid name")
-    }
+	if readBy.ID != nil {
+		fieldMap["ID"] = *readBy.ID
+	}
 
-    fieldMap["Name"] = *readBy.Name
-  }
+	if readBy.Name != nil {
+		if !ValidUserName(*readBy.Name) {
+			return nil, errors.New("Invalid name")
+		}
 
-  if readBy.Email != nil {
-    if !ValidUserName(*readBy.Email) {
-      return nil, errors.New("Invalid email")
-    }
+		fieldMap["Name"] = *readBy.Name
+	}
 
-    fieldMap["Email"] = *readBy.Email
-  }
+	if readBy.Email != nil {
+		if !ValidUserName(*readBy.Email) {
+			return nil, errors.New("Invalid email")
+		}
 
-  if readBy.Status != nil {
-    if !ValidUserStatus(*readBy.Status) {
-      return nil, errors.New("Invalid status")
-    }
+		fieldMap["Email"] = *readBy.Email
+	}
 
-    fieldMap["Status"] = *readBy.Status
-  }
-  
-  if readBy.Limit != nil {
-    result = r.GetDB().Where(fieldMap).Find(&userArray).Limit(*readBy.Limit)
-  } else {
-    result = r.GetDB().Where(fieldMap).Find(&userArray)
-  }
+	if readBy.Status != nil {
+		if !ValidUserStatus(*readBy.Status) {
+			return nil, errors.New("Invalid status")
+		}
 
-  if result.Error != nil {
-    return nil, result.Error
-  }
+		fieldMap["Status"] = *readBy.Status
+	}
+
+	if readBy.Limit != nil {
+		result = r.GetDB().Where(fieldMap).Find(&userArray).Limit(*readBy.Limit)
+	} else {
+		result = r.GetDB().Where(fieldMap).Find(&userArray)
+	}
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
 
 	return userArray, nil
 }
@@ -149,46 +149,46 @@ func (r *Repository) ReadBy(readBy IReadBy) ([]models.User, error) {
 func (r *Repository) Update(updateData IUpdate) error {
 	var fieldMap map[string]interface{}
 	var user = models.User{ID: updateData.ID}
-  
-  if updateData.Name == nil && 
-    updateData.Email == nil && 
-    updateData.Status == nil {
-    return errors.New("No fields to update")
-  } 
 
-  if updateData.Name != nil {
-    if !ValidUserName(*updateData.Name) {
-      return errors.New("Invalid name")
-    }
+	if updateData.Name == nil &&
+		updateData.Email == nil &&
+		updateData.Status == nil {
+		return errors.New("No fields to update")
+	}
 
-    fieldMap["Name"] = *updateData.Name
-  }
+	if updateData.Name != nil {
+		if !ValidUserName(*updateData.Name) {
+			return errors.New("Invalid name")
+		}
 
-  if updateData.Email != nil {
-    if !ValidUserName(*updateData.Email) {
-      return errors.New("Invalid email")
-    }
+		fieldMap["Name"] = *updateData.Name
+	}
 
-    fieldMap["Email"] = *updateData.Email
-  }
+	if updateData.Email != nil {
+		if !ValidUserName(*updateData.Email) {
+			return errors.New("Invalid email")
+		}
 
-  if updateData.Status != nil {
-    if !ValidUserStatus(*updateData.Status) {
-      return errors.New("Invalid status")
-    }
+		fieldMap["Email"] = *updateData.Email
+	}
 
-    fieldMap["Status"] = *updateData.Status
-  }
-  
-  fieldMap["UpdatedAt"] = time.Now()
+	if updateData.Status != nil {
+		if !ValidUserStatus(*updateData.Status) {
+			return errors.New("Invalid status")
+		}
 
-  result := r.GetDB().Model(&user).Updates(fieldMap)
+		fieldMap["Status"] = *updateData.Status
+	}
 
-  if result.Error != nil {
-    return result.Error
-  }
+	fieldMap["UpdatedAt"] = time.Now()
 
-  return nil
+	result := r.GetDB().Model(&user).Updates(fieldMap)
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	return nil
 }
 
 func (r *Repository) Delete(deleteData IDelete) error {
@@ -200,7 +200,7 @@ func (r *Repository) Delete(deleteData IDelete) error {
 		return verifyExistence.Error
 	}
 
-  result := r.GetDB().Delete(&user)
+	result := r.GetDB().Delete(&user)
 
 	if result.Error != nil {
 		return result.Error

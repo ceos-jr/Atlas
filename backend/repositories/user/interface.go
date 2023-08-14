@@ -31,11 +31,11 @@ type (
 	}
 
 	IReadBy struct {
-		ID        *uint
-		Name      *string
-		Email     *string
-		Status    *uint
-		Limit     *int
+		ID     *uint
+		Name   *string
+		Email  *string
+		Status *uint
+		Limit  *int
 	}
 
 	IUpdate struct {

@@ -1,20 +1,20 @@
 package controllers
 
 import (
-	"orb-api/repositories"
 	"github.com/gofiber/fiber/v2"
+	"orb-api/repositories"
 )
 
 type BaseHandler struct {
-  Repository *repository.Repository
+	Repository *repository.Repository
 }
 
 func NewBaseHandler(repository *repository.Repository) *BaseHandler {
-  return &BaseHandler{
-    Repository: repository,
-  }
+	return &BaseHandler{
+		Repository: repository,
+	}
 }
 
 func (handler *BaseHandler) HandleHello(context *fiber.Ctx) error {
-  return context.SendString("Orb API is running")
-} 
+	return context.SendString("Orb API is running")
+}
