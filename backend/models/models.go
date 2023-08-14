@@ -4,11 +4,11 @@ import (
 	"time"
 )
 
-const (
-	DisabledStatus   = 1
-	ActiveStatus     = 2
-	ProcessingStatus = 3
-)
+var UserStatus = map[uint]string{
+	1: "disabled",
+	2: "active",
+	3: "processing",
+}
 
 // `json:"-"` Hide from JSON (not exposed)
 type User struct {
