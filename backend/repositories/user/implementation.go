@@ -3,7 +3,7 @@ package user
 import (
 	"errors"
 	"gorm.io/gorm"
-	"orb-api/models" //pacote que tem a declaração dos modelos (por isso models.User)
+	"orb-api/models"
 	"time"
 )
 
@@ -15,230 +15,195 @@ func NewUserRepository(db *gorm.DB) Repository {
 	}
 }
 
-func (r *Repository) Create(create ICreate) error {
-	var createError error
-	var user models.User
+func ValidUserName(name string) bool {
+  if len(name) < nameMinLen || len(name) > nameMaxLen {
+    return false
+  }
+  return true
+}
 
-	if len(create.Email) < emailMinLen || len(create.Email) > emailMaxLen {
-		createError = errors.New("invalid email value")
-		return createError
+func ValidUserEmail(email string) bool {
+  if len(email) < emailMinLen || len(email) > emailMaxLen {
+    return false
+  }
+  return true
+}
+
+func ValidUserPassword(password string) bool {
+  if len(password) < passwordMinLen {
+    return false 
+  }
+  return true
+} 
+
+func ValidUserStatus(status uint) bool {
+	_, valid := models.UserStatus[status]
+
+	return valid
+}
+
+func (r *Repository) Create(createData ICreate) error {
+	var user = models.User{
+		Name:      createData.Name,
+		Email:     createData.Email,
+		Password:  createData.Password,
+		Status:    createData.Status,
+		UpdatedAt: time.Now(),
 	}
-	user.Email = create.Email
 
-	if len(create.Name) < nameMinLen || len(create.Name) > nameMaxLen {
-		createError = errors.New("invalid name value")
-		return createError
-	}
-	user.Name = create.Name
-
-	switch create.Status {
-	case models.ActiveStatus:
-		user.Status = models.ActiveStatus
-	case models.ProcessingStatus:
-		user.Status = models.ProcessingStatus
-	case models.DisabledStatus:
-		user.Status = models.DisabledStatus
-	default:
-		createError = errors.New("invalid status value")
-		return createError
+	if !ValidUserEmail(createData.Email) {
+		return errors.New("invalid email value")
 	}
 
-	user.UpdatedAt = time.Now()
-
-	if len(create.Password) < passwordMinLen {
-		createError = errors.New("invalid password value")
-		return createError
+	if !ValidUserName(createData.Name) {
+		return errors.New("invalid name value")
 	}
-	user.Password = create.Password
+
+	if !ValidUserPassword(createData.Password) {
+		return errors.New("invalid password value")
+	}
+
+	if !ValidUserStatus(createData.Status) {
+		return errors.New("invalid status")
+	}
 
 	result := r.GetDB().Create(&user)
 
 	if result.Error != nil {
-		createError = result.Error
-		return createError
+		return result.Error
 	}
 
 	return nil
 }
 
 func (r *Repository) ReadAll(all IReadAll) ([]models.User, error) {
-	var readError error
 	var result *gorm.DB
 	var userArray []models.User
 
 	if all.Limit != nil {
-		result = r.GetDB().Find(&userArray)
-	} else {
 		result = r.GetDB().Find(&userArray).Limit(*all.Limit)
+	} else {
+		result = r.GetDB().Find(&userArray)
 	}
 
 	if result.Error != nil {
-		readError = result.Error
-		return nil, readError
+		return nil, result.Error
 	}
 
 	return userArray, nil
 }
 
-func (r *Repository) ReadBy(by IReadBy) ([]models.User, error) {
-	var readError error
-	var result *gorm.DB
+func (r *Repository) ReadBy(readBy IReadBy) ([]models.User, error) {
 	var fieldMap map[string]interface{}
 	var userArray []models.User
+  var result *gorm.DB
 
-	if by.Email != nil {
-		email := *by.Email
-		if len(email) < emailMinLen || len(email) > emailMaxLen {
-			readError = errors.New("invalid email value")
-			return nil, readError
-		}
-
-		fieldMap["Email"] = email
+	if readBy.ID == nil &&
+		readBy.Status == nil &&
+		readBy.Email == nil &&
+		readBy.Name == nil {
+		return nil, errors.New("No fields to read")
 	}
+  
+  if readBy.ID != nil {
+    fieldMap["ID"] = *readBy.ID
+  }
 
-	if by.Name != nil {
-		name := *by.Name
-		if len(name) < nameMinLen || len(name) > nameMaxLen {
-			readError = errors.New("invalid name value")
-			return nil, readError
-		}
+  if readBy.Name != nil {
+    if !ValidUserName(*readBy.Name) {
+      return nil, errors.New("Invalid name")
+    }
 
-		fieldMap["Name"] = name
-	}
+    fieldMap["Name"] = *readBy.Name
+  }
 
-	if by.UpdatedAt != nil {
-		updatedAt := *by.UpdatedAt
-		if updatedAt.After(time.Now()) {
-			readError = errors.New("invalid updatedAt value")
-			return nil, readError
-		}
+  if readBy.Email != nil {
+    if !ValidUserName(*readBy.Email) {
+      return nil, errors.New("Invalid email")
+    }
 
-		fieldMap["updatedAt"] = updatedAt
-	}
+    fieldMap["Email"] = *readBy.Email
+  }
 
-	switch status := *by.Status; status {
-	case models.ActiveStatus:
-		fieldMap["Status"] = models.ActiveStatus
-	case models.ProcessingStatus:
-		fieldMap["Status"] = models.ProcessingStatus
-	case models.DisabledStatus:
-		fieldMap["Status"] = models.DisabledStatus
-	default:
-		readError = errors.New("invalid status value")
-		return nil, readError
-	}
+  if readBy.Status != nil {
+    if !ValidUserStatus(*readBy.Status) {
+      return nil, errors.New("Invalid status")
+    }
 
-	if by.ID != nil {
-		id := *by.ID
-		fieldMap["ID"] = id
-		userArray = make([]models.User, 1)
-		result = r.GetDB().Where(fieldMap).First(&userArray[0])
+    fieldMap["Status"] = *readBy.Status
+  }
+  
+  if readBy.Limit != nil {
+    result = r.GetDB().Where(fieldMap).Find(&userArray).Limit(*readBy.Limit)
+  } else {
+    result = r.GetDB().Where(fieldMap).Find(&userArray)
+  }
 
-		if result.Error != nil {
-			readError = result.Error
-			return nil, readError
-		}
+  if result.Error != nil {
+    return nil, result.Error
+  }
 
-		return userArray, nil
-	}
-
-	if by.Limit != nil {
-		limit := *by.Limit
-
-		if limit < 1 {
-			readError = errors.New("invalid limit value")
-			return nil, readError
-		}
-
-		result = r.GetDB().Where(fieldMap).Find(&userArray).Limit(limit)
-	} else {
-
-		result = r.GetDB().Where(fieldMap).Find(&userArray)
-	}
-
-	if result.Error != nil {
-		readError = result.Error
-		return nil, readError
-	}
-
-	return userArray, readError
+	return userArray, nil
 }
 
-func (r *Repository) Update(update IUpdate) error {
-	var updateError = errors.New("no fields to update")
-	var result *gorm.DB
+func (r *Repository) Update(updateData IUpdate) error {
 	var fieldMap map[string]interface{}
-	var user models.User = models.User{ID: update.ID}
+	var user = models.User{ID: updateData.ID}
+  
+  if updateData.Name == nil && 
+    updateData.Email == nil && 
+    updateData.Status == nil {
+    return errors.New("No fields to update")
+  } 
 
-	if update.Email != nil {
-		email := *update.Email
-		if len(email) < emailMinLen || len(email) > emailMaxLen {
-			updateError = errors.New("invalid email value")
-			return updateError
-		}
+  if updateData.Name != nil {
+    if !ValidUserName(*updateData.Name) {
+      return errors.New("Invalid name")
+    }
 
-		fieldMap["Email"] = email
-	}
+    fieldMap["Name"] = *updateData.Name
+  }
 
-	if update.Name != nil {
-		name := *update.Name
-		if len(name) < nameMinLen || len(name) > nameMaxLen {
-			updateError = errors.New("invalid name value")
-			return updateError
-		}
+  if updateData.Email != nil {
+    if !ValidUserName(*updateData.Email) {
+      return errors.New("Invalid email")
+    }
 
-		fieldMap["Name"] = name
-	}
+    fieldMap["Email"] = *updateData.Email
+  }
 
-	user.UpdatedAt = time.Now()
+  if updateData.Status != nil {
+    if !ValidUserStatus(*updateData.Status) {
+      return errors.New("Invalid status")
+    }
 
-	if update.Status != nil {
-		var status uint = *update.Status
+    fieldMap["Status"] = *updateData.Status
+  }
+  
+  fieldMap["UpdatedAt"] = time.Now()
 
-		switch status {
-		case models.ActiveStatus:
-			fieldMap["Status"] = models.ActiveStatus
-		case models.ProcessingStatus:
-			fieldMap["Status"] = models.ProcessingStatus
-		case models.DisabledStatus:
-			fieldMap["Status"] = models.DisabledStatus
-		default:
-			updateError = errors.New("invalid status value")
-			return updateError
-		}
-	}
+  result := r.GetDB().Model(&user).Updates(fieldMap)
 
-	if len(fieldMap) == 0 {
-		result = r.GetDB().Where(user).Updates(fieldMap)
+  if result.Error != nil {
+    return result.Error
+  }
 
-		if result.Error != nil {
-			updateError = result.Error
-			return updateError
-		}
-
-		return nil
-	}
-
-	return updateError
+  return nil
 }
 
-func (r *Repository) Delete(delete IDelete) error {
-	var deleteError error
-	var result *gorm.DB
-	var user models.User = models.User{ID: delete.ID}
+func (r *Repository) Delete(deleteData IDelete) error {
+	var user = models.User{ID: deleteData.ID}
 
 	verifyExistence := r.GetDB().First(&user)
 
 	if verifyExistence.Error != nil {
-		deleteError = verifyExistence.Error
-		return deleteError
+		return verifyExistence.Error
 	}
 
-	result = r.GetDB().Delete(&user)
+  result := r.GetDB().Delete(&user)
 
 	if result.Error != nil {
-		deleteError = result.Error
-		return deleteError
+		return result.Error
 	}
 
 	return nil

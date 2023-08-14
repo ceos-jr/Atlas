@@ -35,7 +35,6 @@ type (
 		Name      *string
 		Email     *string
 		Status    *uint
-		UpdatedAt *time.Time
 		Limit     *int
 	}
 
