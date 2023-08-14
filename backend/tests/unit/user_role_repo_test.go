@@ -32,7 +32,7 @@ func TestUserRoleCreate(test *testing.T) {
 
 	userRoles := make([]userrole.ICreate, testSize)
 
-	for i, _ := range userRoles {
+	for i := range userRoles {
 		readUser := readUsers[i]
 		readRole := readRoles[i]
 
