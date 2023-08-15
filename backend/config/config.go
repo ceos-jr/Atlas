@@ -2,12 +2,12 @@ package config
 
 import (
 	"fmt"
-	"orb-api/models"
-	"orb-api/repositories"
-  "os"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"orb-api/models"
+	"orb-api/repositories"
+	"os"
 )
 
 type DBConfig struct {
@@ -20,45 +20,45 @@ type DBConfig struct {
 }
 
 func LoadEnv(path string) error {
-	return godotenv.Load(path) 
+	return godotenv.Load(path)
 }
 
 func CreateDBConnection(config DBConfig) (*gorm.DB, error) {
 	DataSourceName := fmt.Sprintf(
 		"host=%s user=%s password=%s dbname=%s port=%s sslmode=%s",
-		config.Host, 
-    config.User, 
-    config.Password, 
-    config.DBName, 
-    config.Port, 
-    config.SLLMode,
+		config.Host,
+		config.User,
+		config.Password,
+		config.DBName,
+		config.Port,
+		config.SLLMode,
 	)
 
 	connection, dbOpenError := gorm.Open(
-    postgres.Open(DataSourceName), &gorm.Config{},
-  )
+		postgres.Open(DataSourceName), &gorm.Config{},
+	)
 
 	if dbOpenError != nil {
-		return nil, dbOpenError 
+		return nil, dbOpenError
 	}
 
 	return connection, nil
 }
 
 func MigrateDB(database *gorm.DB) error {
-  // Skip migration
-  if os.Getenv("MIGRATE") == "false" {
-    return nil
-  }
+	// Skip migration
+	if os.Getenv("MIGRATE") == "false" {
+		return nil
+	}
 
-  return database.Migrator().AutoMigrate(
-    &models.User{}, 
-    &models.Role{},
-    &models.UserRole{},
-    &models.Relation{},
-    &models.Task{},
-    &models.Message{},
-  )
+	return database.Migrator().AutoMigrate(
+		&models.User{},
+		&models.Role{},
+		&models.UserRole{},
+		&models.Relation{},
+		&models.Task{},
+		&models.Message{},
+	)
 }
 
 func SetupDB() (*repository.Repository, error) {
@@ -81,21 +81,21 @@ func SetupDB() (*repository.Repository, error) {
 		return nil, connectionError
 	}
 
-  if migrationError := MigrateDB(connection); migrationError != nil {
-    return nil, migrationError 
-  }
+	if migrationError := MigrateDB(connection); migrationError != nil {
+		return nil, migrationError
+	}
 
 	return repository.SetupRepository(connection), nil
 }
 
 func CloseDB(repository *repository.Repository) error {
-  sqlDB, _ := repository.DB.DB()
-  
-  return sqlDB.Close() 
-}  
+	sqlDB, _ := repository.DB.DB()
+
+	return sqlDB.Close()
+}
 
 func PingDB(repository *repository.Repository) error {
-  sqlDB, _ := repository.DB.DB()
-  
-  return sqlDB.Ping() 
+	sqlDB, _ := repository.DB.DB()
+
+	return sqlDB.Ping()
 }

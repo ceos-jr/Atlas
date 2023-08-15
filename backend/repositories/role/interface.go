@@ -1,41 +1,45 @@
-package role 
+package role
 
 import (
-	"orb-api/models"
 	"gorm.io/gorm"
+	"orb-api/models"
 )
 
 type (
-  Repository struct {
-    getDB func () *gorm.DB
-  }  
-  
-  ICreateRole struct {
-    Name        string 
-    Description string
-  } 
+	Repository struct {
+		getDB func() *gorm.DB
+	}
 
-  IReadBy struct {
-    ID          *uint 
-    Name        *string 
-    Description *string
-  }
-  
-  IUpdateRole struct {
-    RoleID      uint 
-    Name        *string 
-    Description *string
-  }
-    
-  IDeleteRole struct {
-    RoleID      uint
-  }
+	ICreate struct {
+		Name        string
+		Description string
+	}
 
-  RoleInterface interface {
-    Create(ICreateRole) error 
-    ReadAll() ([]models.Role, error)  
-    ReadBy(IReadBy) ([]models.Role, error)
-    Update(IUpdateRole) error
-    Delete(IDeleteRole) error
-  }
+	IReadBy struct {
+		ID          *uint
+		Name        *string
+		Description *string
+	}
+
+	IReadAll struct {
+		Limit *int
+	}
+
+	IUpdate struct {
+		RoleID      uint
+		Name        *string
+		Description *string
+	}
+
+	IDelete struct {
+		RoleID uint
+	}
+
+	Interface interface {
+		Create(ICreate) error
+		ReadAll() ([]models.Role, error)
+		ReadBy(IReadBy) ([]models.Role, error)
+		Update(IUpdate) error
+		Delete(IDelete) error
+	}
 )

@@ -1,4 +1,4 @@
-package unit 
+package unit
 
 import (
 	"github.com/stretchr/testify/assert"
@@ -23,7 +23,9 @@ func TestLoadEnv(test *testing.T) {
 func TestCreateDBConnection(test *testing.T) {
 	assert := assert.New(test)
 
-	config.LoadEnv(".env")
+	loadEnvError := config.LoadEnv(".env")
+
+	assert.Nil(loadEnvError)
 
 	DBConfig = config.DBConfig{
 		Host:     os.Getenv("POSTGRES_HOST"),

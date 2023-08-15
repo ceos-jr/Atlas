@@ -1,32 +1,48 @@
 package unit
 
 import (
-	"math/rand"
+	"github.com/stretchr/testify/assert"
 	"orb-api/config"
+	"orb-api/repositories/role"
 	"orb-api/repositories/seeds"
+	"orb-api/repositories/user"
 	"orb-api/repositories/user_role"
 	"testing"
-	"github.com/stretchr/testify/assert"
 )
 
 var (
 	repository, setupDBError = config.SetupDB()
-	users, usersSeedError = seeds.UserRandSeed(repository.DB, 10)
-	roles, rolesSeedError = seeds.RoleRandSeed(repository.DB, 10)
 )
 
 func TestUserRoleCreate(test *testing.T) {
 	assert := assert.New(test)
+	testSize := 10
 
-	randUserIndex := rand.Intn(len(*users))
-	randRoleIndex := rand.Intn(len(*roles))
+	_, createUserError := seeds.UserRandSeed(repository, testSize)
+	_, createRoleError := seeds.RoleRandSeed(repository, testSize)
 
-	result := repository.UserRole.Create(
-		userrole.ICreateUserRole{
-			UserId: (*users)[randUserIndex].ID,
-			RoleId: (*roles)[randRoleIndex].ID,
-		},
-	)
+	assert.Nil(createUserError)
+	assert.Nil(createRoleError)
 
-	assert.Nil(result)
+	readUsers, readUsersError := repository.User.ReadAll(user.IReadAll{Limit: &testSize})
+	readRoles, readRolesError := repository.Role.ReadAll(role.IReadAll{Limit: &testSize})
+
+	assert.Nil(readUsersError)
+	assert.Nil(readRolesError)
+
+	userRoles := make([]userrole.ICreate, testSize)
+
+	for i := range userRoles {
+		readUser := readUsers[i]
+		readRole := readRoles[i]
+
+		userRoles[i] = userrole.ICreate{
+			RoleID: readRole.ID,
+			UserID: readUser.ID,
+		}
+
+		result := repository.UserRole.Create(userRoles[i])
+
+		assert.Nil(result)
+	}
 }

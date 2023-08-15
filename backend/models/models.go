@@ -4,6 +4,12 @@ import (
 	"time"
 )
 
+var UserStatus = map[uint]string{
+	1: "disabled",
+	2: "active",
+	3: "processing",
+}
+
 // `json:"-"` Hide from JSON (not exposed)
 type User struct {
 	ID        uint
