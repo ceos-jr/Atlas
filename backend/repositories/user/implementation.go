@@ -165,7 +165,7 @@ func (r *Repository) Update(updateData IUpdate) error {
 	}
 
 	if updateData.Email != nil {
-		if !ValidUserName(*updateData.Email) {
+		if !ValidUserEmail(*updateData.Email) {
 			return errors.New("Invalid email")
 		}
 
