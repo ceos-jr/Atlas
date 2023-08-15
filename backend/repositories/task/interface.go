@@ -22,7 +22,7 @@ type (
 	IReadBy struct {
 		ID         *uint
 		AssignedTo *uint
-		CreateBy   *uint
+		CreatedBy   *uint
 		Status     *uint
 		TimeRange  *time.Time
 	}
@@ -31,7 +31,7 @@ type (
 		ID          uint
 		Description *string
 		AssignedTo  *uint
-		CreateBy    *uint
+		CreatedBy    *uint
 		Status      *uint
 		Deadline    *time.Time
 	}
