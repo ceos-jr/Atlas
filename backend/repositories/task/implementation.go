@@ -139,7 +139,7 @@ func (r *Repository) Update(updateData IUpdate) error {
 		updateData.CreatedBy == nil &&
 		updateData.Status == nil &&
 		updateData.Deadline == nil {
-		return errors.New("No fields to read")
+		return errors.New("No fields to update")
 	}
 
 	if updateData.Description != nil {
