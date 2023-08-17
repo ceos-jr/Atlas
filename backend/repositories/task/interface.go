@@ -41,10 +41,10 @@ type (
 	}
 
 	Interface interface {
-		Create(ICreate) error
+		Create(ICreate) (*models.Task, error)
 		ReadAll() ([]models.Task, error)
 		ReadBy(IReadBy) ([]models.Task, error)
-		Update(IUpdate) error
-		Delete(IDelete) error
+		Update(IUpdate) (*models.Task, error)
+		Delete(IDelete) (*models.Task, error)
 	}
 )

@@ -28,7 +28,7 @@ func ValidTaskStatus(status uint) bool {
 	return valid
 }
 
-func (r *Repository) Create(createData ICreate) error {
+func (r *Repository) Create(createData ICreate) (*models.Task, error) {
 	var createdBy = models.User{ID: createData.CreatedBy}
 	var assignedTo = models.User{ID: createData.AssignedTo}
 	var task = models.Task{
@@ -42,30 +42,30 @@ func (r *Repository) Create(createData ICreate) error {
 	verifyCreateBy := r.GetDB().First(&createdBy)
 
 	if verifyCreateBy.Error != nil {
-		return verifyCreateBy.Error
+		return nil, verifyCreateBy.Error
 	}
 
 	verifyAssignedTo := r.GetDB().First(&assignedTo)
 
 	if verifyAssignedTo.Error != nil {
-		return verifyAssignedTo.Error
+		return nil, verifyAssignedTo.Error
 	}
 
 	if !ValidTaskStatus(createData.Status) {
-		return errors.New("Invalid task status")
+		return nil, errors.New("Invalid task status")
 	}
 
 	if !ValidDeadline(createData.Deadline) {
-		return errors.New("Invalid deadline")
+		return nil, errors.New("Invalid deadline")
 	}
 
 	result := r.GetDB().Create(&task)
 
 	if result.Error != nil {
-		return result.Error
+		return nil, result.Error
 	}
 
-	return nil
+	return &task, nil
 }
 
 func (r *Repository) ReadAll() ([]models.Task, error) {
@@ -128,7 +128,7 @@ func (r *Repository) ReadBy(readby IReadBy) ([]models.Task, error) {
 	return nil, nil
 }
 
-func (r *Repository) Update(updateData IUpdate) error {
+func (r *Repository) Update(updateData IUpdate) (*models.Task, error) {
 	var createdBy = models.User{ID: *updateData.CreatedBy}
 	var assignedTo = models.User{ID: *updateData.AssignedTo}
 	var task = models.Task{ID: updateData.ID}
@@ -139,7 +139,7 @@ func (r *Repository) Update(updateData IUpdate) error {
 		updateData.CreatedBy == nil &&
 		updateData.Status == nil &&
 		updateData.Deadline == nil {
-		return errors.New("No fields to update")
+		return nil, errors.New("No fields to update")
 	}
 
 	if updateData.Description != nil {
@@ -156,7 +156,7 @@ func (r *Repository) Update(updateData IUpdate) error {
 
 	if updateData.Status != nil {
 		if !ValidTaskStatus(*updateData.Status) {
-			return errors.New("Invalid task status")
+			return nil, errors.New("Invalid task status")
 		}
 
 		fieldMap["Status"] = *updateData.Status
@@ -164,7 +164,7 @@ func (r *Repository) Update(updateData IUpdate) error {
 
 	if updateData.Deadline != nil {
 		if !ValidDeadline(*updateData.Deadline) {
-			return errors.New("Invalid deadline")
+			return nil, errors.New("Invalid deadline")
 		}
 
 		fieldMap["Deadline"] = *updateData.Deadline
@@ -173,13 +173,13 @@ func (r *Repository) Update(updateData IUpdate) error {
 	verifyCreateBy := r.GetDB().First(&createdBy)
 
 	if verifyCreateBy.Error != nil {
-		return verifyCreateBy.Error
+		return nil, verifyCreateBy.Error
 	}
 
 	verifyAssignedTo := r.GetDB().First(&assignedTo)
 
 	if verifyAssignedTo.Error != nil {
-		return verifyAssignedTo.Error
+		return nil, verifyAssignedTo.Error
 	}
 
 	fieldMap["UpdatedAt"] = time.Now()
@@ -187,26 +187,26 @@ func (r *Repository) Update(updateData IUpdate) error {
 	result := r.GetDB().Model(&task).Updates(fieldMap)
 
 	if result.Error != nil {
-		return result.Error
+		return nil, result.Error
 	}
 
-	return nil
+	return &task, nil
 }
 
-func (r *Repository) Delete(deleteData IDelete) error {
+func (r *Repository) Delete(deleteData IDelete) (*models.Task, error) {
 	var task = models.Task{ID: deleteData.ID}
 
 	verifyExistence := r.GetDB().First(&task)
 
 	if verifyExistence.Error != nil {
-		return verifyExistence.Error
+		return nil, verifyExistence.Error
 	}
 
 	result := r.GetDB().Delete(&task)
 
 	if result.Error != nil {
-		return result.Error
+		return nil, result.Error
 	}
 
-	return nil
+	return &task, nil
 }
