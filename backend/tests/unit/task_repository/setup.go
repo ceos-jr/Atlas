@@ -1,4 +1,4 @@
-package unit
+package taskrepotest 
 
 import (
 	"fmt"
@@ -7,9 +7,6 @@ import (
 	"orb-api/repositories"
 	"orb-api/repositories/task"
 	"orb-api/repositories/user"
-	"testing"
-	"time"
-
 	"github.com/stretchr/testify/suite"
 )
 
@@ -22,7 +19,7 @@ type TaskRepoTestSuite struct {
 
 // Executed before all tests
 func (suite *TaskRepoTestSuite) SetupSuite() {
-  repo, setupError := config.SetupDB() 
+  repo, setupError := config.SetupDB("../.env") 
   
   if setupError != nil {
     panic(setupError)
@@ -74,34 +71,4 @@ func (suite *TaskRepoTestSuite) SetupMocks() {
   }
   
   suite.MockUsers = users
-}
-
-func (suite *TaskRepoTestSuite) TestCreateTask() {
-  var tasks = make([]models.Task, 1)
-  
-  task, createErr := suite.Repo.Task.Create(task.ICreate{
-    Description: "This is a test",
-    CreatedBy: suite.MockUsers[0].ID,
-    AssignedTo: suite.MockUsers[1].ID,
-    Status: 2,
-    Deadline: time.Date(2077, 4, 12, 12, 0, 0, 0, time.UTC),
-  })  
-  
-  suite.Nil(createErr, "Create error must be nil")
-  suite.Equal("This is a test", task.Description, "Description do not match")
-  suite.Equal(suite.MockUsers[0].ID, task.CreatedBy, "CreatedBy do not match")
-  suite.Equal(suite.MockUsers[1].ID, task.AssignedTo, "AssignedTo do not match")
-  suite.Equal(uint(2), task.Status, "Status do not match")
-  suite.Equal(
-    time.Date(2077, 4, 12, 12, 0, 0, 0, time.UTC), task.Deadline,
-    "Deadlines do not match",
-  )
-  
-  tasks[0] = *task
-
-  suite.MockTasks = tasks
-}
-
-func TestTaskRepository(test *testing.T) {
-  suite.Run(test, new(TaskRepoTestSuite))
 }
