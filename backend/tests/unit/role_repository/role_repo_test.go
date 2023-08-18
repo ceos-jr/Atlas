@@ -1,7 +1,6 @@
 package rolerepotest
 
 import (
-	"fmt"
 	"orb-api/models"
 	"orb-api/repositories/role"
 	"testing"
@@ -77,10 +76,6 @@ func (suite *RoleRepoTestSuite) TestReadByRole() {
 		Description: &suite.MockRoles[0].Description,
 	})
 
-	fmt.Println(readByErr)
-	fmt.Println(readByErr)
-	fmt.Println(readByErr)
-	fmt.Println(readByErr)
 	suite.Nil(readByErr, "ReadBy error must be nil")
 
 	readRole := readByRole[0]

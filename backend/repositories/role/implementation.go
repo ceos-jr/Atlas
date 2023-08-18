@@ -56,15 +56,15 @@ func (r *Repository) ReadBy(readBy IReadBy) ([]models.Role, error) {
 	}
 
 	if readBy.ID != nil {
-		roleMap["ID"] = readBy.ID
+		roleMap["id"] = readBy.ID
 	}
 
 	if readBy.Name != nil {
-		roleMap["Name"] = readBy.Name
+		roleMap["name"] = readBy.Name
 	}
 
 	if readBy.Description != nil {
-		roleMap["Description"] = readBy.Description
+		roleMap["description"] = readBy.Description
 	}
 
 	result := r.getDB().Where(roleMap).Find(&rolesArray)
@@ -85,11 +85,11 @@ func (r *Repository) Update(updateData IUpdate) (*models.Role, error) {
 	}
 
 	if updateData.Name != nil {
-		updateMap["Name"] = updateData.Name
+		updateMap["name"] = updateData.Name
 	}
 
 	if updateData.Description != nil {
-		updateMap["Description"] = updateData.Description
+		updateMap["description"] = updateData.Description
 	}
 
 	result := r.getDB().Model(&role).Updates(updateMap)
