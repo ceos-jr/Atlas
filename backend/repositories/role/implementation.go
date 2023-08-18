@@ -49,7 +49,7 @@ func (r *Repository) ReadAll(all IReadAll) ([]models.Role, error) {
 
 func (r *Repository) ReadBy(readBy IReadBy) ([]models.Role, error) {
 	var rolesArray []models.Role
-	var roleMap map[string]interface{}
+	var roleMap = make(map[string]interface{})
 
 	if readBy.ID == nil && readBy.Name == nil && readBy.Description == nil {
 		return nil, errors.New("No fields to read")
@@ -78,7 +78,7 @@ func (r *Repository) ReadBy(readBy IReadBy) ([]models.Role, error) {
 
 func (r *Repository) Update(updateData IUpdate) (*models.Role, error) {
 	var role = models.Role{ID: updateData.RoleID}
-	var updateMap map[string]interface{}
+	var updateMap = make(map[string]interface{})
 
 	if updateData.Name == nil && updateData.Description == nil {
 		return nil, errors.New("No fields to update")

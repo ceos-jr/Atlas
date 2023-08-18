@@ -1,9 +1,10 @@
 package seeds
 
 import (
-	"github.com/bxcodec/faker/v4"
 	repository "orb-api/repositories"
 	"orb-api/repositories/role"
+
+	"github.com/bxcodec/faker/v4"
 )
 
 func RoleRandSeed(repo *repository.Repository, size int) ([]role.ICreate, error) {
@@ -15,7 +16,7 @@ func RoleRandSeed(repo *repository.Repository, size int) ([]role.ICreate, error)
 			Description: faker.Sentence(),
 		}
 
-		result := repo.Role.Create(roles[i])
+		result, _ := repo.Role.Create(roles[i])
 
 		if result != nil {
 			return nil, result
