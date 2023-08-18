@@ -2,8 +2,9 @@ package role
 
 import (
 	"errors"
-	"gorm.io/gorm"
 	"orb-api/models"
+
+	"gorm.io/gorm"
 )
 
 func NewRoleRepository(connection *gorm.DB) Repository {
@@ -14,7 +15,7 @@ func NewRoleRepository(connection *gorm.DB) Repository {
 	}
 }
 
-func (r *Repository) Create(createData ICreate) error {
+func (r *Repository) Create(createData ICreate) (*models.Role, error) {
 	var newRole = models.Role{
 		Name:        createData.Name,
 		Description: createData.Description,
@@ -23,10 +24,10 @@ func (r *Repository) Create(createData ICreate) error {
 	result := r.getDB().Create(&newRole)
 
 	if result.Error != nil {
-		return result.Error
+		return nil, result.Error
 	}
 
-	return nil
+	return &newRole, nil
 }
 
 func (r *Repository) ReadAll(all IReadAll) ([]models.Role, error) {
@@ -75,12 +76,12 @@ func (r *Repository) ReadBy(readBy IReadBy) ([]models.Role, error) {
 	return rolesArray, nil
 }
 
-func (r *Repository) Update(updateData IUpdate) error {
+func (r *Repository) Update(updateData IUpdate) (*models.Role, error) {
 	var role = models.Role{ID: updateData.RoleID}
 	var updateMap map[string]interface{}
 
 	if updateData.Name == nil && updateData.Description == nil {
-		return errors.New("No fields to update")
+		return nil, errors.New("No fields to update")
 	}
 
 	if updateData.Name != nil {
@@ -94,26 +95,26 @@ func (r *Repository) Update(updateData IUpdate) error {
 	result := r.getDB().Model(&role).Updates(updateMap)
 
 	if result.Error != nil {
-		return result.Error
+		return nil, result.Error
 	}
 
-	return nil
+	return &role, nil
 }
 
-func (r *Repository) Delete(deleteData IDelete) error {
+func (r *Repository) Delete(deleteData IDelete) (*models.Role, error) {
 	var role = models.Role{ID: deleteData.RoleID}
 
 	verifyExistence := r.getDB().First(&role)
 
 	if verifyExistence.Error != nil {
-		return verifyExistence.Error
+		return nil, verifyExistence.Error
 	}
 
 	result := r.getDB().Delete(&role)
 
 	if result.Error != nil {
-		return result.Error
+		return nil, result.Error
 	}
 
-	return nil
+	return &role, nil
 }
