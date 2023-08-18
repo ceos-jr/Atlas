@@ -16,8 +16,8 @@ func (suite *RoleRepoTestSuite) TestCreateRole() {
 		Description: "This is a test",
 	})
 	suite.Nil(createErr, "Create error must be nil")
-	suite.Equal("Sucessor do Lucas Braide", role.Description, "Description does not match")
-	suite.Equal("Lucas Braide Jr.", role.Name, "Name does not match")
+	suite.Equal("This is a test", role.Description, "Description does not match")
+	suite.Equal("Role 01", role.Name, "Name does not match")
 
 	roles[0] = *role
 
