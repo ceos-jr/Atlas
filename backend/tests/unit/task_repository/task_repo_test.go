@@ -1,7 +1,6 @@
 package taskrepotest
 
 import (
-	"orb-api/models"
 	"orb-api/repositories/task"
 	"testing"
 	"time"
@@ -10,8 +9,6 @@ import (
 )
 
 func (suite *TaskRepoTestSuite) TestCreateTask() {
-  var tasks = make([]models.Task, 1)
-  
   task, createErr := suite.Repo.Task.Create(task.ICreate{
     Description: "This is a test",
     CreatedBy: suite.MockUsers[0].ID,
@@ -29,9 +26,7 @@ func (suite *TaskRepoTestSuite) TestCreateTask() {
     "Deadlines do not match",
   )
   
-  tasks[0] = *task
-
-  suite.MockTasks = tasks
+  suite.MockTasks[1] = *task 
 }
 
 func (suite *TaskRepoTestSuite) TestCreateTaskErr() {
@@ -88,10 +83,65 @@ func (suite *TaskRepoTestSuite) TestReadAllTasks() {
   tasks, readErr := suite.Repo.Task.ReadAll()  
 
   suite.Nil(readErr, "Read error must be nil")
-  suite.Equal(1, len(tasks), "Expected to have one task")
+  suite.Equal(2, len(tasks), "Expected to have two tasks")
   suite.Equal(suite.MockTasks[0].ID, tasks[0].ID, 
     "Expected to have the same id",
   ) 
+}
+
+func (suite *TaskRepoTestSuite) TestReadTaskByID() {
+  tasks, readErr := suite.Repo.Task.ReadBy(task.IReadBy{
+    ID: &suite.MockTasks[0].ID,
+  })   
+  
+  suite.Nil(readErr, "Read error should be empty")
+  suite.Equal(suite.MockTasks[0].ID, tasks[0].ID, "The ids must match")
+}
+
+func (suite *TaskRepoTestSuite) TestReadTaskByAssigned() {
+  tasks, readErr := suite.Repo.Task.ReadBy(task.IReadBy{
+    AssignedTo: &suite.MockTasks[0].AssignedTo,
+  })   
+
+  suite.Nil(readErr, "Read error should be empty")
+  suite.Equal(suite.MockTasks[0].AssignedTo, tasks[0].AssignedTo, 
+    "The user assigned to the task must match",
+  )
+}
+
+func (suite *TaskRepoTestSuite) TestReadTaskByCreator() {
+  tasks, readErr := suite.Repo.Task.ReadBy(task.IReadBy{
+    CreatedBy: &suite.MockTasks[0].CreatedBy,
+  })   
+
+  suite.Nil(readErr, "Read error should be empty")
+  suite.Equal(suite.MockTasks[0].CreatedBy, tasks[0].CreatedBy, 
+    "The creator of the task must match",
+  )
+}
+
+func (suite *TaskRepoTestSuite) TestReadTaskByStatus() {
+  tasks, readErr := suite.Repo.Task.ReadBy(task.IReadBy{
+    Status: &suite.MockTasks[0].Status,
+  })   
+
+  suite.Nil(readErr, "Read error should be empty")
+  suite.Equal(suite.MockTasks[0].Status, tasks[0].Status, 
+    "The status must match",
+  )
+}
+
+func (suite *TaskRepoTestSuite) TestReadTaskByTimeRange() {
+  timeRange := time.Date(2100, 12, 4, 12, 0, 0, 0, time.UTC) 
+  
+  tasks, readErr := suite.Repo.Task.ReadBy(task.IReadBy{
+    TimeRange: &timeRange,
+  })   
+
+  suite.Nil(readErr, "Read error should be empty")
+  suite.Equal(true, tasks[0].Deadline.Before(timeRange), 
+    "Deadline must be in the time range",
+  )
 }
 
 func (suite *TaskRepoTestSuite) TestDeleteTask() {
