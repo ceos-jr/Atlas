@@ -34,14 +34,15 @@ type UserRole struct {
 
 // side -> embedded in Relation
 type side struct {
-	ID           uint
-	PositionType string
+	UserRoleID   uint
+	UserRole     UserRole `gorm:"references:ID"`
+	PositionType string   `json:"position-type"`
 }
 
 type Relation struct {
 	ID    uint `json:"id" gorm:"primaryKey"`
-	Right side `json:"right" gorm:"embedded; embeddedPrefix:right_"`
-	Left  side `json:"left" gorm:"embedded; embeddedPrefix:left_"`
+	Right side `json:"right-side" gorm:"embedded; embeddedPrefix:right_"`
+	Left  side `json:"left-side" gorm:"embedded; embeddedPrefix:left_"`
 }
 
 type Task struct {
