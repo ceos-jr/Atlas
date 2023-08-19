@@ -10,16 +10,28 @@ var RelationStrongSide = map[string]uint{
 	"right": 2,
 }
 
+const (
+	UStatusDisable    = 1
+	UStatusActive     = 2
+	UStatusProcessing = 3
+)
+
 var UserStatus = map[uint]string{
-	1: "disabled",
-	2: "active",
-	3: "processing",
+	UStatusDisable:    "disabled",
+	UStatusActive:     "active",
+	UStatusProcessing: "processing",
 }
 
+const (
+	TStatusFinished = 1
+	TStatusPending  = 2
+	TStatusOverdue  = 3
+)
+
 var TaskStatus = map[uint]string{
-	1: "finished",
-	2: "pending",
-	3: "overdue",
+	TStatusFinished: "finished",
+	TStatusPending:  "pending",
+	TStatusOverdue:  "overdue",
 }
 
 // `json:"-"` Hide from JSON (not exposed)
