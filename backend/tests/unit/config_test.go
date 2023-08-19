@@ -90,7 +90,7 @@ func TestMigrateDB(test *testing.T) {
 func TestSetupDB(test *testing.T) {
 	assert := assert.New(test)
 
-	repository, setupError := config.SetupDB()
+	repository, setupError := config.SetupDB(".env")
 
 	assert.Nil(setupError, "Setup error should be nil")
 
