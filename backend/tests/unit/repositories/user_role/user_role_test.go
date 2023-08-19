@@ -1,4 +1,4 @@
-package unit
+package userrole
 
 import (
 	"github.com/stretchr/testify/assert"
