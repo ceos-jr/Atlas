@@ -28,9 +28,19 @@ func ValidTaskStatus(status uint) bool {
 	return valid
 }
 
+func (r *Repository) ValidUser(id uint) bool {
+  user := models.User{ID: id}
+	  
+  verifyUser := r.GetDB().First(&user).Error
+
+	if verifyUser != nil {
+	  return false 
+	}
+
+  return true
+}
+
 func (r *Repository) Create(createData ICreate) (*models.Task, error) {
-	var createdBy = models.User{ID: createData.CreatedBy}
-	var assignedTo = models.User{ID: createData.AssignedTo}
 	var task = models.Task{
 		Description: createData.Description,
 		CreatedBy:   createData.CreatedBy,
@@ -39,18 +49,14 @@ func (r *Repository) Create(createData ICreate) (*models.Task, error) {
 		Deadline:    createData.Deadline,
 	}
 
-	verifyCreateBy := r.GetDB().First(&createdBy)
-
-	if verifyCreateBy.Error != nil {
-		return nil, verifyCreateBy.Error
-	}
-
-	verifyAssignedTo := r.GetDB().First(&assignedTo)
-
-	if verifyAssignedTo.Error != nil {
-		return nil, verifyAssignedTo.Error
-	}
-
+  if !r.ValidUser(createData.CreatedBy) {
+    return nil, errors.New("Invalid user passed to createBy")
+  }
+  
+  if !r.ValidUser(createData.AssignedTo) {
+    return nil, errors.New("Invalid user passed to assignedTo")
+  }
+	
 	if !ValidTaskStatus(createData.Status) {
 		return nil, errors.New("Invalid task status")
 	}
@@ -129,8 +135,6 @@ func (r *Repository) ReadBy(readby IReadBy) ([]models.Task, error) {
 }
 
 func (r *Repository) Update(updateData IUpdate) (*models.Task, error) {
-	var createdBy = models.User{ID: *updateData.CreatedBy}
-	var assignedTo = models.User{ID: *updateData.AssignedTo}
 	var task = models.Task{ID: updateData.ID}
 	var fieldMap = make(map[string]interface{})
 
@@ -147,11 +151,19 @@ func (r *Repository) Update(updateData IUpdate) (*models.Task, error) {
 	}
 
 	if updateData.AssignedTo != nil {
-		fieldMap["assigned_to"] = *updateData.AssignedTo
+		if !r.ValidUser(*updateData.AssignedTo) {
+      return nil, errors.New("Invalid user passed to assignedTo")
+    }
+
+    fieldMap["assigned_to"] = *updateData.AssignedTo
 	}
 
 	if updateData.CreatedBy != nil {
-		fieldMap["created_by"] = *updateData.CreatedBy
+	  if !r.ValidUser(*updateData.CreatedBy) {
+      return nil, errors.New("Invalid user passed to createBy")
+    }	
+
+    fieldMap["created_by"] = *updateData.CreatedBy
 	}
 
 	if updateData.Status != nil {
@@ -169,20 +181,8 @@ func (r *Repository) Update(updateData IUpdate) (*models.Task, error) {
 
 		fieldMap["deadline"] = *updateData.Deadline
 	}
-
-	verifyCreateBy := r.GetDB().First(&createdBy)
-
-	if verifyCreateBy.Error != nil {
-		return nil, verifyCreateBy.Error
-	}
-
-	verifyAssignedTo := r.GetDB().First(&assignedTo)
-
-	if verifyAssignedTo.Error != nil {
-		return nil, verifyAssignedTo.Error
-	}
-
-	fieldMap["updated_at"] = time.Now()
+ 	
+  fieldMap["updated_at"] = time.Now()
 
 	result := r.GetDB().Model(&task).Updates(fieldMap)
 
