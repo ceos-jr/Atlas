@@ -4,6 +4,12 @@ import (
 	"time"
 )
 
+var RelationStrongSide = map[string]uint{
+	"both":  0,
+	"left":  1,
+	"right": 2,
+}
+
 var UserStatus = map[uint]string{
 	1: "disabled",
 	2: "active",
@@ -38,17 +44,13 @@ type UserRole struct {
 	RoleID uint `json:"role_id"`
 }
 
-// side -> embedded in Relation
-type side struct {
-	UserRoleID   uint
-	UserRole     UserRole `gorm:"references:ID"`
-	PositionType string   `json:"position-type"`
-}
-
 type Relation struct {
-	ID    uint `json:"id" gorm:"primaryKey"`
-	Right side `json:"right-side" gorm:"embedded; embeddedPrefix:right_"`
-	Left  side `json:"left-side" gorm:"embedded; embeddedPrefix:left_"`
+	ID          uint     `json:"id" gorm:"primaryKey"`
+	StrongSide  uint     `json:"strong-side" gorm:"not null"`
+	LUserRoleId uint     `json:"l-user-role-id"`
+	LUserRole   UserRole `json:"l-user-role" gorm:"foreignKey:LUserRoleId"`
+	RUserRoleId uint     `json:"r-user-role-id"`
+	RUserRole   UserRole `json:"r-user-role" gorm:"foreignKey:RUserRoleId"`
 }
 
 type Task struct {
