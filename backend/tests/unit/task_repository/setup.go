@@ -1,4 +1,4 @@
-package taskrepotest 
+package taskrepotest
 
 import (
 	"fmt"
@@ -7,6 +7,8 @@ import (
 	"orb-api/repositories"
 	"orb-api/repositories/task"
 	"orb-api/repositories/user"
+	"time"
+
 	"github.com/stretchr/testify/suite"
 )
 
@@ -26,6 +28,8 @@ func (suite *TaskRepoTestSuite) SetupSuite() {
   }
 
   suite.Repo = repo
+  suite.MockUsers = make([]models.User, 2)
+  suite.MockTasks = make([]models.Task, 2)
   suite.SetupMocks()
 }
 
@@ -53,9 +57,7 @@ func (suite *TaskRepoTestSuite) TearDownSuite() {
 }
 
 func (suite *TaskRepoTestSuite) SetupMocks() {
-  var users = make([]models.User, 2) 
-
-  for index := range users {
+  for index := 0; index < 2; index++ {
     user, createErr := suite.Repo.User.Create(user.ICreate{
       Name: fmt.Sprintf("Gabrigas %v", index + 1),
       Email: fmt.Sprintf("example0%v@example.com", index + 1),
@@ -67,8 +69,20 @@ func (suite *TaskRepoTestSuite) SetupMocks() {
       panic(createErr)
     }
     
-    users[index] = *user
+    suite.MockUsers[index] = *user
   }
+
+  task, createErr := suite.Repo.Task.Create(task.ICreate{
+    Description: "This is a mock task",
+    CreatedBy: suite.MockUsers[0].ID,
+    AssignedTo: suite.MockUsers[1].ID,
+    Status: 2,
+    Deadline: time.Date(2077, 4, 12, 12, 0, 0, 0, time.UTC),
+  })
   
-  suite.MockUsers = users
+  if createErr != nil {
+    panic(createErr)
+  }
+
+  suite.MockTasks[0] = *task 
 }
