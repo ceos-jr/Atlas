@@ -49,10 +49,10 @@ type (
 	}
 
 	Interface interface {
-		Create(ICreate) error
+		Create(ICreate) (*models.User, error)
 		ReadAll(IReadAll) ([]models.User, error)
 		ReadBy(IReadBy) ([]models.User, error)
-		Update(IUpdate) error
-		Delete(IDelete) error
+		Update(IUpdate) (*models.User, error)
+		Delete(IDelete) (*models.User, error)
 	}
 )

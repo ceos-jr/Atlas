@@ -42,7 +42,7 @@ func ValidUserStatus(status uint) bool {
 	return valid
 }
 
-func (r *Repository) Create(createData ICreate) error {
+func (r *Repository) Create(createData ICreate) (*models.User, error) {
 	var user = models.User{
 		Name:      createData.Name,
 		Email:     createData.Email,
@@ -52,28 +52,28 @@ func (r *Repository) Create(createData ICreate) error {
 	}
 
 	if !ValidUserEmail(createData.Email) {
-		return errors.New("invalid email value")
+		return nil, errors.New("invalid email value")
 	}
 
 	if !ValidUserName(createData.Name) {
-		return errors.New("invalid name value")
+		return nil, errors.New("invalid name value")
 	}
 
 	if !ValidUserPassword(createData.Password) {
-		return errors.New("invalid password value")
+		return nil, errors.New("invalid password value")
 	}
 
 	if !ValidUserStatus(createData.Status) {
-		return errors.New("invalid status")
+		return nil, errors.New("invalid status")
 	}
 
 	result := r.GetDB().Create(&user)
 
 	if result.Error != nil {
-		return result.Error
+		return nil, result.Error
 	}
 
-	return nil
+	return &user, nil
 }
 
 func (r *Repository) ReadAll(all IReadAll) ([]models.User, error) {
@@ -146,19 +146,19 @@ func (r *Repository) ReadBy(readBy IReadBy) ([]models.User, error) {
 	return userArray, nil
 }
 
-func (r *Repository) Update(updateData IUpdate) error {
+func (r *Repository) Update(updateData IUpdate) (*models.User, error) {
 	var fieldMap map[string]interface{}
 	var user = models.User{ID: updateData.ID}
 
 	if updateData.Name == nil &&
 		updateData.Email == nil &&
 		updateData.Status == nil {
-		return errors.New("No fields to update")
+		return nil, errors.New("No fields to update")
 	}
 
 	if updateData.Name != nil {
 		if !ValidUserName(*updateData.Name) {
-			return errors.New("Invalid name")
+			return nil, errors.New("Invalid name")
 		}
 
 		fieldMap["Name"] = *updateData.Name
@@ -166,7 +166,7 @@ func (r *Repository) Update(updateData IUpdate) error {
 
 	if updateData.Email != nil {
 		if !ValidUserEmail(*updateData.Email) {
-			return errors.New("Invalid email")
+			return nil, errors.New("Invalid email")
 		}
 
 		fieldMap["Email"] = *updateData.Email
@@ -174,7 +174,7 @@ func (r *Repository) Update(updateData IUpdate) error {
 
 	if updateData.Status != nil {
 		if !ValidUserStatus(*updateData.Status) {
-			return errors.New("Invalid status")
+			return nil, errors.New("Invalid status")
 		}
 
 		fieldMap["Status"] = *updateData.Status
@@ -185,26 +185,26 @@ func (r *Repository) Update(updateData IUpdate) error {
 	result := r.GetDB().Model(&user).Updates(fieldMap)
 
 	if result.Error != nil {
-		return result.Error
+		return nil, result.Error
 	}
 
-	return nil
+	return &user, nil
 }
 
-func (r *Repository) Delete(deleteData IDelete) error {
+func (r *Repository) Delete(deleteData IDelete) (*models.User, error) {
 	var user = models.User{ID: deleteData.ID}
 
 	verifyExistence := r.GetDB().First(&user)
 
 	if verifyExistence.Error != nil {
-		return verifyExistence.Error
+		return nil, verifyExistence.Error
 	}
 
 	result := r.GetDB().Delete(&user)
 
 	if result.Error != nil {
-		return result.Error
+		return nil, result.Error
 	}
 
-	return nil
+	return &user, nil
 }

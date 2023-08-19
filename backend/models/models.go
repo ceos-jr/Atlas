@@ -10,6 +10,12 @@ var UserStatus = map[uint]string{
 	3: "processing",
 }
 
+var TaskStatus = map[uint]string{
+	1: "finished",
+	2: "pending",
+	3: "overdue",
+}
+
 // `json:"-"` Hide from JSON (not exposed)
 type User struct {
 	ID        uint
@@ -46,15 +52,16 @@ type Relation struct {
 }
 
 type Task struct {
-	ID          uint      `json:"-" gorm:"primaryKey"`
+	ID          uint      `json:"id" gorm:"primaryKey"`
 	Description string    `json:"description" gorm:"not null"`
 	AssignedTo  uint      `json:"assigned_to" gorm:"not null"`
 	CreatedBy   uint      `json:"created_by"  gorm:"not null"`
-	Status      string    `json:"status"`
-	UpdatedAt   time.Time `json:"updated_at" gorm:"autoCreateTime:false"`
+	Status      uint      `json:"status"`
+	Deadline    time.Time `json:"deadline"    gorm:"not null"`
+	UpdatedAt   time.Time `json:"updated_at"  gorm:"autoCreateTime:false"`
 }
 
-type Message struct { // CreatedAt <-> SendAt
+type Message struct {
 	ID       uint   `json:"-" gorm:"primaryKey"`
 	Sender   uint   `json:"sender" gorm:"not null"`
 	Receiver uint   `json:"receiver" gorm:"not null"`
