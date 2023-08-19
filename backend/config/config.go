@@ -61,8 +61,8 @@ func MigrateDB(database *gorm.DB) error {
 	)
 }
 
-func SetupDB() (*repository.Repository, error) {
-	if dbEnvError := LoadEnv(".env"); dbEnvError != nil {
+func SetupDB(envPath string) (*repository.Repository, error) {
+	if dbEnvError := LoadEnv(envPath); dbEnvError != nil {
 		return nil, dbEnvError
 	}
 

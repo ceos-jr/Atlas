@@ -10,7 +10,7 @@ import (
 func main() {
 	server := fiber.New()
 
-	repository, setupError := config.SetupDB()
+	repository, setupError := config.SetupDB(".env")
 
 	if setupError != nil {
 		log.Fatal(setupError)
