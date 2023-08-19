@@ -81,7 +81,7 @@ func (r *Repository) ReadAll() ([]models.Task, error) {
 }
 
 func (r *Repository) ReadBy(readby IReadBy) ([]models.Task, error) {
-	var fieldMap map[string]interface{}
+	var fieldMap = make(map[string]interface{})
 	var taskArray []models.Task
 	var result *gorm.DB
 
@@ -94,15 +94,15 @@ func (r *Repository) ReadBy(readby IReadBy) ([]models.Task, error) {
 	}
 
 	if readby.ID != nil {
-		fieldMap["ID"] = *readby.ID
+		fieldMap["id"] = *readby.ID
 	}
 
 	if readby.AssignedTo != nil {
-		fieldMap["AssignedTo"] = *readby.AssignedTo
+		fieldMap["assigned_to"] = *readby.AssignedTo
 	}
 
 	if readby.CreatedBy != nil {
-		fieldMap["CreatedBy"] = *readby.CreatedBy
+		fieldMap["created_by"] = *readby.CreatedBy
 	}
 
 	if readby.Status != nil {
@@ -110,13 +110,13 @@ func (r *Repository) ReadBy(readby IReadBy) ([]models.Task, error) {
 			return nil, errors.New("Invalid task status")
 		}
 
-		fieldMap["AssignedTo"] = *readby.Status
+		fieldMap["status"] = *readby.Status
 	}
 
 	if readby.TimeRange != nil {
-		result = r.GetDB().Where(fieldMap, "deadline <= ?", *readby.TimeRange).Find(
-			&taskArray,
-		)
+		result = r.GetDB().Where(fieldMap).Find(
+			&taskArray, "deadline <= ?", *readby.TimeRange,
+    )
 	} else {
 		result = r.GetDB().Where(fieldMap).Find(&taskArray)
 	}
@@ -125,14 +125,14 @@ func (r *Repository) ReadBy(readby IReadBy) ([]models.Task, error) {
 		return nil, result.Error
 	}
 
-	return nil, nil
+	return taskArray, nil
 }
 
 func (r *Repository) Update(updateData IUpdate) (*models.Task, error) {
 	var createdBy = models.User{ID: *updateData.CreatedBy}
 	var assignedTo = models.User{ID: *updateData.AssignedTo}
 	var task = models.Task{ID: updateData.ID}
-	var fieldMap map[string]interface{}
+	var fieldMap = make(map[string]interface{})
 
 	if updateData.Description == nil &&
 		updateData.AssignedTo == nil &&
@@ -143,15 +143,15 @@ func (r *Repository) Update(updateData IUpdate) (*models.Task, error) {
 	}
 
 	if updateData.Description != nil {
-		fieldMap["Description"] = *updateData.Description
+		fieldMap["description"] = *updateData.Description
 	}
 
 	if updateData.AssignedTo != nil {
-		fieldMap["AssignedTo"] = *updateData.AssignedTo
+		fieldMap["assigned_to"] = *updateData.AssignedTo
 	}
 
 	if updateData.CreatedBy != nil {
-		fieldMap["CreatedBy"] = *updateData.CreatedBy
+		fieldMap["created_by"] = *updateData.CreatedBy
 	}
 
 	if updateData.Status != nil {
@@ -159,7 +159,7 @@ func (r *Repository) Update(updateData IUpdate) (*models.Task, error) {
 			return nil, errors.New("Invalid task status")
 		}
 
-		fieldMap["Status"] = *updateData.Status
+		fieldMap["status"] = *updateData.Status
 	}
 
 	if updateData.Deadline != nil {
@@ -167,7 +167,7 @@ func (r *Repository) Update(updateData IUpdate) (*models.Task, error) {
 			return nil, errors.New("Invalid deadline")
 		}
 
-		fieldMap["Deadline"] = *updateData.Deadline
+		fieldMap["deadline"] = *updateData.Deadline
 	}
 
 	verifyCreateBy := r.GetDB().First(&createdBy)
@@ -182,7 +182,7 @@ func (r *Repository) Update(updateData IUpdate) (*models.Task, error) {
 		return nil, verifyAssignedTo.Error
 	}
 
-	fieldMap["UpdatedAt"] = time.Now()
+	fieldMap["updated_at"] = time.Now()
 
 	result := r.GetDB().Model(&task).Updates(fieldMap)
 
