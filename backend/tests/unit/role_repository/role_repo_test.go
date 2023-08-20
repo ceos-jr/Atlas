@@ -48,7 +48,9 @@ func (suite *RoleRepoTestSuite) TestUpdateRole() {
 	suite.Nil(updateErr, "Update error must be nil")
 	suite.Equal(suite.MockRoles[0].ID, updatedrole.ID, "Expected to have the same ID")
 	suite.Equal(updatedrole.Name, "Role Test", "Expected to have updated the same name")
-	suite.Equal(updatedrole.Description, "This is another test", "Expected to have the same description")
+	suite.Equal(updatedrole.Description, "This is another test",
+		"Expected to have the same description",
+	)
 }
 
 func (suite *RoleRepoTestSuite) TestUpdateRoleErr() {
@@ -66,8 +68,9 @@ func (suite *RoleRepoTestSuite) TestUpdateRoleErr() {
 		Description: &updateDescriptionTest,
 	})
 
-	suite.Equal("WHERE conditions required", updateErr.Error(), "Expected to have an ID error")
-
+	suite.Equal("WHERE conditions required", updateErr.Error(),
+		"Expected to have an ID error",
+	)
 }
 
 func (suite *RoleRepoTestSuite) TestReadByRole() {
@@ -83,14 +86,15 @@ func (suite *RoleRepoTestSuite) TestReadByRole() {
 
 	suite.Equal(suite.MockRoles[0].ID, readRole.ID, "Expected to hame same ID")
 	suite.Equal(suite.MockRoles[0].Name, readRole.Name, "Expected to hame same name")
-	suite.Equal(suite.MockRoles[0].Description, readRole.Description, "Expected to hame same description")
+	suite.Equal(suite.MockRoles[0].Description, readRole.Description,
+		"Expected to hame same description",
+	)
 }
 
 func (suite *RoleRepoTestSuite) TestReadByRoleErr() {
 	_, readByErr := suite.Repo.Role.ReadBy(role.IReadBy{})
 
 	suite.Equal("No fields to read", readByErr.Error(), "Expected to have fields to read")
-
 }
 
 func (suite *RoleRepoTestSuite) TestDeleteRole() {
