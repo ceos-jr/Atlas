@@ -23,6 +23,23 @@ func (suite *UserRepoTestSuite) SetupSuite() {
 	}
 
 	suite.Repo = repo
+	suite.MockUsers = make([]models.User, 2)
+	suite.SetupMocks()
+}
+
+func (suite *UserRepoTestSuite) SetupMocks() {
+	user, createErr := suite.Repo.User.Create(user.ICreate{
+		Name:     "User 01",
+		Email:    "user01@example.com",
+		Password: "12345678",
+		Status:   1,
+	})
+
+	if createErr != nil {
+		panic(createErr)
+	}
+
+	suite.MockUsers[0] = *user
 }
 
 func (suite *UserRepoTestSuite) TearDownSuite() {
