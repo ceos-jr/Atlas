@@ -169,7 +169,7 @@ func (suite *UserRepoTestSuite) TestDeleteUser() {
 		Name:     "vanilla",
 		Email:    "vanilla@email.com",
 		Status:   1,
-		Password: "123454",
+		Password: "12345678",
 	})
 
 	deletedUser, deleteErr := suite.Repo.User.Delete(user.IDelete{
