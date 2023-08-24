@@ -1,6 +1,7 @@
 package userrepotest
 
 import (
+	"orb-api/models"
 	"orb-api/repositories/user"
 	"testing"
 
@@ -21,7 +22,8 @@ func (suite *UserRepoTestSuite) TestCreateUser() {
 	suite.Equal(uint(1), user.Status, "Status does not match")
 	suite.Equal("12345678", user.Password, "Password does not match")
 
-	suite.MockUsers = append(suite.MockUsers, *user)
+	suite.MockUsers = make([]models.User, 1)
+	suite.MockUsers[0] = *user
 }
 
 func (suite *UserRepoTestSuite) TestReadAllUsers() {
