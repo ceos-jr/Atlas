@@ -4,12 +4,6 @@ import (
 	"time"
 )
 
-var RelationStrongSide = map[string]uint{
-	"both":  0,
-	"left":  1,
-	"right": 2,
-}
-
 const (
 	UStatusDisable    = 1
 	UStatusActive     = 2
@@ -62,7 +56,7 @@ type Relation struct {
 	LUserRoleId uint     `json:"l-user-role-id"`
 	LUserRole   UserRole `json:"l-user-role" gorm:"foreignKey:LUserRoleId"`
 	RUserRoleId uint     `json:"r-user-role-id"`
-	RUserRole   UserRole `json:"r-user-role" gorm:"foreignKey:RUserRoleId"`
+	RUserRole   UserRole `json:"r-user-role" gorm:"foreignKey:RUserRoleId;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 }
 
 type Task struct {
