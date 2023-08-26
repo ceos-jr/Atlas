@@ -1,8 +1,9 @@
 package role
 
 import (
-	"gorm.io/gorm"
 	"orb-api/models"
+
+	"gorm.io/gorm"
 )
 
 type (

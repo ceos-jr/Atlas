@@ -2,8 +2,9 @@ package role
 
 import (
 	"errors"
-	"gorm.io/gorm"
 	"orb-api/models"
+
+	"gorm.io/gorm"
 )
 
 func NewRoleRepository(connection *gorm.DB) Repository {
@@ -48,22 +49,22 @@ func (r *Repository) ReadAll(all IReadAll) ([]models.Role, error) {
 
 func (r *Repository) ReadBy(readBy IReadBy) ([]models.Role, error) {
 	var rolesArray []models.Role
-	var roleMap map[string]interface{}
+	var roleMap = make(map[string]interface{})
 
 	if readBy.ID == nil && readBy.Name == nil && readBy.Description == nil {
 		return nil, errors.New("No fields to read")
 	}
 
 	if readBy.ID != nil {
-		roleMap["ID"] = readBy.ID
+		roleMap["id"] = readBy.ID
 	}
 
 	if readBy.Name != nil {
-		roleMap["Name"] = readBy.Name
+		roleMap["name"] = readBy.Name
 	}
 
 	if readBy.Description != nil {
-		roleMap["Description"] = readBy.Description
+		roleMap["description"] = readBy.Description
 	}
 
 	result := r.getDB().Where(roleMap).Find(&rolesArray)
@@ -77,18 +78,18 @@ func (r *Repository) ReadBy(readBy IReadBy) ([]models.Role, error) {
 
 func (r *Repository) Update(updateData IUpdate) (*models.Role, error) {
 	var role = models.Role{ID: updateData.RoleID}
-	var updateMap map[string]interface{}
+	var updateMap = make(map[string]interface{})
 
 	if updateData.Name == nil && updateData.Description == nil {
 		return nil, errors.New("No fields to update")
 	}
 
 	if updateData.Name != nil {
-		updateMap["Name"] = updateData.Name
+		updateMap["name"] = updateData.Name
 	}
 
 	if updateData.Description != nil {
-		updateMap["Description"] = updateData.Description
+		updateMap["description"] = updateData.Description
 	}
 
 	result := r.getDB().Model(&role).Updates(updateMap)
