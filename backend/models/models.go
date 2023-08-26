@@ -4,6 +4,8 @@ import (
 	"time"
 )
 
+//revive:disable:line-length-limit
+
 const (
 	UStatusDisable    = 1
 	UStatusActive     = 2
@@ -28,7 +30,6 @@ var TaskStatus = map[uint]string{
 	TStatusOverdue:  "overdue",
 }
 
-// `json:"-"` Hide from JSON (not exposed)
 type User struct {
 	ID        uint
 	Name      string    `json:"name" gorm:"size:128;not null;"`
@@ -53,10 +54,10 @@ type UserRole struct {
 type Relation struct {
 	ID          uint     `json:"id" gorm:"primaryKey"`
 	StrongSide  uint     `json:"strong-side" gorm:"not null"`
-	LUserRoleId uint     `json:"l-user-role-id"`
-	LUserRole   UserRole `json:"l-user-role" gorm:"foreignKey:LUserRoleId"`
-	RUserRoleId uint     `json:"r-user-role-id"`
-	RUserRole   UserRole `json:"r-user-role" gorm:"foreignKey:RUserRoleId;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	LUserRoleID uint     `json:"l-user-role-id"`
+	LUserRole   UserRole `json:"l-user-role" gorm:"foreignKey:LUserRoleID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	RUserRoleID uint     `json:"r-user-role-id"`
+	RUserRole   UserRole `json:"r-user-role" gorm:"foreignKey:RUserRoleID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 }
 
 type Task struct {
