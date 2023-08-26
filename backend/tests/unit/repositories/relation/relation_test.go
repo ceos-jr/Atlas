@@ -8,8 +8,8 @@ import (
 )
 
 const (
-	UnmatchedLUserRoleId = "the left userRole does not match with expected"
-	UnmatchedRUserRoleId = "the right userRole does not match with expected"
+	UnmatchedLUserRoleID = "the left userRole does not match with expected"
+	UnmatchedRUserRoleID = "the right userRole does not match with expected"
 	UnmatchedStrongSide  = "the strong side does not match with expected"
 )
 
@@ -26,8 +26,8 @@ func (s *TestSuite) TestCreate() {
 		result, createError := s.Repo.Relation.Create(iCreate)
 
 		s.Nil(createError)
-		s.Equal(iCreate.LeftUserRoleId, result.LUserRoleId, UnmatchedLUserRoleId)
-		s.Equal(iCreate.RightUserRoleId, result.RUserRoleId, UnmatchedRUserRoleId)
+		s.Equal(iCreate.LeftUserRoleID, result.LUserRoleID, UnmatchedLUserRoleID)
+		s.Equal(iCreate.RightUserRoleID, result.RUserRoleID, UnmatchedRUserRoleID)
 		s.NotNil(models.StrongSide.GetCode(iCreate.StrongSide))
 		s.Equal(
 			*models.StrongSide.GetCode(iCreate.StrongSide),
@@ -61,8 +61,8 @@ func (s *TestSuite) TestReadAll() {
 
 		if ok {
 			s.Equal(relMemory.ID, relDB.ID)
-			s.Equal(relMemory.RUserRoleId, relDB.RUserRoleId, UnmatchedRUserRoleId)
-			s.Equal(relMemory.LUserRoleId, relDB.LUserRoleId, UnmatchedLUserRoleId)
+			s.Equal(relMemory.RUserRoleID, relDB.RUserRoleID, UnmatchedRUserRoleID)
+			s.Equal(relMemory.LUserRoleID, relDB.LUserRoleID, UnmatchedLUserRoleID)
 			s.Equal(relMemory.StrongSide, relDB.StrongSide, UnmatchedStrongSide)
 		}
 	}
@@ -73,12 +73,16 @@ func (s *TestSuite) TestReadBy() {
 	var expected = make(map[uint]models.Relation)
 
 	for _, rel := range s.MockRelation {
-		id := (iReadBy.ID != nil) && (*iReadBy.ID == rel.ID)
-		rId := (iReadBy.RightUserRoleId != nil) && (*iReadBy.RightUserRoleId == rel.RUserRoleId)
-		lId := (iReadBy.LeftUserRoleId != nil) && (*iReadBy.LeftUserRoleId == rel.LUserRoleId)
-		ss := (iReadBy.StrongSide != nil) && (*models.StrongSide.GetCode(*iReadBy.StrongSide) == rel.StrongSide)
+		id := (iReadBy.ID != nil) &&
+			(*iReadBy.ID == rel.ID)
+		rID := (iReadBy.RightUserRoleID != nil) &&
+			(*iReadBy.RightUserRoleID == rel.RUserRoleID)
+		lID := (iReadBy.LeftUserRoleID != nil) &&
+			(*iReadBy.LeftUserRoleID == rel.LUserRoleID)
+		ss := (iReadBy.StrongSide != nil) &&
+			(*models.StrongSide.GetCode(*iReadBy.StrongSide) == rel.StrongSide)
 
-		if id && rId && lId && ss {
+		if id && rID && lID && ss {
 			expected[rel.ID] = rel
 		}
 	}
@@ -91,8 +95,8 @@ func (s *TestSuite) TestReadBy() {
 		expRel, ok := expected[rel.ID]
 
 		s.True(ok, expRel)
-		s.Equal(expRel.LUserRoleId, rel.LUserRoleId, UnmatchedLUserRoleId)
-		s.Equal(expRel.RUserRole, rel.RUserRole, UnmatchedRUserRoleId)
+		s.Equal(expRel.LUserRoleID, rel.LUserRoleID, UnmatchedLUserRoleID)
+		s.Equal(expRel.RUserRole, rel.RUserRole, UnmatchedRUserRoleID)
 		s.Equal(expRel.StrongSide, rel.StrongSide, UnmatchedStrongSide)
 	}
 
@@ -108,34 +112,34 @@ func (s *TestSuite) TestReadBy() {
 }
 
 func (s *TestSuite) TestUpdate() {
-	var auxId uint
+	var auxID uint
 	var strongSide uint
 
 	for _, rel := range s.MockRelation {
-		auxId = rel.ID
-		iUpdate := s.MakeIUpdate(&auxId)
+		auxID = rel.ID
+		iUpdate := s.MakeIUpdate(&auxID)
 
 		result, updateError := s.Repo.Relation.Update(iUpdate)
 
 		s.Nil(updateError)
 
 		updatedRel := *result
-		auxId = iUpdate.ID
-		s.Equal(updatedRel.ID, auxId)
+		auxID = iUpdate.ID
+		s.Equal(updatedRel.ID, auxID)
 
-		if iUpdate.RightUserRoleId != nil {
-			auxId = *iUpdate.RightUserRoleId
+		if iUpdate.RightUserRoleID != nil {
+			auxID = *iUpdate.RightUserRoleID
 		} else {
-			auxId = rel.RUserRoleId
+			auxID = rel.RUserRoleID
 		}
-		s.Equal(updatedRel.RUserRoleId, auxId, UnmatchedRUserRoleId)
+		s.Equal(updatedRel.RUserRoleID, auxID, UnmatchedRUserRoleID)
 
-		if iUpdate.LeftUserRoleId != nil {
-			auxId = *iUpdate.LeftUserRoleId
+		if iUpdate.LeftUserRoleID != nil {
+			auxID = *iUpdate.LeftUserRoleID
 		} else {
-			auxId = rel.LUserRoleId
+			auxID = rel.LUserRoleID
 		}
-		s.Equal(updatedRel.LUserRoleId, auxId, UnmatchedLUserRoleId)
+		s.Equal(updatedRel.LUserRoleID, auxID, UnmatchedLUserRoleID)
 
 		if iUpdate.StrongSide != nil {
 			strongSide = *models.StrongSide.GetCode(*iUpdate.StrongSide)
@@ -147,8 +151,8 @@ func (s *TestSuite) TestUpdate() {
 		_, updateError = s.Repo.Relation.Update(relation.IUpdate{
 			ID:              rel.ID,
 			StrongSide:      models.StrongSide.GetName(rel.StrongSide),
-			RightUserRoleId: &rel.RUserRoleId,
-			LeftUserRoleId:  &rel.LUserRoleId,
+			RightUserRoleID: &rel.RUserRoleID,
+			LeftUserRoleID:  &rel.LUserRoleID,
 		})
 
 		s.Nil(updateError)

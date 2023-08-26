@@ -27,9 +27,9 @@ func (r *Repository) Create(create ICreate) (*models.Relation, error) {
 
 	relation.StrongSide = *strongSide
 
-	relation.LUserRoleId = create.LeftUserRoleId
+	relation.LUserRoleID = create.LeftUserRoleID
 
-	relation.RUserRoleId = create.RightUserRoleId
+	relation.RUserRoleID = create.RightUserRoleID
 
 	result := r.GetDB().Model(&models.Relation{}).Create(&relation)
 
@@ -48,7 +48,7 @@ func (r *Repository) ReadBy(readBy IReadBy) ([]models.Relation, error) {
 	var refRelation = models.Relation{}
 
 	if readBy.ID == nil && readBy.StrongSide == nil &&
-		readBy.RightUserRoleId == nil && readBy.LeftUserRoleId == nil {
+		readBy.RightUserRoleID == nil && readBy.LeftUserRoleID == nil {
 		readError = errors.New(RErrorEmptyReadBy)
 		return nil, readError
 	}
@@ -59,16 +59,16 @@ func (r *Repository) ReadBy(readBy IReadBy) ([]models.Relation, error) {
 		refRelation.ID = id
 	}
 
-	if readBy.RightUserRoleId != nil {
-		RUserRoleId := *readBy.RightUserRoleId
+	if readBy.RightUserRoleID != nil {
+		RUserRoleID := *readBy.RightUserRoleID
 
-		refRelation.RUserRoleId = RUserRoleId
+		refRelation.RUserRoleID = RUserRoleID
 	}
 
-	if readBy.LeftUserRoleId != nil {
-		LUserRoleId := *readBy.LeftUserRoleId
+	if readBy.LeftUserRoleID != nil {
+		LUserRoleID := *readBy.LeftUserRoleID
 
-		refRelation.LUserRoleId = LUserRoleId
+		refRelation.LUserRoleID = LUserRoleID
 	}
 
 	if readBy.StrongSide != nil {
@@ -83,9 +83,11 @@ func (r *Repository) ReadBy(readBy IReadBy) ([]models.Relation, error) {
 	}
 
 	if readBy.Limit == nil {
-		result = r.GetDB().Model(&models.Relation{}).Where(refRelation).Find(&relations)
+		result = r.GetDB().Model(&models.Relation{}).
+			Where(refRelation).Find(&relations)
 	} else {
-		result = r.GetDB().Model(&models.Relation{}).Where(refRelation).Find(&relations).Limit(int(*readBy.Limit))
+		result = r.GetDB().Model(&models.Relation{}).
+			Where(refRelation).Find(&relations).Limit(int(*readBy.Limit))
 	}
 
 	if result.Error != nil {
@@ -113,7 +115,9 @@ func (r *Repository) Update(update IUpdate) (*models.Relation, error) {
 	var updateError error = nil
 	var relation = models.Relation{ID: update.ID}
 
-	if update.StrongSide == nil && update.LeftUserRoleId == nil && update.RightUserRoleId == nil {
+	if update.StrongSide == nil &&
+		update.LeftUserRoleID == nil &&
+		update.RightUserRoleID == nil {
 		updateError = errors.New(UErrorEmptyUpdate)
 		return nil, updateError
 	}
@@ -129,16 +133,16 @@ func (r *Repository) Update(update IUpdate) (*models.Relation, error) {
 		relation.StrongSide = *strongSide
 	}
 
-	if update.RightUserRoleId != nil {
-		relation.RUserRoleId = *update.RightUserRoleId
+	if update.RightUserRoleID != nil {
+		relation.RUserRoleID = *update.RightUserRoleID
 	}
 
-	if update.RightUserRoleId != nil {
-		relation.RUserRoleId = *update.RightUserRoleId
+	if update.RightUserRoleID != nil {
+		relation.RUserRoleID = *update.RightUserRoleID
 	}
 
-	if update.LeftUserRoleId != nil {
-		relation.LUserRoleId = *update.LeftUserRoleId
+	if update.LeftUserRoleID != nil {
+		relation.LUserRoleID = *update.LeftUserRoleID
 	}
 
 	result := r.GetDB().Updates(&relation)

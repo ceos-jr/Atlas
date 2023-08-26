@@ -6,28 +6,16 @@ import (
 )
 
 const (
-	_invalidLeftKey    = "invalid LeftUserRoleId value"
-	_invalidRightKey   = "invalid RightUserRoleId value"
 	_invalidStrongSide = "invalid StrongSide value"
-	_invalidID         = "invalid id value"
 
-	CErrorInvalidLeftKey    = _invalidLeftKey
-	CErrorInvalidRightKey   = _invalidRightKey
 	CErrorInvalidStrongSide = _invalidStrongSide
 
 	RErrorEmptyReadBy       = "no fields to search for"
-	RErrorInvalidID         = _invalidID
-	RErrorInvalidLeftKey    = _invalidLeftKey
-	RErrorInvalidRightKey   = _invalidRightKey
 	RErrorInvalidStrongSide = _invalidStrongSide
 
-	UErrorEmptyUpdate       = "no fields to update"
-	UErrorInvalidID         = _invalidID
-	UErrorInvalidLeftKey    = _invalidLeftKey
-	UErrorInvalidRightKey   = _invalidRightKey
-	UErrorInvalidStrongSide = _invalidStrongSide
+	UErrorEmptyUpdate = "no fields to update"
 
-	DErrorInvalidID = _invalidID
+	UErrorInvalidStrongSide = _invalidStrongSide
 )
 
 type (
@@ -37,18 +25,17 @@ type (
 
 	ICreate struct {
 		StrongSide      string
-		RightUserRoleId uint
-		LeftUserRoleId  uint
+		RightUserRoleID uint
+		LeftUserRoleID  uint
 	}
 
 	IUpdate struct {
 		ID              uint
 		StrongSide      *string
-		RightUserRoleId *uint
-		LeftUserRoleId  *uint
+		RightUserRoleID *uint
+		LeftUserRoleID  *uint
 	}
 
-	// implement full pagination latter: https://dev.to/rafaelgfirmino/pagination-using-gorm-scopes-3k5f
 	IReadAll struct {
 		Limit *uint
 	}
@@ -56,8 +43,8 @@ type (
 	IReadBy struct {
 		ID              *uint
 		StrongSide      *string
-		RightUserRoleId *uint
-		LeftUserRoleId  *uint
+		RightUserRoleID *uint
+		LeftUserRoleID  *uint
 		Limit           *uint
 	}
 

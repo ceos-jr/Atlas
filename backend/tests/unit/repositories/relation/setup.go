@@ -146,8 +146,8 @@ func (s *TestSuite) MakeIReadBy() relation.IReadBy {
 	codeID := 0b00001
 	var id *uint = nil
 	if fieldRandomChoice&codeID == codeID {
-		auxId := s.MockUser[RandIndex(nil, len(s.MockUser))].ID
-		id = &auxId
+		auxID := s.MockUser[RandIndex(nil, len(s.MockUser))].ID
+		id = &auxID
 	}
 	iReadBy.ID = id
 
@@ -159,21 +159,21 @@ func (s *TestSuite) MakeIReadBy() relation.IReadBy {
 	}
 	iReadBy.StrongSide = strongSide
 
-	codeRUserRoleId := 0b00100
-	var rUserRoleId *uint = nil
-	if fieldRandomChoice&codeRUserRoleId == codeRUserRoleId {
+	codeRUserRoleID := 0b00100
+	var rUserRoleID *uint = nil
+	if fieldRandomChoice&codeRUserRoleID == codeRUserRoleID {
 		auxRUserRole := s.MockUserRole[RandIndex(nil, len(s.MockUserRole))].ID
-		rUserRoleId = &auxRUserRole
+		rUserRoleID = &auxRUserRole
 	}
-	iReadBy.RightUserRoleId = rUserRoleId
+	iReadBy.RightUserRoleID = rUserRoleID
 
-	codeLUserRoleId := 0b01000
-	var lUserRoleId *uint = nil
-	if fieldRandomChoice&codeLUserRoleId == codeLUserRoleId {
+	codeLUserRoleID := 0b01000
+	var lUserRoleID *uint = nil
+	if fieldRandomChoice&codeLUserRoleID == codeLUserRoleID {
 		auxRUserRole := s.MockUserRole[RandIndex(nil, len(s.MockUserRole))].ID
-		lUserRoleId = &auxRUserRole
+		lUserRoleID = &auxRUserRole
 	}
-	iReadBy.LeftUserRoleId = lUserRoleId
+	iReadBy.LeftUserRoleID = lUserRoleID
 
 	codeLimit := 0b10000
 	var limit *uint = nil
@@ -188,8 +188,8 @@ func (s *TestSuite) MakeIReadBy() relation.IReadBy {
 		auxRelation := s.MockRelation[RandIndex(nil, len(s.MockRelation))]
 
 		iReadBy.ID = &auxRelation.ID
-		iReadBy.RightUserRoleId = &auxRelation.RUserRoleId
-		iReadBy.LeftUserRoleId = &auxRelation.LUserRoleId
+		iReadBy.RightUserRoleID = &auxRelation.RUserRoleID
+		iReadBy.LeftUserRoleID = &auxRelation.LUserRoleID
 		iReadBy.StrongSide = models.StrongSide.GetName(auxRelation.StrongSide)
 		iReadBy.Limit = nil
 	}
@@ -212,8 +212,8 @@ func (s *TestSuite) MakeICreate() relation.ICreate {
 	rightIndex := RandIndex(nil, len(s.MockUserRole))
 	leftIndex := RandIndex(&rightIndex, len(s.MockUserRole))
 
-	iCreate.RightUserRoleId = s.MockUserRole[rightIndex].ID
-	iCreate.LeftUserRoleId = s.MockUserRole[leftIndex].ID
+	iCreate.RightUserRoleID = s.MockUserRole[rightIndex].ID
+	iCreate.LeftUserRoleID = s.MockUserRole[leftIndex].ID
 	iCreate.StrongSide = models.StrongSide.RandState().Name
 
 	return iCreate
@@ -255,13 +255,13 @@ func (s *TestSuite) MakeIUpdate(fromID *uint) relation.IUpdate {
 	if fieldRandomChoice&codeRightID == codeRightID {
 		auxRandIndex := RandIndex(nil, len(s.MockUserRole))
 		randIndex = &auxRandIndex
-		iUpdate.RightUserRoleId = &s.MockUserRole[auxRandIndex].ID
+		iUpdate.RightUserRoleID = &s.MockUserRole[auxRandIndex].ID
 	}
 
 	codeLeftID := 0b100
 	if fieldRandomChoice&codeLeftID == codeLeftID {
 		auxRandIndex := RandIndex(randIndex, len(s.MockUserRole))
-		iUpdate.LeftUserRoleId = &s.MockUserRole[auxRandIndex].ID
+		iUpdate.LeftUserRoleID = &s.MockUserRole[auxRandIndex].ID
 	}
 
 	codeEmpty := 0b000
@@ -271,10 +271,10 @@ func (s *TestSuite) MakeIUpdate(fromID *uint) relation.IUpdate {
 
 		auxRandIndex := RandIndex(nil, len(s.MockUserRole))
 		randIndex = &auxRandIndex
-		iUpdate.RightUserRoleId = &s.MockUserRole[auxRandIndex].ID
+		iUpdate.RightUserRoleID = &s.MockUserRole[auxRandIndex].ID
 
 		auxRandIndex = RandIndex(randIndex, len(s.MockUserRole))
-		iUpdate.LeftUserRoleId = &s.MockUserRole[auxRandIndex].ID
+		iUpdate.LeftUserRoleID = &s.MockUserRole[auxRandIndex].ID
 	}
 
 	auxRandIndex := RandIndex(nil, len(s.MockRelation))
