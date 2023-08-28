@@ -43,7 +43,7 @@ func (r *Repository) Create(createData ICreate) (*models.Message, error) {
 
 }
 
-func (r *Repository) GetBySender(getBySender IGetBySender) ([]models.Message, error) {
+func (r *Repository) GetBySender(getBySender IReadBySender) ([]models.Message, error) {
 	var messagesArray []models.Message
 	var messagesMap = make(map[string]interface{})
 
@@ -62,7 +62,7 @@ func (r *Repository) GetBySender(getBySender IGetBySender) ([]models.Message, er
 	return messagesArray, nil
 }
 
-func (r *Repository) GetByReceiver(getByReceiver IGetByReceiver) ([]models.Message, error) {
+func (r *Repository) GetByReceiver(getByReceiver IReadByReceiver) ([]models.Message, error) {
 	var messagesArray []models.Message
 	var messageMap = make(map[string]interface{})
 
@@ -81,7 +81,7 @@ func (r *Repository) GetByReceiver(getByReceiver IGetByReceiver) ([]models.Messa
 	return messagesArray, nil
 }
 
-func (r *Repository) GetChat(getChat IGetChat) ([]models.Message, error) {
+func (r *Repository) GetChat(getChat IReadChat) ([]models.Message, error) {
 	var messagesArray []models.Message
 	var messageMap = make(map[string]interface{})
 
