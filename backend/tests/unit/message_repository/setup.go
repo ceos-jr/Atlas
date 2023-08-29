@@ -73,7 +73,7 @@ func (suite *MessageRepoTestSuite) SetupMocks() {
 		message, createErr := suite.Repo.Message.Create(message.ICreate{
 			Sender:   suite.MockUsers[index%2].ID,
 			Receiver: suite.MockUsers[(index+1)%2].ID,
-			Content:  fmt.Sprint("Do that %v", index),
+			Content:  fmt.Sprintf("Do that %v", index),
 		})
 
 		if createErr != nil {

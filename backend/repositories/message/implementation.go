@@ -45,15 +45,15 @@ func (r *Repository) Create(createData ICreate) (*models.Message, error) {
 
 }
 
-func (r *Repository) GetBySender(getBySender IReadBySender) ([]models.Message, error) {
+func (r *Repository) ReadBySender(readBySender IReadBySender) ([]models.Message, error) {
 	var messagesArray []models.Message
 	var messagesMap = make(map[string]interface{})
 
-	if getBySender.Sender == nil {
+	if readBySender.Sender == nil {
 		return nil, errors.New("No field to read")
 	}
 
-	messagesMap["Sender"] = getBySender.Sender
+	messagesMap["Sender"] = readBySender.Sender
 
 	result := r.getDB().Where(messagesMap).Find(&messagesArray)
 
@@ -64,15 +64,15 @@ func (r *Repository) GetBySender(getBySender IReadBySender) ([]models.Message, e
 	return messagesArray, nil
 }
 
-func (r *Repository) GetByReceiver(getByReceiver IReadByReceiver) ([]models.Message, error) {
+func (r *Repository) ReadByReceiver(readByReceiver IReadByReceiver) ([]models.Message, error) {
 	var messagesArray []models.Message
 	var messageMap = make(map[string]interface{})
 
-	if getByReceiver.Receiver == nil {
+	if readByReceiver.Receiver == nil {
 		return nil, errors.New("No field to read")
 	}
 
-	messageMap["Receiver"] = getByReceiver.Receiver
+	messageMap["Receiver"] = readByReceiver.Receiver
 
 	result := r.getDB().Where(messageMap).Find(&messagesArray)
 
@@ -83,20 +83,20 @@ func (r *Repository) GetByReceiver(getByReceiver IReadByReceiver) ([]models.Mess
 	return messagesArray, nil
 }
 
-func (r *Repository) GetChat(getChat IReadChat) ([]models.Message, error) {
+func (r *Repository) ReadChat(readChat IReadChat) ([]models.Message, error) {
 	var messagesArray []models.Message
 	var messageMap = make(map[string]interface{})
 
-	if getChat.Receiver == nil && getChat.Sender == nil {
+	if readChat.Receiver == nil && readChat.Sender == nil {
 		return nil, errors.New("No fields to read")
 	}
 
-	if getChat.Sender != nil {
-		messageMap["Sender"] = getChat.Sender
+	if readChat.Sender != nil {
+		messageMap["Sender"] = readChat.Sender
 	}
 
-	if getChat.Receiver != nil {
-		messageMap["Receiver"] = getChat.Receiver
+	if readChat.Receiver != nil {
+		messageMap["Receiver"] = readChat.Receiver
 	}
 
 	result := r.getDB().Where(messageMap).Find(&messagesArray)
@@ -109,24 +109,24 @@ func (r *Repository) GetChat(getChat IReadChat) ([]models.Message, error) {
 }
 
 func (r *Repository) Update(updateData IUpdate) (*models.Message, error) {
-    var message = models.Message{ID: updateData.ID}
+	var message = models.Message{ID: updateData.ID}
 	verifyExistence := r.getDB().First(&message)
 
 	if verifyExistence.Error != nil {
 		return nil, verifyExistence.Error
 	}
 
-    message.Content = *updateData.Content
-    saveResult := r.getDB().Save(&message)
+	message.Content = *updateData.Content
+	saveResult := r.getDB().Save(&message)
 
-    if saveResult.Error != nil {
-        return nil, saveResult.Error
-    }
+	if saveResult.Error != nil {
+		return nil, saveResult.Error
+	}
 
-    return &message, nil
+	return &message, nil
 }
 
-func (r *Repository) DeleteMessage(deleteData IDelete) (*models.Message, error) {
+func (r *Repository) Delete(deleteData IDelete) (*models.Message, error) {
 	var message = models.Message{ID: deleteData.ID}
 
 	verifyExistence := r.getDB().First(&message)
