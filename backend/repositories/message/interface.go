@@ -34,9 +34,23 @@ type (
 		Receiver *uint
 	}
 
+	IUpdate struct {
+		ID uint
+		Content *string
+	}
+	
+	IDelete struct {
+		ID uint
+		Sender *uint 
+		Receiver *uint 
+		Content *string 
+	}
+
 	Interface interface {
 		GetBySender(IGetBySender) ([]models.Message, error)
 		GetByReceiver(IGetByReceiver) ([]models.Message, error)
 		GetChat(IGetChat) ([]models.Message, error)
+		Update(IUpdate) (*models.Message, error)
+		Delete(IDelete) (*models.Message, error)
 	}
 )
