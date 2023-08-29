@@ -21,15 +21,15 @@ type (
 		Content  string
 	}
 
-	IGetBySender struct {
+	IReadBySender struct {
 		Sender *uint
 	}
 
-	IGetByReceiver struct {
+	IReadByReceiver struct {
 		Receiver *uint
 	}
 
-	IGetChat struct {
+	IReadChat struct {
 		Sender   *uint
 		Receiver *uint
 	}
@@ -47,9 +47,10 @@ type (
 	}
 
 	Interface interface {
-		GetBySender(IGetBySender) ([]models.Message, error)
-		GetByReceiver(IGetByReceiver) ([]models.Message, error)
-		GetChat(IGetChat) ([]models.Message, error)
+		Create(ICreate) (*models.Message, error)
+		ReadBySender(IReadBySender) ([]models.Message, error)
+		ReadByReceiver(IReadByReceiver) ([]models.Message, error)
+		ReadByChat(IReadChat) ([]models.Message, error)
 		Update(IUpdate) (*models.Message, error)
 		Delete(IDelete) (*models.Message, error)
 	}
