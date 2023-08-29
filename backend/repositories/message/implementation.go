@@ -15,6 +15,7 @@ func NewMessageRepository(connection *gorm.DB) Repository {
 	}
 }
 
+// len(content) == 0
 func (r *Repository) ValidContent(content string) bool {
 	if len(content) > contentMaxLen || len(content) < 0 {
 		return false
@@ -22,6 +23,7 @@ func (r *Repository) ValidContent(content string) bool {
 	return true
 }
 
+// criar uma nova condição : "content too long" e "content cannot be empty"
 func (r *Repository) Create(createData ICreate) (*models.Message, error) {
 	var message = models.Message{
 		Sender:   createData.Sender,
@@ -104,5 +106,40 @@ func (r *Repository) GetChat(getChat IReadChat) ([]models.Message, error) {
 	}
 
 	return messagesArray, nil
+}
 
+func (r *Repository) Update(updateData IUpdate) (*models.Message, error) {
+    var message = models.Message{ID: updateData.ID}
+	verifyExistence := r.getDB().First(&message)
+
+	if verifyExistence.Error != nil {
+		return nil, verifyExistence.Error
+	}
+
+    message.Content = *updateData.Content
+    saveResult := r.getDB().Save(&message)
+
+    if saveResult.Error != nil {
+        return nil, saveResult.Error
+    }
+
+    return &message, nil
+}
+
+func (r *Repository) DeleteMessage(deleteData IDelete) (*models.Message, error) {
+	var message = models.Message{ID: deleteData.ID}
+
+	verifyExistence := r.getDB().First(&message)
+
+	if verifyExistence.Error != nil {
+		return nil, verifyExistence.Error
+	}
+
+	result := r.getDB().Delete(&message)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return &message, nil
 }

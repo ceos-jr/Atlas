@@ -35,11 +35,15 @@ type (
 	}
 
 	IUpdate struct {
-		Content string
+		ID uint
+		Content *string
 	}
-
+	
 	IDelete struct {
 		ID uint
+		Sender *uint 
+		Receiver *uint 
+		Content *string 
 	}
 
 	Interface interface {
