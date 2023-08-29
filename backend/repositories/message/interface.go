@@ -38,8 +38,8 @@ type (
 		Content string
 	}
 
-	IDelete {
-
+	IDelete struct {
+		ID uint
 	}
 
 	Interface interface {
