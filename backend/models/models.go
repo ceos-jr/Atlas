@@ -65,4 +65,5 @@ type Message struct {
 	Sender   uint   `json:"sender" gorm:"not null"`
 	Receiver uint   `json:"receiver" gorm:"not null"`
 	Content  string `json:"content" gorm:"not null"`
+	// Timestamp time.Time `json:"sent_time"`
 }

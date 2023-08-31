@@ -17,7 +17,10 @@ func NewMessageRepository(connection *gorm.DB) Repository {
 
 // len(content) == 0
 func (r *Repository) ValidContent(content string) bool {
-	if len(content) > contentMaxLen || len(content) < 0 {
+	if len(content) > contentMaxLen || len(content) <= 0 {
+		return false
+	}
+	if len(content) > 216 {
 		return false
 	}
 	return true
@@ -31,8 +34,12 @@ func (r *Repository) Create(createData ICreate) (*models.Message, error) {
 		Content:  createData.Content,
 	}
 
+	if createData.Sender == createData.Receiver {
+		return nil, errors.New("Can't send message to self")
+	}
+
 	if !r.ValidContent(createData.Content) {
-		return nil, errors.New("Content too long")
+		return nil, errors.New("Content empty or too long")
 	}
 
 	result := r.getDB().Create(&message)
@@ -49,11 +56,7 @@ func (r *Repository) ReadBySender(readBySender IReadBySender) ([]models.Message,
 	var messagesArray []models.Message
 	var messagesMap = make(map[string]interface{})
 
-	if readBySender.Sender == nil {
-		return nil, errors.New("No field to read")
-	}
-
-	messagesMap["Sender"] = readBySender.Sender
+	messagesMap["sender"] = readBySender.Sender
 
 	result := r.getDB().Where(messagesMap).Find(&messagesArray)
 
@@ -68,11 +71,7 @@ func (r *Repository) ReadByReceiver(readByReceiver IReadByReceiver) ([]models.Me
 	var messagesArray []models.Message
 	var messageMap = make(map[string]interface{})
 
-	if readByReceiver.Receiver == nil {
-		return nil, errors.New("No field to read")
-	}
-
-	messageMap["Receiver"] = readByReceiver.Receiver
+	messageMap["receiver"] = readByReceiver.Receiver
 
 	result := r.getDB().Where(messageMap).Find(&messagesArray)
 
@@ -87,17 +86,8 @@ func (r *Repository) ReadChat(readChat IReadChat) ([]models.Message, error) {
 	var messagesArray []models.Message
 	var messageMap = make(map[string]interface{})
 
-	if readChat.Receiver == nil && readChat.Sender == nil {
-		return nil, errors.New("No fields to read")
-	}
-
-	if readChat.Sender != nil {
-		messageMap["Sender"] = readChat.Sender
-	}
-
-	if readChat.Receiver != nil {
-		messageMap["Receiver"] = readChat.Receiver
-	}
+	messageMap["sender"] = readChat.Sender
+	messageMap["receiver"] = readChat.Receiver
 
 	result := r.getDB().Where(messageMap).Find(&messagesArray)
 
@@ -116,7 +106,7 @@ func (r *Repository) Update(updateData IUpdate) (*models.Message, error) {
 		return nil, verifyExistence.Error
 	}
 
-	message.Content = *updateData.Content
+	message.Content = updateData.Content
 	saveResult := r.getDB().Save(&message)
 
 	if saveResult.Error != nil {

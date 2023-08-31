@@ -58,7 +58,7 @@ func (suite *MessageRepoTestSuite) SetupMocks() {
 		user, createErr := suite.Repo.User.Create(user.ICreate{
 			Name:     fmt.Sprintf("Mahmoud Mahmed %v", index+1),
 			Email:    fmt.Sprintf("mahmoud123@gmail.com %v", index+1),
-			Password: "123",
+			Password: "123456789",
 			Status:   2,
 		})
 
@@ -71,8 +71,8 @@ func (suite *MessageRepoTestSuite) SetupMocks() {
 
 	for index := 0; index < 2; index++ {
 		message, createErr := suite.Repo.Message.Create(message.ICreate{
-			Sender:   suite.MockUsers[index%2].ID,
-			Receiver: suite.MockUsers[(index+1)%2].ID,
+			Sender:   suite.MockUsers[0].ID,
+			Receiver: suite.MockUsers[1].ID,
 			Content:  fmt.Sprintf("Do that %v", index),
 		})
 

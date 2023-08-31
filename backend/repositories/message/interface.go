@@ -22,28 +22,25 @@ type (
 	}
 
 	IReadBySender struct {
-		Sender *uint
+		Sender uint
 	}
 
 	IReadByReceiver struct {
-		Receiver *uint
+		Receiver uint
 	}
 
 	IReadChat struct {
-		Sender   *uint
-		Receiver *uint
+		Sender   uint
+		Receiver uint
 	}
 
 	IUpdate struct {
 		ID uint
-		Content *string
+		Content string
 	}
 	
 	IDelete struct {
 		ID uint
-		Sender *uint 
-		Receiver *uint 
-		Content *string 
 	}
 
 	Interface interface {
