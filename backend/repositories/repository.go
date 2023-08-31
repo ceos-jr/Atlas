@@ -26,6 +26,6 @@ func SetupRepository(connection *gorm.DB) *Repository {
 		Role:     role.NewRoleRepository(connection),
 		User:     user.NewUserRepository(connection),
 		Task:     task.NewTaskRepository(connection),
-	  Message:  message.NewMessageRepository(connection), 
-  }
+		Message:  message.NewMessageRepository(connection),
+	}
 }

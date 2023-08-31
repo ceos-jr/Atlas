@@ -11,8 +11,8 @@ import (
 
 type UserRepoTestSuite struct {
 	suite.Suite
-	Repo        *repository.Repository
-	MockUsers   []models.User
+	Repo      *repository.Repository
+	MockUsers []models.User
 }
 
 func (suite *UserRepoTestSuite) SetupSuite() {
@@ -53,6 +53,3 @@ func (suite *UserRepoTestSuite) TearDownSuite() {
 		}
 	}
 }
-
-
-
