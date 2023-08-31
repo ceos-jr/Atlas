@@ -94,7 +94,7 @@ func (r *Repository) ReadAll(all IReadAll) ([]models.User, error) {
 }
 
 func (r *Repository) ReadBy(readBy IReadBy) ([]models.User, error) {
-	var fieldMap map[string]interface{}
+	var fieldMap = make(map[string]interface{})
 	var userArray []models.User
 	var result *gorm.DB
 
@@ -106,7 +106,7 @@ func (r *Repository) ReadBy(readBy IReadBy) ([]models.User, error) {
 	}
 
 	if readBy.ID != nil {
-		fieldMap["ID"] = *readBy.ID
+		fieldMap["id"] = *readBy.ID
 	}
 
 	if readBy.Name != nil {
@@ -114,7 +114,7 @@ func (r *Repository) ReadBy(readBy IReadBy) ([]models.User, error) {
 			return nil, errors.New("Invalid name")
 		}
 
-		fieldMap["Name"] = *readBy.Name
+		fieldMap["name"] = *readBy.Name
 	}
 
 	if readBy.Email != nil {
@@ -122,7 +122,7 @@ func (r *Repository) ReadBy(readBy IReadBy) ([]models.User, error) {
 			return nil, errors.New("Invalid email")
 		}
 
-		fieldMap["Email"] = *readBy.Email
+		fieldMap["email"] = *readBy.Email
 	}
 
 	if readBy.Status != nil {
@@ -130,7 +130,7 @@ func (r *Repository) ReadBy(readBy IReadBy) ([]models.User, error) {
 			return nil, errors.New("Invalid status")
 		}
 
-		fieldMap["Status"] = *readBy.Status
+		fieldMap["status"] = *readBy.Status
 	}
 
 	if readBy.Limit != nil {
@@ -147,7 +147,7 @@ func (r *Repository) ReadBy(readBy IReadBy) ([]models.User, error) {
 }
 
 func (r *Repository) Update(updateData IUpdate) (*models.User, error) {
-	var fieldMap map[string]interface{}
+	var fieldMap = make(map[string]interface{})
 	var user = models.User{ID: updateData.ID}
 
 	if updateData.Name == nil &&
@@ -161,7 +161,7 @@ func (r *Repository) Update(updateData IUpdate) (*models.User, error) {
 			return nil, errors.New("Invalid name")
 		}
 
-		fieldMap["Name"] = *updateData.Name
+		fieldMap["name"] = *updateData.Name
 	}
 
 	if updateData.Email != nil {
@@ -169,7 +169,7 @@ func (r *Repository) Update(updateData IUpdate) (*models.User, error) {
 			return nil, errors.New("Invalid email")
 		}
 
-		fieldMap["Email"] = *updateData.Email
+		fieldMap["email"] = *updateData.Email
 	}
 
 	if updateData.Status != nil {
@@ -177,10 +177,10 @@ func (r *Repository) Update(updateData IUpdate) (*models.User, error) {
 			return nil, errors.New("Invalid status")
 		}
 
-		fieldMap["Status"] = *updateData.Status
+		fieldMap["status"] = *updateData.Status
 	}
 
-	fieldMap["UpdatedAt"] = time.Now()
+	fieldMap["updated_at"] = time.Now()
 
 	result := r.GetDB().Model(&user).Updates(fieldMap)
 
