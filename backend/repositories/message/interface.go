@@ -1,10 +1,8 @@
 package message
 
 import (
-	"orb-api/models"
-	"time"
-
 	"gorm.io/gorm"
+	"orb-api/models"
 )
 
 const (
@@ -13,14 +11,13 @@ const (
 
 type (
 	Repository struct {
-		getDB func() *gorm.DB
+		GetDB func() *gorm.DB
 	}
 
 	ICreate struct {
-		Sender    uint
-		Receiver  uint
-		Content   string
-		Timestamp time.Time
+		Sender   uint
+		Receiver uint
+		Content  string
 	}
 
 	IReadBySender struct {
