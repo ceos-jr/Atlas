@@ -3,6 +3,7 @@ package message
 import (
 	"errors"
 	"orb-api/models"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -29,9 +30,10 @@ func (r *Repository) ValidContent(content string) bool {
 // criar uma nova condição : "content too long" e "content cannot be empty"
 func (r *Repository) Create(createData ICreate) (*models.Message, error) {
 	var message = models.Message{
-		Sender:   createData.Sender,
-		Receiver: createData.Receiver,
-		Content:  createData.Content,
+		Sender:    createData.Sender,
+		Receiver:  createData.Receiver,
+		Content:   createData.Content,
+		Timestamp: time.Now(),
 	}
 
 	if createData.Sender == createData.Receiver {

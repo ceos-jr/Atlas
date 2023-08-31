@@ -3,6 +3,7 @@ package messagerepotest
 import (
 	"orb-api/repositories/message"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/suite"
 )
@@ -13,6 +14,7 @@ func (suite *MessageRepoTestSuite) TestCreateMessage() {
 		Sender:   suite.MockUsers[0].ID,
 		Receiver: suite.MockUsers[1].ID,
 		Content:  "This is a message",
+		Timestamp: time.Now(),
 	})
 
 	suite.Nil(createErr, "Create error must be nil")
@@ -60,7 +62,7 @@ func (suite *MessageRepoTestSuite) TestCreateMessagErr() {
 			Content:  content,
 		})
 
-		suite.NotNil(createErr, "Invalid message")
+		suite.NotNil(createErr.Error(), "Invalid message")
 	}
 
 	_, createErr := suite.Repo.Message.Create(message.ICreate{

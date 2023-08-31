@@ -2,6 +2,7 @@ package message
 
 import (
 	"orb-api/models"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -16,9 +17,10 @@ type (
 	}
 
 	ICreate struct {
-		Sender   uint
-		Receiver uint
-		Content  string
+		Sender    uint
+		Receiver  uint
+		Content   string
+		Timestamp time.Time
 	}
 
 	IReadBySender struct {
@@ -35,10 +37,10 @@ type (
 	}
 
 	IUpdate struct {
-		ID uint
+		ID      uint
 		Content string
 	}
-	
+
 	IDelete struct {
 		ID uint
 	}
