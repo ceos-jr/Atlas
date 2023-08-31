@@ -10,7 +10,7 @@ import (
 
 func NewMessageRepository(connection *gorm.DB) Repository {
 	return Repository{
-		getDB: func() *gorm.DB {
+		GetDB: func() *gorm.DB {
 			return connection
 		},
 	}
@@ -21,9 +21,21 @@ func (r *Repository) ValidContent(content string) bool {
 	if len(content) > contentMaxLen || len(content) <= 0 {
 		return false
 	}
-	if len(content) > 216 {
+	if len(content) > contentMaxLen {
 		return false
 	}
+	return true
+}
+
+func (r *Repository) ValidUser(id uint) bool {
+	user := models.User{ID: id}
+
+	verifyUser := r.GetDB().First(&user).Error
+
+	if verifyUser != nil {
+		return false
+	}
+
 	return true
 }
 
@@ -36,6 +48,14 @@ func (r *Repository) Create(createData ICreate) (*models.Message, error) {
 		Timestamp: time.Now(),
 	}
 
+	if !r.ValidUser(createData.Sender) {
+		return nil, errors.New("Invalid sender")
+	}
+
+	if !r.ValidUser(createData.Receiver) {
+		return nil, errors.New("Invalid receiver")
+	}
+
 	if createData.Sender == createData.Receiver {
 		return nil, errors.New("Can't send message to self")
 	}
@@ -44,7 +64,7 @@ func (r *Repository) Create(createData ICreate) (*models.Message, error) {
 		return nil, errors.New("Content empty or too long")
 	}
 
-	result := r.getDB().Create(&message)
+	result := r.GetDB().Create(&message)
 
 	if result.Error != nil {
 		return nil, result.Error
@@ -60,7 +80,7 @@ func (r *Repository) ReadBySender(readBySender IReadBySender) ([]models.Message,
 
 	messagesMap["sender"] = readBySender.Sender
 
-	result := r.getDB().Where(messagesMap).Find(&messagesArray)
+	result := r.GetDB().Where(messagesMap).Find(&messagesArray)
 
 	if result.Error != nil {
 		return nil, result.Error
@@ -69,13 +89,13 @@ func (r *Repository) ReadBySender(readBySender IReadBySender) ([]models.Message,
 	return messagesArray, nil
 }
 
-func (r *Repository) ReadByReceiver(readByReceiver IReadByReceiver) ([]models.Message, error) {
+func (r *Repository) ReadByReceiver(readBy IReadByReceiver) ([]models.Message, error) {
 	var messagesArray []models.Message
 	var messageMap = make(map[string]interface{})
 
-	messageMap["receiver"] = readByReceiver.Receiver
+	messageMap["receiver"] = readBy.Receiver
 
-	result := r.getDB().Where(messageMap).Find(&messagesArray)
+	result := r.GetDB().Where(messageMap).Find(&messagesArray)
 
 	if result.Error != nil {
 		return nil, result.Error
@@ -91,7 +111,7 @@ func (r *Repository) ReadChat(readChat IReadChat) ([]models.Message, error) {
 	messageMap["sender"] = readChat.Sender
 	messageMap["receiver"] = readChat.Receiver
 
-	result := r.getDB().Where(messageMap).Find(&messagesArray)
+	result := r.GetDB().Where(messageMap).Find(&messagesArray)
 
 	if result.Error != nil {
 		return nil, result.Error
@@ -102,14 +122,14 @@ func (r *Repository) ReadChat(readChat IReadChat) ([]models.Message, error) {
 
 func (r *Repository) Update(updateData IUpdate) (*models.Message, error) {
 	var message = models.Message{ID: updateData.ID}
-	verifyExistence := r.getDB().First(&message)
+	verifyExistence := r.GetDB().First(&message)
 
 	if verifyExistence.Error != nil {
 		return nil, verifyExistence.Error
 	}
 
 	message.Content = updateData.Content
-	saveResult := r.getDB().Save(&message)
+	saveResult := r.GetDB().Save(&message)
 
 	if saveResult.Error != nil {
 		return nil, saveResult.Error
@@ -121,13 +141,13 @@ func (r *Repository) Update(updateData IUpdate) (*models.Message, error) {
 func (r *Repository) Delete(deleteData IDelete) (*models.Message, error) {
 	var message = models.Message{ID: deleteData.ID}
 
-	verifyExistence := r.getDB().First(&message)
+	verifyExistence := r.GetDB().First(&message)
 
 	if verifyExistence.Error != nil {
 		return nil, verifyExistence.Error
 	}
 
-	result := r.getDB().Delete(&message)
+	result := r.GetDB().Delete(&message)
 
 	if result.Error != nil {
 		return nil, result.Error
