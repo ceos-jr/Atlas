@@ -3,7 +3,6 @@ package messagerepotest
 import (
 	"orb-api/repositories/message"
 	"testing"
-	"time"
 
 	"github.com/stretchr/testify/suite"
 )
@@ -14,7 +13,6 @@ func (suite *MessageRepoTestSuite) TestCreateMessage() {
 		Sender:   suite.MockUsers[0].ID,
 		Receiver: suite.MockUsers[1].ID,
 		Content:  "This is a message",
-		Timestamp: time.Now(),
 	})
 
 	suite.Nil(createErr, "Create error must be nil")
@@ -24,54 +22,44 @@ func (suite *MessageRepoTestSuite) TestCreateMessage() {
 
 }
 
-func (suite *MessageRepoTestSuite) TestCreateMessagErr() {
-	var sender uint
-	var receiver uint
-	var content string
-
-	var validSender uint = 1
-	var invalidSender uint = 999
-	var validReceiver uint = 2
-	var invalidReceiver uint = 999
-	validContent := "This is a valid message"
+func (suite *MessageRepoTestSuite) TestCreateMessageErr() {
+	invalidSender := 9999
+	invalidReceiver := 9999
 	invalidContent := ""
 
-	for index := 0; index < 8; index++ {
-
-		if index&0b001 != 0 {
-			sender = validSender
-		} else {
-			sender = invalidSender
-		}
-
-		if index&0b010 != 0 {
-			receiver = validReceiver
-		} else {
-			receiver = invalidReceiver
-		}
-
-		if index&0b100 != 0 {
-			content = validContent
-		} else {
-			content = invalidContent
-		}
-
-		_, createErr := suite.Repo.Message.Create(message.ICreate{
-			Sender:   sender,
-			Receiver: receiver,
-			Content:  content,
-		})
-
-		suite.NotNil(createErr.Error(), "Invalid message")
-	}
-
 	_, createErr := suite.Repo.Message.Create(message.ICreate{
-		Sender:   sender,
-		Receiver: sender,
-		Content:  "Olá, tudo bem?",
+		Sender:   uint(invalidSender),
+		Receiver: suite.MockUsers[1].ID,
+		Content:  "This is a message",
 	})
-	suite.Equal(createErr, "Can't send message to self")
 
+	suite.Equal("Invalid sender", createErr.Error(), "Expected to have an error")
+
+	_, createErr = suite.Repo.Message.Create(message.ICreate{
+		Sender:   suite.MockUsers[0].ID,
+		Receiver: uint(invalidReceiver),
+		Content:  "This is a message",
+	})
+
+	suite.Equal("Invalid receiver", createErr.Error(), "Expected to have an error")
+
+	_, createErr = suite.Repo.Message.Create(message.ICreate{
+		Sender:   suite.MockUsers[0].ID,
+		Receiver: suite.MockUsers[1].ID,
+		Content:  invalidContent,
+	})
+
+	suite.Equal("Content empty or too long", createErr.Error(), "Expected to have an error")
+
+	_, createErr = suite.Repo.Message.Create(message.ICreate{
+		Sender:   suite.MockUsers[0].ID,
+		Receiver: suite.MockUsers[0].ID,
+		Content:  "This is a message",
+	})
+
+	suite.Equal("Can't send message to self", createErr.Error(),
+		"Expected to have an error",
+	)
 }
 
 func (suite *MessageRepoTestSuite) TestReadMessageBySender() {
@@ -86,11 +74,11 @@ func (suite *MessageRepoTestSuite) TestReadMessageBySender() {
 
 func (suite *MessageRepoTestSuite) TestReadMessageByReceiver() {
 	messages, readErr := suite.Repo.Message.ReadByReceiver(message.IReadByReceiver{
-		Receiver: suite.MockUsers[0].ID,
+		Receiver: suite.MockUsers[1].ID,
 	})
 
 	suite.Nil(readErr, "Read Error must be nil")
-	suite.Equal(suite.MockUsers[0].ID, messages[0].Sender, "IDs must match")
+	suite.Equal(suite.MockUsers[1].ID, messages[0].Receiver, "IDs must match")
 }
 
 //func (suite *MessageRepoTestSuite) TestReadChat() {
