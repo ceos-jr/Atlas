@@ -31,7 +31,7 @@ var TaskStatus = map[uint]string{
 }
 
 type User struct {
-	ID        uint
+	ID        uint      `json:"id" gorm:"primaryKey"`
 	Name      string    `json:"name" gorm:"size:128;not null;"`
 	Email     string    `json:"email" gorm:"size:128;not null;"`
 	Status    uint      `json:"status"`
