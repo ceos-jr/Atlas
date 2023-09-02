@@ -15,7 +15,7 @@ func NewRepository(db *gorm.DB) Repository {
 }
 
 func (r *Repository) Create(create ICreate) (*models.Relation, error) {
-	var createError error = nil
+	var createError error
 	var relation = models.Relation{}
 
 	strongSide := models.StrongSide.GetCode(create.StrongSide)
@@ -42,7 +42,7 @@ func (r *Repository) Create(create ICreate) (*models.Relation, error) {
 }
 
 func (r *Repository) ReadBy(readBy IReadBy) ([]models.Relation, error) {
-	var readError error = nil
+	var readError error
 	var result *gorm.DB
 	var relations []models.Relation
 	var refRelation = models.Relation{}
@@ -99,7 +99,7 @@ func (r *Repository) ReadBy(readBy IReadBy) ([]models.Relation, error) {
 }
 
 func (r *Repository) ReadAll(readAll IReadAll) ([]models.Relation, error) {
-	var readError error = nil
+	var readError error
 	var relations []models.Relation
 
 	readError = r.matchReadLimit(readAll.Limit, &relations)
@@ -112,7 +112,7 @@ func (r *Repository) ReadAll(readAll IReadAll) ([]models.Relation, error) {
 }
 
 func (r *Repository) Update(update IUpdate) (*models.Relation, error) {
-	var updateError error = nil
+	var updateError error
 	var relation = models.Relation{ID: update.ID}
 
 	if update.StrongSide == nil &&
