@@ -1,16 +1,16 @@
-package userservice 
+package userservice
 
 import (
-  "orb-api/repositories/user"
-  "orb-api/repositories"
+	"orb-api/repositories"
+	"orb-api/repositories/user"
 )
 
 type UserService struct {
-  userRepo user.Repository; 
+	userRepo user.Repository
 }
 
 func SetupUserService(repo repository.Repository) *UserService {
-  return &UserService{
-    userRepo: repo.User,
-  }
-} 
+	return &UserService{
+		userRepo: repo.User,
+	}
+}
