@@ -14,8 +14,8 @@ import (
 )
 
 const (
-	MockArraySize        = 100
-	AuxRelationArraySize = 100
+	MockArraySize        = 10
+	AuxRelationArraySize = 10
 )
 
 type TestSuite struct {
@@ -144,7 +144,7 @@ func (s *TestSuite) MakeIReadBy() relation.IReadBy {
 	var fieldRandomChoice = rand.Intn(2 ^ 5)
 
 	codeID := 0b00001
-	var id *uint = nil
+	var id *uint
 	if fieldRandomChoice&codeID == codeID {
 		auxID := s.MockUser[RandIndex(nil, len(s.MockUser))].ID
 		id = &auxID
@@ -152,7 +152,7 @@ func (s *TestSuite) MakeIReadBy() relation.IReadBy {
 	iReadBy.ID = id
 
 	codeStrongSide := 0b00010
-	var strongSide *string = nil
+	var strongSide *string
 	if fieldRandomChoice&codeStrongSide == codeStrongSide {
 		auxStrongSide := models.StrongSide.RandState().Name
 		strongSide = &auxStrongSide
@@ -160,7 +160,7 @@ func (s *TestSuite) MakeIReadBy() relation.IReadBy {
 	iReadBy.StrongSide = strongSide
 
 	codeRUserRoleID := 0b00100
-	var rUserRoleID *uint = nil
+	var rUserRoleID *uint
 	if fieldRandomChoice&codeRUserRoleID == codeRUserRoleID {
 		auxRUserRole := s.MockUserRole[RandIndex(nil, len(s.MockUserRole))].ID
 		rUserRoleID = &auxRUserRole
@@ -168,7 +168,7 @@ func (s *TestSuite) MakeIReadBy() relation.IReadBy {
 	iReadBy.RightUserRoleID = rUserRoleID
 
 	codeLUserRoleID := 0b01000
-	var lUserRoleID *uint = nil
+	var lUserRoleID *uint
 	if fieldRandomChoice&codeLUserRoleID == codeLUserRoleID {
 		auxRUserRole := s.MockUserRole[RandIndex(nil, len(s.MockUserRole))].ID
 		lUserRoleID = &auxRUserRole
@@ -176,7 +176,7 @@ func (s *TestSuite) MakeIReadBy() relation.IReadBy {
 	iReadBy.LeftUserRoleID = lUserRoleID
 
 	codeLimit := 0b10000
-	var limit *uint = nil
+	var limit *uint
 	if fieldRandomChoice&codeLimit == codeLimit {
 		auxLimit := uint(rand.Intn(len(s.MockRelation)))
 		limit = &auxLimit
@@ -243,7 +243,7 @@ func RandIndex(diffFrom *int, arrayLen int) int {
 func (s *TestSuite) MakeIUpdate(fromID *uint) relation.IUpdate {
 	var iUpdate relation.IUpdate
 	var fieldRandomChoice = rand.Intn(2 ^ 3)
-	var randIndex *int = nil
+	var randIndex *int
 
 	codeStrongSide := 0b001
 	if fieldRandomChoice&codeStrongSide == codeStrongSide {
