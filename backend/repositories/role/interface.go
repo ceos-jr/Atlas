@@ -37,10 +37,10 @@ type (
 	}
 
 	Interface interface {
-		Create(ICreate) (models.Role, error)
+		Create(ICreate) (*models.Role, error)
 		ReadAll() ([]models.Role, error)
 		ReadBy(IReadBy) ([]models.Role, error)
-		Update(IUpdate) (models.Role, error)
-		Delete(IDelete) (models.Role, error)
+		Update(IUpdate) (*models.Role, error)
+		Delete(IDelete) (*models.Role, error)
 	}
 )
