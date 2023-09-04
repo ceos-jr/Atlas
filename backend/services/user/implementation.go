@@ -74,8 +74,8 @@ func (service *UserService) CreateNewUser(credentials ICreateUser) (*models.User
 	return newUser, nil
 }
 
-func (service *UserService) UpdateEmail(id uint, Email string) (*string, error) {
-	// Checar se o email não já está sendo utilizado
+func (service *UserService) UpdateEmail(id uint, Email string) (*models.User, error) {
+	// Check if the email is not being used by anyone else and different by current
 	userArray, readErr := service.UserRepo.ReadBy(user.IReadBy{
 		Email: &Email,
 	})
@@ -88,22 +88,8 @@ func (service *UserService) UpdateEmail(id uint, Email string) (*string, error) 
 		return nil, errors.New("This Email same as current")
 	}
 
-	// Checar se o email é diferente do atual
-	userArray, readErr = service.UserRepo.ReadBy(user.IReadBy{
-		ID:    &id,
-		Email: &Email,
-	})
-
-	if readErr != nil {
-		return nil, readErr
-	}
-
-	if len(userArray) == 1 {
-		return nil, errors.New("This Email same as current")
-	}
-
-	// Atualizando valor
-	_, updateErr := service.UserRepo.Update(user.IUpdate{
+	// Update e-mail
+	userUpdate, updateErr := service.UserRepo.Update(user.IUpdate{
 		ID:    id,
 		Email: &Email,
 	})
@@ -112,18 +98,16 @@ func (service *UserService) UpdateEmail(id uint, Email string) (*string, error) 
 		return nil, updateErr
 	}
 
-	opa := "deu bom"
-
-	return &opa, nil
+	return userUpdate, nil
 }
 
-func (service *UserService) UpdateStatus(id uint, Status uint) (*string, error) {
-	// Checar se o status é valido
+func (service *UserService) UpdateStatus(id uint, Status uint) (*models.User, error) {
+	// Check if the status is valid
 	if !user.ValidUserStatus(Status) {
 		return nil, errors.New("Status Invalido")
 	}
 
-	// Checar se o status é diferente do atual
+	// Check if the status is different by current
 	userStatus, readErr := service.UserRepo.ReadBy(user.IReadBy{
 		ID:     &id,
 		Status: &Status,
@@ -137,8 +121,8 @@ func (service *UserService) UpdateStatus(id uint, Status uint) (*string, error) 
 		return nil, errors.New("This status same as current")
 	}
 
-	// Atualizando valor
-	_, updateErr := service.UserRepo.Update(user.IUpdate{
+	// Update status
+	userUpdate, updateErr := service.UserRepo.Update(user.IUpdate{
 		ID:     id,
 		Status: &Status,
 	})
@@ -147,8 +131,6 @@ func (service *UserService) UpdateStatus(id uint, Status uint) (*string, error) 
 		return nil, updateErr
 	}
 
-	opa := "deu bom"
-
-	return &opa, nil
+	return userUpdate, nil
 
 }
