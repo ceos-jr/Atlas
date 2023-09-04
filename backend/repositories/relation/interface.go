@@ -6,16 +6,11 @@ import (
 )
 
 const (
-	_invalidStrongSide = "invalid StrongSide value"
-
-	CErrorInvalidStrongSide = _invalidStrongSide
-
+	CErrorInvalidStrongSide = "invalid StrongSide value"
 	RErrorEmptyReadBy       = "no fields to search for"
-	RErrorInvalidStrongSide = _invalidStrongSide
-
-	UErrorEmptyUpdate = "no fields to update"
-
-	UErrorInvalidStrongSide = _invalidStrongSide
+	RErrorInvalidStrongSide = "invalid StrongSide value"
+	UErrorEmptyUpdate       = "no fields to update"
+	UErrorInvalidStrongSide = "invalid StrongSide value"
 )
 
 type (
