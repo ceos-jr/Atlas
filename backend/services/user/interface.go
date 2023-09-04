@@ -14,17 +14,17 @@ const (
 )
 
 type (
-    UserService struct {
-	    UserRepo user.Repository
-    }        
-   
-    ICreateUser struct {
-        Name     string 
-        Email    string     
-        Password string
-    }
-        
-    Interface interface {
-        CreateNewUser(ICreateUser) (*models.User, error)  
-    }
+	UserService struct {
+		UserRepo user.Repository
+	}
+
+	ICreateUser struct {
+		Name     string
+		Email    string
+		Password string
+	}
+
+	Interface interface {
+		CreateNewUser(ICreateUser) (*models.User, error)
+	}
 )
