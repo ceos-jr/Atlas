@@ -32,7 +32,7 @@ func (suite *UserRepoTestSuite) TestReadAllUsers() {
 }
 
 func (suite *UserRepoTestSuite) TestReadUserByID() {
-	invalidId := uint(777)
+	invalidID := uint(777)
 
 	users, readErr := suite.Repo.User.ReadBy(user.IReadBy{
 		ID: &suite.MockUsers[0].ID,
@@ -43,7 +43,7 @@ func (suite *UserRepoTestSuite) TestReadUserByID() {
 	suite.Equal(suite.MockUsers[0].ID, users[0].ID, "Expected to have the same ID")
 
 	users, readErr = suite.Repo.User.ReadBy(user.IReadBy{
-		ID: &invalidId,
+		ID: &invalidID,
 	})
 
 	suite.Nil(readErr, "Read error must be nil")
@@ -123,7 +123,7 @@ func (suite *UserRepoTestSuite) TestUpdateUserErr() {
 	invalidName := GenerateString(129)
 	invalidEmail := GenerateString(129)
 	invalidStatus := uint(77)
-    invalidPassword := "short"
+	invalidPassword := "short"
 
 	// Test 01: Try to update with no fields
 	_, updateError := suite.Repo.User.Update(user.IUpdate{
@@ -164,11 +164,11 @@ func (suite *UserRepoTestSuite) TestUpdateUserErr() {
 		"Invalid email should return an error",
 	)
 
-    // Test 05: Try to update with invalid password 
-    _, updateError = suite.Repo.User.Update(user.IUpdate{
-		ID:    suite.MockUsers[0].ID,
-	    Password: &invalidPassword,
-    })
+	// Test 05: Try to update with invalid password
+	_, updateError = suite.Repo.User.Update(user.IUpdate{
+		ID:       suite.MockUsers[0].ID,
+		Password: &invalidPassword,
+	})
 
 	suite.Equal("Invalid password", updateError.Error(),
 		"Invalid password should return an error",

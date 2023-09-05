@@ -164,8 +164,8 @@ func (r *Repository) Update(updateData IUpdate) (*models.User, error) {
 
 	if updateData.Name == nil &&
 		updateData.Email == nil &&
-		updateData.Status == nil && 
-        updateData.Password == nil {
+		updateData.Status == nil &&
+		updateData.Password == nil {
 		return nil, errors.New("No fields to update")
 	}
 
@@ -192,14 +192,14 @@ func (r *Repository) Update(updateData IUpdate) (*models.User, error) {
 
 		fieldMap["status"] = *updateData.Status
 	}
-    
-    if updateData.Password != nil {
-        if !ValidUserPassword(*updateData.Password) {
-			return nil, errors.New("Invalid password")
-		} 
 
-        fieldMap["password"] = *updateData.Password
-    }
+	if updateData.Password != nil {
+		if !ValidUserPassword(*updateData.Password) {
+			return nil, errors.New("Invalid password")
+		}
+
+		fieldMap["password"] = *updateData.Password
+	}
 
 	fieldMap["updated_at"] = time.Now()
 
