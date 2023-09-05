@@ -42,6 +42,18 @@ func ValidUserStatus(status uint) bool {
 	return valid
 }
 
+func (r *Repository) ValidUser(id uint) bool {
+	user := models.User{ID: id}
+
+	verifyUser := r.GetDB().First(&user).Error
+
+	if verifyUser != nil {
+		return false
+	}
+
+	return true
+}
+
 func (r *Repository) Create(createData ICreate) (*models.User, error) {
 	var user = models.User{
 		Name:      createData.Name,
