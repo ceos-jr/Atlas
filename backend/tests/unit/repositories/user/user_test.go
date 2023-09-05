@@ -1,7 +1,6 @@
 package userrepotest
 
 import (
-	"fmt"
 	"github.com/stretchr/testify/suite"
 	"orb-api/repositories/user"
 	"testing"
@@ -124,6 +123,7 @@ func (suite *UserRepoTestSuite) TestUpdateUserErr() {
 	invalidName := GenerateString(129)
 	invalidEmail := GenerateString(129)
 	invalidStatus := uint(77)
+    invalidPassword := "short"
 
 	// Test 01: Try to update with no fields
 	_, updateError := suite.Repo.User.Update(user.IUpdate{
@@ -162,6 +162,16 @@ func (suite *UserRepoTestSuite) TestUpdateUserErr() {
 
 	suite.Equal("Invalid email", updateError.Error(),
 		"Invalid email should return an error",
+	)
+
+    // Test 05: Try to update with invalid password 
+    _, updateError = suite.Repo.User.Update(user.IUpdate{
+		ID:    suite.MockUsers[0].ID,
+	    Password: &invalidPassword,
+    })
+
+	suite.Equal("Invalid password", updateError.Error(),
+		"Invalid password should return an error",
 	)
 }
 

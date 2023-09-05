@@ -38,10 +38,11 @@ type (
 	}
 
 	IUpdate struct {
-		ID     uint
-		Name   *string
-		Email  *string
-		Status *uint
+		ID          uint
+		Name        *string
+		Email       *string
+		Password    *string
+        Status      *uint
 	}
 
 	IDelete struct {
