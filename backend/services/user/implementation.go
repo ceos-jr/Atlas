@@ -74,24 +74,29 @@ func (service *UserService) CreateNewUser(credentials ICreateUser) (*models.User
 	return newUser, nil
 }
 
-func (service *UserService) UpdateEmail(id uint, Email string) (*models.User, error) {
+func (service *UserService) UpdateEmail(id uint, email string) (*models.User, error) {
+	// Check if the id belongs a valid user
+	if !service.UserRepo.ValidUser(id) {
+		return nil, errors.New("Invalid user id")
+	}
+
 	// Check if the email is not being used by anyone else and different by current
 	userArray, readErr := service.UserRepo.ReadBy(user.IReadBy{
-		Email: &Email,
+		Email: &email,
 	})
 
 	if readErr != nil {
 		return nil, readErr
 	}
 
-	if len(userArray) == 1 {
-		return nil, errors.New("This Email same as current")
+	if len(userArray) > 0 {
+		return nil, errors.New("This email is already being used")
 	}
 
 	// Update e-mail
 	userUpdate, updateErr := service.UserRepo.Update(user.IUpdate{
 		ID:    id,
-		Email: &Email,
+		Email: &email,
 	})
 
 	if updateErr != nil {
@@ -101,30 +106,21 @@ func (service *UserService) UpdateEmail(id uint, Email string) (*models.User, er
 	return userUpdate, nil
 }
 
-func (service *UserService) UpdateStatus(id uint, Status uint) (*models.User, error) {
+func (service *UserService) UpdateStatus(id uint, status uint) (*models.User, error) {
 	// Check if the status is valid
-	if !user.ValidUserStatus(Status) {
-		return nil, errors.New("Status Invalido")
+	if !user.ValidUserStatus(status) {
+		return nil, errors.New("Invalid status")
 	}
 
-	// Check if the status is different by current
-	userStatus, readErr := service.UserRepo.ReadBy(user.IReadBy{
-		ID:     &id,
-		Status: &Status,
-	})
-
-	if readErr != nil {
-		return nil, readErr
-	}
-
-	if len(userStatus) == 1 {
-		return nil, errors.New("This status same as current")
+	// Check if the id belongs a valid user
+	if !service.UserRepo.ValidUser(id) {
+		return nil, errors.New("Invalid user id")
 	}
 
 	// Update status
 	userUpdate, updateErr := service.UserRepo.Update(user.IUpdate{
 		ID:     id,
-		Status: &Status,
+		Status: &status,
 	})
 
 	if updateErr != nil {
@@ -132,5 +128,4 @@ func (service *UserService) UpdateStatus(id uint, Status uint) (*models.User, er
 	}
 
 	return userUpdate, nil
-
 }
