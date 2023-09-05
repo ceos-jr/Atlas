@@ -1,10 +1,10 @@
 package userrepotest
 
 import (
+	"fmt"
+	"github.com/stretchr/testify/suite"
 	"orb-api/repositories/user"
 	"testing"
-
-	"github.com/stretchr/testify/suite"
 )
 
 func (suite *UserRepoTestSuite) TestCreateUser() {
@@ -33,6 +33,8 @@ func (suite *UserRepoTestSuite) TestReadAllUsers() {
 }
 
 func (suite *UserRepoTestSuite) TestReadUserByID() {
+	invalidId := uint(777)
+
 	users, readErr := suite.Repo.User.ReadBy(user.IReadBy{
 		ID: &suite.MockUsers[0].ID,
 	})
@@ -40,6 +42,13 @@ func (suite *UserRepoTestSuite) TestReadUserByID() {
 	suite.Nil(readErr, "Read error must be nil")
 	suite.Equal(1, len(users), "Expected to have one user")
 	suite.Equal(suite.MockUsers[0].ID, users[0].ID, "Expected to have the same ID")
+
+	users, readErr = suite.Repo.User.ReadBy(user.IReadBy{
+		ID: &invalidId,
+	})
+
+	suite.Nil(readErr, "Read error must be nil")
+	suite.Equal(0, len(users), "Expected to have one user")
 }
 
 func (suite *UserRepoTestSuite) TestReadUserByName() {
@@ -77,7 +86,6 @@ func (suite *UserRepoTestSuite) TestReadByErr() {
 	_, readErr := suite.Repo.User.ReadBy(user.IReadBy{})
 
 	suite.Equal("No fields to read", readErr.Error(), "Expected to have fields error")
-
 }
 
 func (suite *UserRepoTestSuite) TestUpdateUser() {
@@ -117,7 +125,7 @@ func (suite *UserRepoTestSuite) TestUpdateUserErr() {
 	invalidEmail := GenerateString(129)
 	invalidStatus := uint(77)
 
-	// Teste 1: Tentativa de atualizar sem campos
+	// Test 01: Try to update with no fields
 	_, updateError := suite.Repo.User.Update(user.IUpdate{
 		ID: suite.MockUsers[0].ID,
 	})
@@ -126,7 +134,7 @@ func (suite *UserRepoTestSuite) TestUpdateUserErr() {
 		"Empty fields it should return an error",
 	)
 
-	// Teste 2: Tentativa de atualizar com status inválido
+	// Test 02: Try to update with invalid status
 	_, updateError = suite.Repo.User.Update(user.IUpdate{
 		ID:     suite.MockUsers[0].ID,
 		Status: &invalidStatus,
@@ -136,7 +144,7 @@ func (suite *UserRepoTestSuite) TestUpdateUserErr() {
 		"Invalid user status it should return an error",
 	)
 
-	// Teste 3: Tentativa de atualizar com nome inválido
+	// Test 03: Try to update with invalid name
 	_, updateError = suite.Repo.User.Update(user.IUpdate{
 		ID:   suite.MockUsers[0].ID,
 		Name: &invalidName,
@@ -146,7 +154,7 @@ func (suite *UserRepoTestSuite) TestUpdateUserErr() {
 		"Invalid user name it should return an error",
 	)
 
-	// Teste 4: Tentativa de atualizar com email inválido
+	// Test 04: Try to update with invalid email
 	_, updateError = suite.Repo.User.Update(user.IUpdate{
 		ID:    suite.MockUsers[0].ID,
 		Email: &invalidEmail,
@@ -155,7 +163,6 @@ func (suite *UserRepoTestSuite) TestUpdateUserErr() {
 	suite.Equal("Invalid email", updateError.Error(),
 		"Invalid email should return an error",
 	)
-
 }
 
 func (suite *UserRepoTestSuite) TestDeleteUser() {
