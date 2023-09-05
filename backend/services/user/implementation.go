@@ -74,6 +74,73 @@ func (service *UserService) CreateNewUser(credentials ICreateUser) (*models.User
 	return newUser, nil
 }
 
+func (service *UserService) UpdateName(id uint, name string) (*models.User, error) {
+	// Check if name has a valid length
+	if !user.ValidUserName(name) {
+		return nil, errors.New("Invalid username size")
+	}
+
+	// Check if the id belongs a valid user
+	if !service.UserRepo.ValidUser(id) {
+		return nil, errors.New("Invalid user id")
+	}
+
+	// Check if the email is not being used by anyone else and different by current
+	userArray, readErr := service.UserRepo.ReadBy(user.IReadBy{
+		Name: &name,
+	})
+
+	if readErr != nil {
+		return nil, readErr
+	}
+
+	if len(userArray) > 0 {
+		return nil, errors.New("This name is already being used")
+	}
+
+	// Update username
+	updatedUser, updateErr := service.UserRepo.Update(user.IUpdate{
+		ID:   id,
+		Name: &name,
+	})
+
+	if updateErr != nil {
+		return nil, updateErr
+	}
+
+	return updatedUser, nil
+}
+
+func (service *UserService) UpdatePassword(id uint, password string) (*models.User, error) {
+	// Check if it is password has a valid length
+	if !user.ValidUserPassword(password) {
+		return nil, errors.New("Invalid password size")
+	}
+
+	// Check if the id belongs a valid user
+	if !service.UserRepo.ValidUser(id) {
+		return nil, errors.New("Invalid user id")
+	}
+
+	// hash password
+	hashedPassword, hashError := HashPassword(password)
+
+	if hashError != nil {
+		return nil, hashError
+	}
+
+	updatedUser, updateError := service.UserRepo.Update(user.IUpdate{
+		ID:       id,
+		Password: &hashedPassword,
+	})
+
+	if updateError != nil {
+		return nil, updateError
+	}
+
+	return updatedUser, nil
+}
+
 func (service *UserService) UpdateEmail(id uint, email string) (*models.User, error) {
 	// Check if the id belongs a valid user
 	if !service.UserRepo.ValidUser(id) {

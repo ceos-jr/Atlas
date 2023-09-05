@@ -33,7 +33,9 @@ type (
 
 	Interface interface {
 		CreateNewUser(ICreateUser) (*models.User, error)
+		UpdateName(id uint, name string) (*models.User, error)
 		UpdateEmail(id uint, email string) (*models.User, error)
+		UpdatePassword(id uint, password string) (*models.User, error)
 		UpdateStatus(id uint, status uint) (*models.User, error)
 	}
 )
