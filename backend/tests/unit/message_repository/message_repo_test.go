@@ -80,15 +80,7 @@ func (suite *MessageRepoTestSuite) TestReadMessageByReceiver() {
     suite.Nil(readErr, "Read Error must be nil")
     suite.Equal(suite.MockUsers[1].ID, messages[0].Receiver, "IDs must match")
 }
-
-//func (suite *MessageRepoTestSuite) TestReadChat() {
-//  messages, readErr := suite.R
-//}
-
-func TestMessageRepository(test *testing.T) {
-    suite.Run(test, new(MessageRepoTestSuite))
-}
-
+    
 func (suite *MessageRepoTestSuite) TestUpdateMessage() {
     content := "edited message"
 
@@ -99,22 +91,30 @@ func (suite *MessageRepoTestSuite) TestUpdateMessage() {
 
     suite.Nil(updateError, "Update error must be nil")
     suite.Equal(content, updatedMessage.Content, "Content do not match",)
-    suite.Equal(suite.MockUsers[1].ID, updatedMessage.Sender, "Sender do not match",)
-    suite.Equal(suite.MockUsers[0].ID, updatedMessage.Receiver, "Receiver do not match",)
-
+    suite.Equal(suite.MockUsers[0].ID, updatedMessage.Sender, "Sender do not match",)
+    suite.Equal(suite.MockUsers[1].ID, updatedMessage.Receiver, "Receiver do not match",)
 }
 
-// unchanged content = suite.MockMessages[1].Content,
 func (suite *MessageRepoTestSuite) TestUpdateMessageErr() {
+    invalidID := uint(9999)
     invalidContent := ""
 
     _, updateError := suite.Repo.Message.Update(message.IUpdate{
-        ID:      suite.MockUsers[0].ID,
+        ID:      invalidID,
+        Content: "This is a simple test", 
+    })
+
+    suite.Equal("record not found", updateError.Error(),
+        "Invalid ID it should return an error",
+    )
+
+    _, updateError = suite.Repo.Message.Update(message.IUpdate{
+        ID:      suite.MockMessages[0].ID,
         Content: invalidContent, 
     })
 
-    suite.Equal("No fields to update", updateError.Error(),
-        "Empty fields should return an error",
+    suite.Equal("Content empty or too long", updateError.Error(),
+        "Invalid content it should return an error",
     )
 }
 
@@ -130,6 +130,9 @@ func (suite *MessageRepoTestSuite) TestDeleteMessage() {
     })
 
     suite.Nil(deleteErr, "Delete error must be nil")
-    suite.Equal(newMessage, deletedMessage.ID, "Expected to have the same ID")
+    suite.Equal(newMessage.ID, deletedMessage.ID, "Expected to have the same ID")
+}
 
+func TestMessageRepository(test *testing.T) {
+    suite.Run(test, new(MessageRepoTestSuite))
 }

@@ -39,7 +39,6 @@ func (r *Repository) ValidUser(id uint) bool {
 	return true
 }
 
-// criar uma nova condição : "content too long" e "content cannot be empty"
 func (r *Repository) Create(createData ICreate) (*models.Message, error) {
 	var message = models.Message{
 		Sender:    createData.Sender,
@@ -126,6 +125,10 @@ func (r *Repository) Update(updateData IUpdate) (*models.Message, error) {
 
 	if verifyExistence.Error != nil {
 		return nil, verifyExistence.Error
+	}
+    
+    if !r.ValidContent(updateData.Content) {
+		return nil, errors.New("Content empty or too long")
 	}
 
 	message.Content = updateData.Content
