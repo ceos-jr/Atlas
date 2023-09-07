@@ -14,10 +14,10 @@ func NewUserRoleRepository(connection *gorm.DB) Repository {
 	}
 }
 
-func (r *Repository) Create(createData ICreate) error {
+func (r *Repository) Create(createData ICreate) (*models.UserRole, error) {
 	var user = models.User{ID: createData.UserID}
 	var role = models.Role{ID: createData.RoleID}
-	var newUserRole = models.UserRole{
+	var userRole = models.UserRole{
 		UserID: createData.UserID,
 		RoleID: createData.RoleID,
 	}
@@ -25,22 +25,22 @@ func (r *Repository) Create(createData ICreate) error {
 	verifyUserExistence := r.GetDB().First(&user)
 
 	if verifyUserExistence.Error != nil {
-		return verifyUserExistence.Error
+		return nil, verifyUserExistence.Error
 	}
 
 	verifyRoleExistence := r.GetDB().First(&role)
 
 	if verifyRoleExistence.Error != nil {
-		return verifyRoleExistence.Error
+		return nil, verifyRoleExistence.Error
 	}
 
-	result := r.GetDB().Create(&newUserRole)
+	result := r.GetDB().Create(&userRole)
 
 	if result.Error != nil {
-		return result.Error
+		return nil, result.Error
 	}
 
-	return nil
+	return &userRole, nil
 }
 
 func (r *Repository) ReadAll() ([]models.UserRole, error) {
@@ -80,14 +80,14 @@ func (r *Repository) ReadBy(readBy IReadBy) ([]models.UserRole, error) {
 	return userRoleArray, nil
 }
 
-func (r *Repository) Update(updateData IUpdate) error {
+func (r *Repository) Update(updateData IUpdate) (*models.UserRole, error) {
 	var user = models.User{ID: *updateData.UserID}
 	var role = models.Role{ID: *updateData.RoleID}
 	var userRole = models.UserRole{ID: updateData.UserRoleID}
 	var updateMap map[string]interface{}
 
 	if updateData.UserID == nil && updateData.RoleID == nil {
-		return errors.New("No fields to update")
+		return nil, errors.New("No fields to update")
 	}
 
 	if updateData.UserID != nil {
@@ -101,44 +101,44 @@ func (r *Repository) Update(updateData IUpdate) error {
 	verifyExistence := r.GetDB().First(&userRole)
 
 	if verifyExistence.Error != nil {
-		return verifyExistence.Error
+		return nil, verifyExistence.Error
 	}
 
 	verifyUserExistence := r.GetDB().First(&user)
 
 	if verifyUserExistence.Error != nil {
-		return verifyUserExistence.Error
+		return nil, verifyUserExistence.Error
 	}
 
 	verifyRoleExistence := r.GetDB().First(&role)
 
 	if verifyRoleExistence.Error != nil {
-		return verifyRoleExistence.Error
+		return nil, verifyRoleExistence.Error
 	}
 
 	result := r.GetDB().Model(&userRole).Updates(updateMap)
 
 	if result.Error != nil {
-		return result.Error
+		return nil, result.Error
 	}
 
-	return nil
+	return &userRole, nil
 }
 
-func (r *Repository) Delete(deleteData IDelete) error {
+func (r *Repository) Delete(deleteData IDelete) (*models.UserRole, error) {
 	var userRole = models.UserRole{ID: deleteData.UserRoleID}
 
 	verifyExistence := r.GetDB().First(&userRole)
 
 	if verifyExistence.Error != nil {
-		return verifyExistence.Error
+		return nil, verifyExistence.Error
 	}
 
 	result := r.GetDB().Delete(&userRole)
 
 	if result.Error != nil {
-		return result.Error
+		return nil, result.Error
 	}
 
-	return nil
+	return &userRole, nil
 }
