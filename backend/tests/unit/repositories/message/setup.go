@@ -19,7 +19,7 @@ type MessageRepoTestSuite struct {
 }
 
 func (suite *MessageRepoTestSuite) SetupSuite() {
-	repo, setupError := config.SetupDB("../.env")
+	repo, setupError := config.SetupDB("../../.env")
 
 	if setupError != nil {
 		panic(setupError)
