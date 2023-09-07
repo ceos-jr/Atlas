@@ -1,10 +1,9 @@
 package repository
 
 import (
-	
 	"gorm.io/gorm"
+	"orb-api/repositories/message"
 	"orb-api/repositories/relation"
-    "orb-api/repositories/message"
 	"orb-api/repositories/role"
 	"orb-api/repositories/task"
 	"orb-api/repositories/user"

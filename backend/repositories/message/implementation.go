@@ -126,8 +126,8 @@ func (r *Repository) Update(updateData IUpdate) (*models.Message, error) {
 	if verifyExistence.Error != nil {
 		return nil, verifyExistence.Error
 	}
-    
-    if !r.ValidContent(updateData.Content) {
+
+	if !r.ValidContent(updateData.Content) {
 		return nil, errors.New("Content empty or too long")
 	}
 
