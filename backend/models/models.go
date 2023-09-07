@@ -55,9 +55,9 @@ type Relation struct {
 	ID          uint     `json:"id" gorm:"primaryKey"`
 	StrongSide  uint     `json:"strong-side" gorm:"not null"`
 	LUserRoleID uint     `json:"l-user-role-id"`
-	LUserRole   UserRole `json:"l-user-role" gorm:"foreignKey:LUserRoleID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	LUserRole   UserRole `json:"l-user-role" gorm:"foreignKey:LUserRoleID"`
 	RUserRoleID uint     `json:"r-user-role-id"`
-	RUserRole   UserRole `json:"r-user-role" gorm:"foreignKey:RUserRoleID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	RUserRole   UserRole `json:"r-user-role" gorm:"foreignKey:RUserRoleID"`
 }
 
 type Task struct {
