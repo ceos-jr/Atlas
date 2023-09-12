@@ -1,21 +1,21 @@
----
-name: Nova Feature
-about: Uma sugestão para o projeto
-title: "[feat] "
-labels: "enhancement "
-assignees: ""
----
+### Titulo
+Descrição curta
 
-# **🚀 Nova Feature**
+## Mudanças
+- **New File**: Criar ExemploRepo
+  - path: `**/Repo/ExemploRepo/impl.hs`
+  - Implementar: Criar xemploRepo
+- **Change File**: Conectar ExemploRepo
+  - Path: `**/Repo/main.hs`
+  - Implementar: Conectar ExemploRepo ao main repo
 
-## **A sua feature é relacionada com algum problema?. Por favor descreva**
+## Requisitos
+- [] Implementar testes
+- [] Criar Interface
 
-<!-- Uma descrição sucinta do problema. Ex.: As vezes eu gostaria[...] -->
+## Template - Parte opcional abaixo
+### Contexto
 
-## **Descreva uma solução que você gostaria que acontecesse**
+### Escopo
 
-<!-- Uma descrição sucinta da solução que você gostaria que acontecesse -->
-
-## **Contexto Adicional**
-
-<!-- Adicione qualquer outro contexto ou prints sobre a feature aqui -->
+### Fora do Escopo
