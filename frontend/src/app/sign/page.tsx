@@ -10,8 +10,6 @@ const SignInPage = () => {
   
   const [data, setData] = useState({
     name: "",
-    age: "",
-    tel: "",
     email: "",
   });
 
@@ -22,11 +20,14 @@ const SignInPage = () => {
   };
   
   return (
-    <section className=" container flex flex-col gap-8 justify-center items-center mx-auto h-screen">
-      <h1 className="text-4xl text-teal-800">Cadastre-se</h1>
-      <p className="text-neutral-400">Preecha os campos abaixo</p>
+    <section className=" flex justify-center items-center mx-auto h-screen bg-gradient-to-r from-cyan-500 to-blue-500">
+      <div className=" container flex md:mx-52 items-center justify-center my-20 py-6 rounded-se-full bg-white/40 ">
+      <div>
+       <div>
+      <h1 className="text-4xl text-teal-800 pb-4">Cadastre-se</h1>
+       </div>
       <form 
-        className="flex flex-col space-y-8 w-1/2"
+        className="flex flex-col space-y-8"
         onSubmit={(e) => handleSubmit(e)}
       >
         <input
@@ -36,30 +37,21 @@ const SignInPage = () => {
           onChange={(e) => setData({ ...data, name: e.target.value })}
         />
         <input
-          type="tel"
-          placeholder="Telefone para contato"
+          type="email"
+          placeholder="Email para contato"
           className="form-input rounded-lg border-2"
-          onChange={(e) => setData({ ...data, tel: e.target.value })}
+          onChange={(e) => setData({ ...data, email: e.target.value })}
         />
-        <div>
-        <input 
-          type="checkbox"
-          className="form-input rounded-lg"
-          checked
-           />
-          <label className=""> Eu li e concordo com os termos de uso</label>
-          </div>
         <input
           type="submit"
           value="Enviar"
-          className="py-4 bg-stone-200 rounded-lg hover:bg-green-500 focus:outline-zinc-900 active:py-6z"
+          className="py-4 bg-stone-200 rounded-lg hover:bg-green-500 shadow-lg shadow-cyan-500/50 focus:outline-zinc-900 active:py-6z"
         />
       </form>
+      </div>
+      </div>
     </section>
   );
 };
 
 export default SignInPage;
-
-// erro: 
-//You provided a `checked` prop to a form field without an `onChange` handler. This will render a read-only field. If the field should be mutable use `defaultChecked`. Otherwise, set either `onChange` or `readOnly`.
