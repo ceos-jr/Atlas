@@ -1,9 +1,10 @@
 package userrepotest
 
 import (
-	"github.com/stretchr/testify/suite"
 	"orb-api/repositories/user"
 	"testing"
+
+	"github.com/stretchr/testify/suite"
 )
 
 func (suite *UserRepoTestSuite) TestCreateUser() {
