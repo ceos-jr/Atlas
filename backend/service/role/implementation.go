@@ -43,6 +43,46 @@ func (s *ServiceRole) CreateRole(name string, description string ) (*models.Role
 	return createdRole, nil
 }
 
+func (s *ServiceRole) UpdateRoleName(id uint, name string) ([]models.Role, error) {
+	//check if Role exists 
+	roleArray, readErr := service.RoleRepo.ReadBy(role.IReadBy{
+		ID: &id,
+	})
+
+	if readErr != nil {
+		return nil, readErr
+	}
+
+	if len(roleArray) == 0 {
+		return nil, errors.New("This role doesn't exist")
+	}
+
+	//check if Name input is null ("")
+	if name =="" {
+		return nil, errors.New("Name cannot be empty")
+	}
+
+	//check if Name already exists
+	roleArray, readErr = service.RoleRepo.ReadBy(role.IReadBy{
+		Name: &name,
+	})
+	if len(roleArray) == 1 {
+		return nil, errors.New("This name is already being used")
+	}	
+	
+	updateName, updateErr:= service.RoleRepo.Update(role.IUpdate{
+		ID: id,
+        Name: name,
+	})
+
+	if updateErr!= nil {
+        return nil, updateErr
+    }
+
+	return updateName, nil
+}
+
+
 
 
 
