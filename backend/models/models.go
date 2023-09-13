@@ -4,19 +4,32 @@ import (
 	"time"
 )
 
+//revive:disable:line-length-limit
+
+const (
+	UStatusDisable    = 1
+	UStatusActive     = 2
+	UStatusProcessing = 3
+)
+
 var UserStatus = map[uint]string{
-	1: "disabled",
-	2: "active",
-	3: "processing",
+	UStatusDisable:    "disabled",
+	UStatusActive:     "active",
+	UStatusProcessing: "processing",
 }
+
+const (
+	TStatusFinished = 1
+	TStatusPending  = 2
+	TStatusOverdue  = 3
+)
 
 var TaskStatus = map[uint]string{
-	1: "finished",
-	2: "pending",
-	3: "overdue",
+	TStatusFinished: "finished",
+	TStatusPending:  "pending",
+	TStatusOverdue:  "overdue",
 }
 
-// `json:"-"` Hide from JSON (not exposed)
 type User struct {
 	ID        uint      `json:"id" gorm:"primaryKey"`
 	Name      string    `json:"name" gorm:"size:128;not null;"`
@@ -38,16 +51,13 @@ type UserRole struct {
 	RoleID uint `json:"role_id"`
 }
 
-// side -> embedded in Relation
-type side struct {
-	ID           uint
-	PositionType string
-}
-
 type Relation struct {
-	ID    uint `json:"id" gorm:"primaryKey"`
-	Right side `json:"right" gorm:"embedded; embeddedPrefix:right_"`
-	Left  side `json:"left" gorm:"embedded; embeddedPrefix:left_"`
+	ID          uint     `json:"id" gorm:"primaryKey"`
+	StrongSide  uint     `json:"strong-side" gorm:"not null"`
+	LUserRoleID uint     `json:"l-user-role-id"`
+	LUserRole   UserRole `json:"l-user-role" gorm:"foreignKey:LUserRoleID"`
+	RUserRoleID uint     `json:"r-user-role-id"`
+	RUserRole   UserRole `json:"r-user-role" gorm:"foreignKey:RUserRoleID"`
 }
 
 type Task struct {
@@ -61,8 +71,9 @@ type Task struct {
 }
 
 type Message struct {
-	ID       uint   `json:"-" gorm:"primaryKey"`
-	Sender   uint   `json:"sender" gorm:"not null"`
-	Receiver uint   `json:"receiver" gorm:"not null"`
-	Content  string `json:"content" gorm:"not null"`
+	ID        uint      `json:"-" gorm:"primaryKey"`
+	Sender    uint      `json:"sender" gorm:"not null"`
+	Receiver  uint      `json:"receiver" gorm:"not null"`
+	Content   string    `json:"content" gorm:"not null"`
+	Timestamp time.Time `json:"timestamp"`
 }

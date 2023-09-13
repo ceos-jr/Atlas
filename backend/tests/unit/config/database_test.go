@@ -1,4 +1,4 @@
-package unit
+package repositories
 
 import (
 	"github.com/stretchr/testify/assert"
@@ -13,7 +13,7 @@ var DBConfig config.DBConfig
 func TestLoadEnv(test *testing.T) {
 	assert := assert.New(test)
 
-	loadEnvError := config.LoadEnv(".env")
+	loadEnvError := config.LoadEnv("../.env")
 
 	assert.Nil(loadEnvError, "Load env error should be nil")
 
@@ -23,7 +23,7 @@ func TestLoadEnv(test *testing.T) {
 func TestCreateDBConnection(test *testing.T) {
 	assert := assert.New(test)
 
-	loadEnvError := config.LoadEnv(".env")
+	loadEnvError := config.LoadEnv("../.env")
 
 	assert.Nil(loadEnvError)
 
@@ -90,7 +90,7 @@ func TestMigrateDB(test *testing.T) {
 func TestSetupDB(test *testing.T) {
 	assert := assert.New(test)
 
-	repository, setupError := config.SetupDB(".env")
+	repository, setupError := config.SetupDB("../.env")
 
 	assert.Nil(setupError, "Setup error should be nil")
 

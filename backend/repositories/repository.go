@@ -2,10 +2,12 @@ package repository
 
 import (
 	"gorm.io/gorm"
+	"orb-api/repositories/message"
+	"orb-api/repositories/relation"
 	"orb-api/repositories/role"
 	"orb-api/repositories/task"
 	"orb-api/repositories/user"
-	"orb-api/repositories/user_role"
+	userrole "orb-api/repositories/user_role"
 )
 
 type Repository struct {
@@ -14,6 +16,8 @@ type Repository struct {
 	Role     role.Repository
 	User     user.Repository
 	Task     task.Repository
+	Message  message.Repository
+	Relation relation.Repository
 }
 
 func SetupRepository(connection *gorm.DB) *Repository {
@@ -23,5 +27,7 @@ func SetupRepository(connection *gorm.DB) *Repository {
 		Role:     role.NewRoleRepository(connection),
 		User:     user.NewUserRepository(connection),
 		Task:     task.NewTaskRepository(connection),
+		Message:  message.NewMessageRepository(connection),
+		Relation: relation.NewRepository(connection),
 	}
 }
