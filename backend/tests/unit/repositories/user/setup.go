@@ -16,7 +16,7 @@ type UserRepoTestSuite struct {
 }
 
 func (suite *UserRepoTestSuite) SetupSuite() {
-	repo, setupError := config.SetupDB("../.env")
+	repo, setupError := config.SetupDB("../../.env")
 
 	if setupError != nil {
 		panic(setupError)

@@ -21,7 +21,7 @@ type TaskRepoTestSuite struct {
 
 // Executed before all tests
 func (suite *TaskRepoTestSuite) SetupSuite() {
-	repo, setupError := config.SetupDB("../.env")
+	repo, setupError := config.SetupDB("../../.env")
 
 	if setupError != nil {
 		panic(setupError)
