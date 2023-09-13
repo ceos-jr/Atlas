@@ -16,10 +16,10 @@ import (
 func (s *ServiceRole) CreateRole(name string, description string ) (*models.Role, error) {
 	//logic to create role using roleRepository
 
-	//verify is name and description are not empty; errors.New() creates and returns a new error with the given message.
+	//verify is name or description are not empty; errors.New() creates and returns a new error with the given message.
 
 	if name == "" || description == "" {
-		return nil, errors.New("name and description cannot be empty")
+		return nil, errors.New("name or description cannot be empty")
 	}
 
 	//create a new role using the parameters passed to the function
@@ -44,39 +44,5 @@ func (s *ServiceRole) CreateRole(name string, description string ) (*models.Role
 }
 
 
-func (s *ServiceRole) GetAllRoles () ([]models.Role, error) {
-	//logic to get all roles using roleRepository
-}
 
-func (s *ServiceRole) GetRoleByID (id uint) (*models.Role, error) {
-	//logic to get role by id using roleRepository
-}
-
-func(s *ServiceRole) UpdateRole (id uint, name string, description string) (*models.Role, error) {
-	//logic to update role using roleRepository
-}
-
-func (s *ServiceRole) DeleteRole (id uint) (*models.Role, error) {
-	//logic to delete role using roleRepository
-}
-
-func (s *ServiceRole) AssignRoleToUser (roleID uint, userID uint) (*models.User, error) {
-	//logic to assign role to user using roleRepository
-}
-
-func (s *ServiceRole) RemoveRoleFromUser (roleID uint, userID uint) (*models.User, error) {
-	//logic to remove role from user using roleRepository
-}
-
-func (s *ServiceRole) GetUsersByRole (roleID uint) ([]models.User, error) {
-	//logic to get users by role using roleRepository
-}
-
-func (s *ServiceRole) CheckIfUserHasRole (roleID uint, userID uint) (bool, error) {
-	//logic to check if user has role using roleRepository
-}
-
-func (s *ServiceRole) SearchRoles (name string, description string) ([]models.Role, error) {
-	//logic to search roles using roleRepository
-}
 
