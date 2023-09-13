@@ -82,6 +82,38 @@ func (s *ServiceRole) UpdateRoleName(id uint, name string) ([]models.Role, error
 	return updateName, nil
 }
 
+func UpdateRoleDescription(id uint, description string) (*models.Role,error) {
+//check if Role exists
+	roleArray, readErr := service.RoleRepo.ReadBy(role.IReadBy{
+		ID: &id,
+	})
+
+	if readErr != nil {
+		return nil, readErr
+	}
+
+	if len(roleArray) == 0 {
+		return nil, errors.New("This role doesn't exist")
+	}
+
+	//check if Description is empty / null ("")
+	if description == "" {
+		return nil, erros.New("Description cannot be empty")
+	}
+
+	updateDescription, updateErr:= service.RoleRepo.Update(role.IUpdate{
+		ID: id,
+    	Description: &description,
+	})
+
+	if updateErr !=nil{
+		return nil, updateErr
+	}
+
+	return updateDescription, nil
+
+}	
+
 
 
 
