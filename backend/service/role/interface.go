@@ -7,7 +7,7 @@ import (
 
 type (
 	RoleService struct {
-		RoleRepo role.Repository
+		RoleRepo *role.Repository
 	}
 
 ICreateRole struct{

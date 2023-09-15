@@ -13,6 +13,12 @@ import (
 //Description string `json:"description" gorm:"not null"`
 //}
 
+func SetupRoleService(repo *role.Repository) *RoleService {
+	return &RoleService{
+		RoleRepo: repo,
+	}
+}
+
 func (s *RoleService) CreateRole(name string, description string) (*models.Role, error) {
 	//logic to create role using roleRepository
 
