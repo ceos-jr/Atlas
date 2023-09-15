@@ -25,14 +25,14 @@ type UserRoleRepoTestSuite struct {
 }
 
 func (s *UserRoleRepoTestSuite) SetupSuite() {
-	repo, setupErr := config.SetupDB("../.env")
+	repo, setupErr := config.SetupDB("../../.env")
 
 	if setupErr != nil {
 		panic(setupErr)
 	}
 
 	s.Repo = repo
-	s.MockUser = make([]models.User, MockArraySize)
+	s.MockUser = make([]models.User, 3)
 	s.MockRole = make([]models.Role, MockArraySize)
 	s.MockUserRole = make([]models.UserRole, MockArraySize)
 	s.SetupMocks()
@@ -71,7 +71,7 @@ func (s *UserRoleRepoTestSuite) TearDownSuite() {
 }
 
 func (s *UserRoleRepoTestSuite) SetupMocks() {
-	for index := 0; index < 2; index++ {
+	for index := 0; index < 3; index++ {
 		createdUser, createError := s.Repo.User.Create(user.ICreate{
 			Name:     faker.Name(),
 			Email:    faker.Email(),

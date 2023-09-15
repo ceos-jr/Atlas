@@ -80,9 +80,9 @@ func (suite *TaskRepoTestSuite) TestCreateTaskErr() {
 }
 
 func (suite *TaskRepoTestSuite) TestReadAllTasks() {
-	tasks, readError := suite.Repo.Task.ReadAll()
+	tasks, readErr := suite.Repo.Task.ReadAll()
 
-	suite.Nil(readError, "Read error must be nil")
+	suite.Nil(readErr, "Read error must be nil")
 	suite.Equal(2, len(tasks), "Expected to have two tasks")
 	suite.Equal(suite.MockTasks[0].ID, tasks[0].ID,
 		"Expected to have the same id")
@@ -91,42 +91,42 @@ func (suite *TaskRepoTestSuite) TestReadAllTasks() {
 }
 
 func (suite *TaskRepoTestSuite) TestReadTaskByID() {
-	tasks, readError := suite.Repo.Task.ReadBy(task.IReadBy{
+	tasks, readErr := suite.Repo.Task.ReadBy(task.IReadBy{
 		ID: &suite.MockTasks[0].ID,
 	})
 
-	suite.Nil(readError, "Read error should be empty")
+	suite.Nil(readErr, "Read error should be empty")
 	suite.Equal(suite.MockTasks[0].ID, tasks[0].ID, "The ids must match")
 }
 
 func (suite *TaskRepoTestSuite) TestReadTaskByAssigned() {
-	tasks, readError := suite.Repo.Task.ReadBy(task.IReadBy{
+	tasks, readErr := suite.Repo.Task.ReadBy(task.IReadBy{
 		AssignedTo: &suite.MockTasks[0].AssignedTo,
 	})
 
-	suite.Nil(readError, "Read error should be empty")
+	suite.Nil(readErr, "Read error should be empty")
 	suite.Equal(suite.MockTasks[0].AssignedTo, tasks[0].AssignedTo,
 		"The user assigned to the task must match",
 	)
 }
 
 func (suite *TaskRepoTestSuite) TestReadTaskByCreator() {
-	tasks, readError := suite.Repo.Task.ReadBy(task.IReadBy{
+	tasks, readErr := suite.Repo.Task.ReadBy(task.IReadBy{
 		CreatedBy: &suite.MockTasks[0].CreatedBy,
 	})
 
-	suite.Nil(readError, "Read error should be empty")
+	suite.Nil(readErr, "Read error should be empty")
 	suite.Equal(suite.MockTasks[0].CreatedBy, tasks[0].CreatedBy,
 		"The creator of the task must match",
 	)
 }
 
 func (suite *TaskRepoTestSuite) TestReadTaskByStatus() {
-	tasks, readError := suite.Repo.Task.ReadBy(task.IReadBy{
+	tasks, readErr := suite.Repo.Task.ReadBy(task.IReadBy{
 		Status: &suite.MockTasks[0].Status,
 	})
 
-	suite.Nil(readError, "Read error should be empty")
+	suite.Nil(readErr, "Read error should be empty")
 	suite.Equal(suite.MockTasks[0].Status, tasks[0].Status,
 		"The status must match",
 	)
@@ -135,30 +135,30 @@ func (suite *TaskRepoTestSuite) TestReadTaskByStatus() {
 func (suite *TaskRepoTestSuite) TestReadTaskByTimeRange() {
 	timeRange := time.Date(2100, 12, 4, 12, 0, 0, 0, time.UTC)
 
-	tasks, readError := suite.Repo.Task.ReadBy(task.IReadBy{
+	tasks, readErr := suite.Repo.Task.ReadBy(task.IReadBy{
 		TimeRange: &timeRange,
 	})
 
-	suite.Nil(readError, "Read error should be empty")
+	suite.Nil(readErr, "Read error should be empty")
 	suite.Equal(true, tasks[0].Deadline.Before(timeRange),
 		"Deadline must be in the time range",
 	)
 }
 
 func (suite *TaskRepoTestSuite) TestReadByErr() {
-	_, readError := suite.Repo.Task.ReadBy(task.IReadBy{})
+	_, readErr := suite.Repo.Task.ReadBy(task.IReadBy{})
 
-	suite.Equal("No fields to read", readError.Error(),
+	suite.Equal("No fields to read", readErr.Error(),
 		"Empty fields it should return an error",
 	)
 
 	var invalidStatus uint = 777
 
-	_, readError = suite.Repo.Task.ReadBy(task.IReadBy{
+	_, readErr = suite.Repo.Task.ReadBy(task.IReadBy{
 		Status: &invalidStatus,
 	})
 
-	suite.Equal("Invalid task status", readError.Error(),
+	suite.Equal("Invalid task status", readErr.Error(),
 		"Invalid status it should return an error",
 	)
 }
@@ -168,7 +168,7 @@ func (suite *TaskRepoTestSuite) TestUpdateTask() {
 	status := uint(3)
 	deadline := time.Date(2099, 12, 4, 12, 0, 0, 0, time.UTC)
 
-	updatedTask, updateError := suite.Repo.Task.Update(task.IUpdate{
+	updatedTask, updateErr := suite.Repo.Task.Update(task.IUpdate{
 		ID:          suite.MockTasks[1].ID,
 		Description: &description,
 		CreatedBy:   &suite.MockUsers[1].ID,
@@ -177,7 +177,7 @@ func (suite *TaskRepoTestSuite) TestUpdateTask() {
 		Deadline:    &deadline,
 	})
 
-	suite.Nil(updateError, "Update error must be nil")
+	suite.Nil(updateErr, "Update error must be nil")
 	suite.Equal(description, updatedTask.Description,
 		"Descriptions do not match",
 	)
@@ -200,47 +200,47 @@ func (suite *TaskRepoTestSuite) TestUpdateTaskErr() {
 	invalidDeadline := time.Date(2012, 12, 4, 12, 0, 0, 0, time.UTC)
 	invalidUserID := uint(777)
 
-	_, updateError := suite.Repo.Task.Update(task.IUpdate{
+	_, updateErr := suite.Repo.Task.Update(task.IUpdate{
 		ID: suite.MockTasks[1].ID,
 	})
 
-	suite.Equal("No fields to update", updateError.Error(),
+	suite.Equal("No fields to update", updateErr.Error(),
 		"Empty fields it should return an error",
 	)
 
-	_, updateError = suite.Repo.Task.Update(task.IUpdate{
+	_, updateErr = suite.Repo.Task.Update(task.IUpdate{
 		ID:     suite.MockTasks[1].ID,
 		Status: &invalidStatus,
 	})
 
-	suite.Equal("Invalid task status", updateError.Error(),
+	suite.Equal("Invalid task status", updateErr.Error(),
 		"Invalid task status it should return an error",
 	)
 
-	_, updateError = suite.Repo.Task.Update(task.IUpdate{
+	_, updateErr = suite.Repo.Task.Update(task.IUpdate{
 		ID:       suite.MockTasks[1].ID,
 		Deadline: &invalidDeadline,
 	})
 
-	suite.Equal("Invalid deadline", updateError.Error(),
+	suite.Equal("Invalid deadline", updateErr.Error(),
 		"Invalid task deadline it should return an error",
 	)
 
-	_, updateError = suite.Repo.Task.Update(task.IUpdate{
+	_, updateErr = suite.Repo.Task.Update(task.IUpdate{
 		ID:        suite.MockTasks[1].ID,
 		CreatedBy: &invalidUserID,
 	})
 
-	suite.Equal("Invalid user passed to createBy", updateError.Error(),
+	suite.Equal("Invalid user passed to createBy", updateErr.Error(),
 		"Invalid createby it should return an error",
 	)
 
-	_, updateError = suite.Repo.Task.Update(task.IUpdate{
+	_, updateErr = suite.Repo.Task.Update(task.IUpdate{
 		ID:         suite.MockTasks[1].ID,
 		AssignedTo: &invalidUserID,
 	})
 
-	suite.Equal("Invalid user passed to assignedTo", updateError.Error(),
+	suite.Equal("Invalid user passed to assignedTo", updateErr.Error(),
 		"Invalid assignedto it should return an error",
 	)
 }

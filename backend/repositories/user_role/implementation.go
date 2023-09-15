@@ -2,8 +2,9 @@ package userrole
 
 import (
 	"errors"
-	"gorm.io/gorm"
 	"orb-api/models"
+
+	"gorm.io/gorm"
 )
 
 func NewUserRoleRepository(connection *gorm.DB) Repository {
@@ -57,18 +58,18 @@ func (r *Repository) ReadAll() ([]models.UserRole, error) {
 
 func (r *Repository) ReadBy(readBy IReadBy) ([]models.UserRole, error) {
 	var userRoleArray []models.UserRole
-	var userRoleMap map[string]interface{}
+	var userRoleMap = make(map[string]interface{})
 
 	if readBy.RoleID == nil && readBy.UserID == nil {
 		return nil, errors.New("No fields to read")
 	}
 
 	if readBy.RoleID != nil {
-		userRoleMap["RoleID"] = *readBy.RoleID
+		userRoleMap["role_id"] = *readBy.RoleID
 	}
 
 	if readBy.UserID != nil {
-		userRoleMap["UserID"] = *readBy.UserID
+		userRoleMap["user_id"] = *readBy.UserID
 	}
 
 	result := r.GetDB().Where(userRoleMap).Find(&userRoleArray)
@@ -81,39 +82,31 @@ func (r *Repository) ReadBy(readBy IReadBy) ([]models.UserRole, error) {
 }
 
 func (r *Repository) Update(updateData IUpdate) (*models.UserRole, error) {
-	var user = models.User{ID: *updateData.UserID}
-	var role = models.Role{ID: *updateData.RoleID}
-	var userRole = models.UserRole{ID: updateData.UserRoleID}
-	var updateMap map[string]interface{}
+	userRole := models.UserRole{ID: updateData.UserRoleID}
+	var updateMap = make(map[string]interface{})
 
 	if updateData.UserID == nil && updateData.RoleID == nil {
 		return nil, errors.New("No fields to update")
 	}
 
 	if updateData.UserID != nil {
-		updateMap["UserID"] = updateData.UserID
+		updateMap["user_id"] = *updateData.UserID
+		user := models.User{ID: *updateData.UserID}
+		verifyUserExistence := r.GetDB().First(&user)
+
+		if verifyUserExistence.Error != nil {
+			return nil, verifyUserExistence.Error
+		}
 	}
 
 	if updateData.RoleID != nil {
-		updateMap["RoleID"] = updateData.RoleID
-	}
+		updateMap["role_id"] = *updateData.RoleID
+		role := models.Role{ID: *updateData.RoleID}
+		verifyRoleExistence := r.GetDB().First(&role)
 
-	verifyExistence := r.GetDB().First(&userRole)
-
-	if verifyExistence.Error != nil {
-		return nil, verifyExistence.Error
-	}
-
-	verifyUserExistence := r.GetDB().First(&user)
-
-	if verifyUserExistence.Error != nil {
-		return nil, verifyUserExistence.Error
-	}
-
-	verifyRoleExistence := r.GetDB().First(&role)
-
-	if verifyRoleExistence.Error != nil {
-		return nil, verifyRoleExistence.Error
+		if verifyRoleExistence.Error != nil {
+			return nil, verifyRoleExistence.Error
+		}
 	}
 
 	result := r.GetDB().Model(&userRole).Updates(updateMap)
