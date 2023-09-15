@@ -1,19 +1,18 @@
-package userservice
+package user
 
 import (
 	"errors"
 	"orb-api/models"
-	repository "orb-api/repositories"
 	"orb-api/repositories/user"
 )
 
-func SetupUserService(repo repository.Repository) *UserService {
-	return &UserService{
-		UserRepo: repo.User,
+func SetupService(repository *user.Repository) *Service {
+	return &Service{
+		UserRepo: repository,
 	}
 }
 
-func (service *UserService) CreateNewUser(credentials ICreateUser) (*models.User, error) {
+func (service *Service) CreateNewUser(credentials ICreateUser) (*models.User, error) {
 	// Check if the email is not being used by anyone else
 	userArray, readErr := service.UserRepo.ReadBy(user.IReadBy{
 		Email: &credentials.Email,
@@ -74,7 +73,7 @@ func (service *UserService) CreateNewUser(credentials ICreateUser) (*models.User
 	return newUser, nil
 }
 
-func (service *UserService) UpdateName(id uint, name string) (*models.User, error) {
+func (service *Service) UpdateName(id uint, name string) (*models.User, error) {
 	// Check if name has a valid length
 	if !user.ValidUserName(name) {
 		return nil, errors.New("Invalid username size")
@@ -111,7 +110,7 @@ func (service *UserService) UpdateName(id uint, name string) (*models.User, erro
 	return updatedUser, nil
 }
 
-func (service *UserService) UpdatePassword(id uint, password string) (*models.User, error) {
+func (service *Service) UpdatePassword(id uint, password string) (*models.User, error) {
 	// Check if it is password has a valid length
 	if !user.ValidUserPassword(password) {
 		return nil, errors.New("Invalid password size")
@@ -141,7 +140,7 @@ func (service *UserService) UpdatePassword(id uint, password string) (*models.Us
 	return updatedUser, nil
 }
 
-func (service *UserService) UpdateEmail(id uint, email string) (*models.User, error) {
+func (service *Service) UpdateEmail(id uint, email string) (*models.User, error) {
 	// Check if the id belongs a valid user
 	if !service.UserRepo.ValidUser(id) {
 		return nil, errors.New("Invalid user id")
@@ -173,7 +172,7 @@ func (service *UserService) UpdateEmail(id uint, email string) (*models.User, er
 	return userUpdate, nil
 }
 
-func (service *UserService) UpdateStatus(id uint, status uint) (*models.User, error) {
+func (service *Service) UpdateStatus(id uint, status uint) (*models.User, error) {
 	// Check if the status is valid
 	if !user.ValidUserStatus(status) {
 		return nil, errors.New("Invalid status")

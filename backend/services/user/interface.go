@@ -1,4 +1,4 @@
-package userservice
+package user
 
 import (
 	"orb-api/models"
@@ -14,8 +14,8 @@ const (
 )
 
 type (
-	UserService struct {
-		UserRepo user.Repository
+	Service struct {
+		UserRepo *user.Repository
 	}
 
 	ICreateUser struct {
