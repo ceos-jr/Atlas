@@ -44,7 +44,7 @@ func (handler *BaseHandler) CreateUser(context *fiber.Ctx) error {
 
 	if serviceError != nil {
 		return context.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "invalid credentials",
+			"message": "user creation error",
 			"error":   serviceError.Error(),
 		})
 	}
