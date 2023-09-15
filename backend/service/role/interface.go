@@ -10,7 +10,7 @@ type (
 		RoleRepo role.Repository
 	}
 
-ICreateRole{
+ICreateRole struct{
 	Name string 
 	Descripton string
 }

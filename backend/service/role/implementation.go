@@ -1,4 +1,4 @@
-package role
+package roleservice
 
 import (
 	"errors"
@@ -13,7 +13,7 @@ import (
 //Description string `json:"description" gorm:"not null"`
 //}
 
-func (s *ServiceRole) CreateRole(name string, description string ) (*models.Role, error) {
+func (s *RoleService) CreateRole(name string, description string) (*models.Role, error) {
 	//logic to create role using roleRepository
 
 	//verify is name or description are not empty; errors.New() creates and returns a new error with the given message.
@@ -24,13 +24,13 @@ func (s *ServiceRole) CreateRole(name string, description string ) (*models.Role
 
 	//create a new role using the parameters passed to the function
 	newRole := models.Role{
-		Name: name,
+		Name:        name,
 		Description: description,
-}
+	}
 
 	//calls the roleRepository to insert the new role in the database
-	createdRole, err := s.roleRepository.Create(role.ICreate{
-		Name: newRole.Name,
+	createdRole, err := s.RoleRepo.Create(role.ICreate{
+		Name:        newRole.Name,
 		Description: newRole.Description,
 	})
 
@@ -43,9 +43,9 @@ func (s *ServiceRole) CreateRole(name string, description string ) (*models.Role
 	return createdRole, nil
 }
 
-func (s *ServiceRole) UpdateRoleName(id uint, name string) ([]models.Role, error) {
-	//check if Role exists 
-	roleArray, readErr := service.RoleRepo.ReadBy(role.IReadBy{
+func (s *RoleService) UpdateRoleName(id uint, name string) (*models.Role, error) {
+	//check if Role exists
+	roleArray, readErr := s.RoleRepo.ReadBy(role.IReadBy{
 		ID: &id,
 	})
 
@@ -58,33 +58,33 @@ func (s *ServiceRole) UpdateRoleName(id uint, name string) ([]models.Role, error
 	}
 
 	//check if Name input is null ("")
-	if name =="" {
+	if name == "" {
 		return nil, errors.New("Name cannot be empty")
 	}
 
 	//check if Name already exists
-	roleArray, readErr = service.RoleRepo.ReadBy(role.IReadBy{
+	roleArray, readErr = s.RoleRepo.ReadBy(role.IReadBy{
 		Name: &name,
 	})
 	if len(roleArray) == 1 {
 		return nil, errors.New("This name is already being used")
-	}	
-	
-	updateName, updateErr:= service.RoleRepo.Update(role.IUpdate{
-		ID: id,
-        Name: name,
+	}
+
+	updateName, updateErr := s.RoleRepo.Update(role.IUpdate{
+		RoleID: id,
+		Name:   &name,
 	})
 
-	if updateErr!= nil {
-        return nil, updateErr
-    }
+	if updateErr != nil {
+		return nil, updateErr
+	}
 
 	return updateName, nil
 }
 
-func UpdateRoleDescription(id uint, description string) (*models.Role,error) {
-//check if Role exists
-	roleArray, readErr := service.RoleRepo.ReadBy(role.IReadBy{
+func (s *RoleService) UpdateRoleDescription(id uint, description string) (*models.Role, error) {
+	//check if Role exists
+	roleArray, readErr := s.RoleRepo.ReadBy(role.IReadBy{
 		ID: &id,
 	})
 
@@ -98,23 +98,18 @@ func UpdateRoleDescription(id uint, description string) (*models.Role,error) {
 
 	//check if Description is empty / null ("")
 	if description == "" {
-		return nil, erros.New("Description cannot be empty")
+		return nil, errors.New("Description cannot be empty")
 	}
 
-	updateDescription, updateErr:= service.RoleRepo.Update(role.IUpdate{
-		ID: id,
-    	Description: &description,
+	updateDescription, updateErr := s.RoleRepo.Update(role.IUpdate{
+		RoleID:      id,
+		Description: &description,
 	})
 
-	if updateErr !=nil{
+	if updateErr != nil {
 		return nil, updateErr
 	}
 
 	return updateDescription, nil
 
-}	
-
-
-
-
-
+}
