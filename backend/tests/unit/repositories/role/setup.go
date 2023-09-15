@@ -23,6 +23,7 @@ func (suite *RoleRepoTestSuite) SetupSuite() {
 	}
 
 	suite.Repo = repo
+	suite.MockRoles = make([]models.Role, 2)
 }
 
 func (suite *RoleRepoTestSuite) TearDownSuite() {
@@ -35,4 +36,17 @@ func (suite *RoleRepoTestSuite) TearDownSuite() {
 			panic(deleteErr)
 		}
 	}
+}
+
+func (suite *RoleRepoTestSuite) SetupMocks() {
+	role, createErr := suite.Repo.Role.Create(role.ICreate{
+		Name:        "Role 0",
+		Description: "Description 0",
+	})
+
+	if createErr != nil {
+		panic(createErr)
+	}
+
+	suite.MockRoles[0] = *role
 }

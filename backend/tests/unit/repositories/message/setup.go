@@ -69,17 +69,15 @@ func (suite *MessageRepoTestSuite) SetupMocks() {
 		suite.MockUsers[index] = *user
 	}
 
-	for index := 0; index < 2; index++ {
-		message, createErr := suite.Repo.Message.Create(message.ICreate{
-			Sender:   suite.MockUsers[0].ID,
-			Receiver: suite.MockUsers[1].ID,
-			Content:  fmt.Sprintf("Do that %v", index),
-		})
+	message, createErr := suite.Repo.Message.Create(message.ICreate{
+		Sender:   suite.MockUsers[0].ID,
+		Receiver: suite.MockUsers[1].ID,
+		Content:  fmt.Sprintf("Do that 0"),
+	})
 
-		if createErr != nil {
-			panic(createErr)
-		}
-
-		suite.MockMessages[index] = *message
+	if createErr != nil {
+		panic(createErr)
 	}
+
+	suite.MockMessages[0] = *message
 }

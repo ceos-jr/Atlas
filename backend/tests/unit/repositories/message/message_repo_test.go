@@ -20,6 +20,7 @@ func (suite *MessageRepoTestSuite) TestCreateMessage() {
 	suite.Equal(suite.MockUsers[1].ID, message.Receiver)
 	suite.Equal("This is a message", message.Content)
 
+	suite.MockMessages[1] = *message
 }
 
 func (suite *MessageRepoTestSuite) TestCreateMessageErr() {

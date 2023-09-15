@@ -85,8 +85,9 @@ func (suite *TaskRepoTestSuite) TestReadAllTasks() {
 	suite.Nil(readError, "Read error must be nil")
 	suite.Equal(2, len(tasks), "Expected to have two tasks")
 	suite.Equal(suite.MockTasks[0].ID, tasks[0].ID,
-		"Expected to have the same id",
-	)
+		"Expected to have the same id")
+	suite.Equal(suite.MockTasks[1].ID, tasks[1].ID,
+		"Expected to have the same id")
 }
 
 func (suite *TaskRepoTestSuite) TestReadTaskByID() {

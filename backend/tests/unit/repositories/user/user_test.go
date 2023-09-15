@@ -30,6 +30,7 @@ func (suite *UserRepoTestSuite) TestReadAllUsers() {
 	suite.Nil(readErr, "Read error must be nil")
 	suite.Equal(2, len(users), "Expected to have two users")
 	suite.Equal(suite.MockUsers[0].ID, users[0].ID, "Expected to have the same ID")
+
 }
 
 func (suite *UserRepoTestSuite) TestReadUserByID() {

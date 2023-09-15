@@ -1,7 +1,6 @@
 package rolerepotest
 
 import (
-	"orb-api/models"
 	"orb-api/repositories/role"
 	"testing"
 
@@ -9,8 +8,6 @@ import (
 )
 
 func (suite *RoleRepoTestSuite) TestCreateRole() {
-	var roles = make([]models.Role, 1)
-
 	role, createErr := suite.Repo.Role.Create(role.ICreate{
 		Name:        "Role 01",
 		Description: "This is a test",
@@ -19,20 +16,19 @@ func (suite *RoleRepoTestSuite) TestCreateRole() {
 	suite.Equal("This is a test", role.Description, "Description does not match")
 	suite.Equal("Role 01", role.Name, "Name does not match")
 
-	roles[0] = *role
-
-	suite.MockRoles = roles
+	suite.MockRoles[1] = *role
 }
 
 func (suite *RoleRepoTestSuite) TestReadAllRoles() {
-	limit := 1
+	limit := 2
 	roles, readErr := suite.Repo.Role.ReadAll(role.IReadAll{
 		Limit: &limit,
 	})
 
 	suite.Nil(readErr, "Read error must be nil")
-	suite.Equal(1, len(roles), "Expected to have one role")
+	suite.Equal(2, len(roles), "Expected to have one role")
 	suite.Equal(suite.MockRoles[0].ID, roles[0].ID, "Expected to have the same ID")
+	suite.Equal(suite.MockRoles[1].ID, roles[1].ID, "Expected to have the same ID")
 }
 
 func (suite *RoleRepoTestSuite) TestUpdateRole() {
