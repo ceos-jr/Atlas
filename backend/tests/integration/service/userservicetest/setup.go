@@ -3,7 +3,8 @@ package userservicetest
 import (
 	"orb-api/config"
 	"orb-api/models"
-	repository "orb-api/repositories"
+	userservice "orb-api/services/user"
+
 	"orb-api/repositories/user"
 
 	"github.com/stretchr/testify/suite"
@@ -11,7 +12,7 @@ import (
 
 type UserServiceTestSuit struct {
 	suite.Suite
-	Repo      *repository.Repository
+	userservice *userservice.UserService
 	MockUsers []models.User
 }
 
@@ -23,13 +24,13 @@ func (suite *UserServiceTestSuit) SetupSuite() {
 		panic(setupError)
 	}
 
-	suite.Repo = repo
+	suite.userservice = userservice.SetupUserService(*repo)
 	suite.MockUsers = make([]models.User, 2)
 	suite.SetupMocks()
 }
 
 func (suite *UserServiceTestSuit) SetupMocks() {
-	user, createErr := suite.Repo.User.Create(user.ICreate{
+	user, createErr := suite.userservice.UserRepo.Create(user.ICreate{
 		Name:     "Gabrigas",
 		Email:    "gabrigas@example.com",
 		Password: "mostBeautiful",
@@ -46,7 +47,7 @@ func (suite *UserServiceTestSuit) SetupMocks() {
 // Executed after all tests
 func (suite *UserServiceTestSuit) TearDownSuite() {
 	for index := range suite.MockUsers {
-		_, deleteErr := suite.Repo.User.Delete(user.IDelete{
+		_, deleteErr := suite.userservice.UserRepo.Delete(user.IDelete{
 			ID: suite.MockUsers[index].ID,
 		})
 
