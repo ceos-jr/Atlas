@@ -42,6 +42,18 @@ func ValidUserStatus(status uint) bool {
 	return valid
 }
 
+func (r *Repository) ValidUser(id uint) bool {
+	user := models.User{ID: id}
+
+	verifyUser := r.GetDB().First(&user).Error
+
+	if verifyUser != nil {
+		return false
+	}
+
+	return true
+}
+
 func (r *Repository) Create(createData ICreate) (*models.User, error) {
 	var user = models.User{
 		Name:      createData.Name,
@@ -152,7 +164,8 @@ func (r *Repository) Update(updateData IUpdate) (*models.User, error) {
 
 	if updateData.Name == nil &&
 		updateData.Email == nil &&
-		updateData.Status == nil {
+		updateData.Status == nil &&
+		updateData.Password == nil {
 		return nil, errors.New("No fields to update")
 	}
 
@@ -178,6 +191,14 @@ func (r *Repository) Update(updateData IUpdate) (*models.User, error) {
 		}
 
 		fieldMap["status"] = *updateData.Status
+	}
+
+	if updateData.Password != nil {
+		if !ValidUserPassword(*updateData.Password) {
+			return nil, errors.New("Invalid password")
+		}
+
+		fieldMap["password"] = *updateData.Password
 	}
 
 	fieldMap["updated_at"] = time.Now()
