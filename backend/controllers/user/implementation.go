@@ -36,11 +36,11 @@ func (handler *BaseHandler) CreateUser(context *fiber.Ctx) error {
 		})
 	}
 
-	newUser, serviceError := handler.Service.CreateNewUser(user.ICreateUser{
-		Name:     body.Name,
-		Email:    body.Email,
-		Password: body.Password,
-	})
+	newUser, serviceError := handler.Service.CreateNewUser(
+		body.Name,
+		body.Email,
+		body.Password,
+	)
 
 	if serviceError != nil {
 		return context.Status(fiber.StatusBadRequest).JSON(fiber.Map{

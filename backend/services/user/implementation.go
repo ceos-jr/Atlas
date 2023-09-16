@@ -12,7 +12,11 @@ func SetupService(repository *user.Repository) *Service {
 	}
 }
 
-func (service *Service) CreateNewUser(name, email, password string) (*models.User, error) {
+func (service *Service) CreateNewUser(
+	name string,
+	email string,
+	password string,
+) (*models.User, error) {
 	// Check if the email is not being used by anyone else
 	userArray, readErr := service.UserRepo.ReadBy(user.IReadBy{
 		Email: &email,
@@ -144,8 +148,8 @@ func (service *Service) UpdateEmail(id uint, email string) (*models.User, error)
 	if !user.ValidUserEmail(email) {
 		return nil, errors.New("Invalid email size")
 	}
-	
-  // Check if the id belongs a valid user
+
+	// Check if the id belongs a valid user
 	if !service.UserRepo.ValidUser(id) {
 		return nil, errors.New("Invalid user id")
 	}
