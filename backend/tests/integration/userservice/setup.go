@@ -13,7 +13,7 @@ import (
 type UserServiceTestSuit struct {
 	suite.Suite
 	userservice *userservice.UserService
-	MockUsers []models.User
+	MockUsers   []models.User
 }
 
 // Executed before all tests

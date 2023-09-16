@@ -7,51 +7,68 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
-func (suite *UserServiceTestSuit) TestCreateNewUser(){
+func (suite *UserServiceTestSuit) TestCreateNewUser() {
 	newUser, createErr := suite.userservice.CreateNewUser((userservice.ICreateUser{
-		Name: "exampleexample",
-		Email: "example@example.com.br",
+		Name:     "exampleexample",
+		Email:    "example@example.com.br",
 		Password: suite.MockUsers[0].Password,
 	}))
 
 	suite.Nil(createErr, "Create error must be nil")
 	suite.Equal("exampleexample", newUser.Name)
 	suite.Equal("example@example.com.br", newUser.Email)
-	suite.Equal(true, userservice.PasswordMatch(suite.MockUsers[0].Password,newUser.Password ))
+	suite.Equal(true, userservice.PasswordMatch(suite.MockUsers[0].Password, newUser.Password))
 
+	suite.MockUsers[1] = *newUser
 }
 
-func (suite *UserServiceTestSuit) TestCreateNewUserErr(){
+func (suite *UserServiceTestSuit) TestCreateNewUserErr() {
 	invalidName := ""
 	invalidEmail := ""
 	invalidPassword := ""
 
 	_, createErr := suite.userservice.CreateNewUser((userservice.ICreateUser{
-		Name: invalidName,
-		Email: "example@example.com",
+		Name:     invalidName,
+		Email:    "example@example.com",
 		Password: suite.MockUsers[0].Password,
 	}))
 
 	suite.Equal("Invalid name", createErr.Error(), "Expected to have an error")
 
 	_, createErr = suite.userservice.CreateNewUser((userservice.ICreateUser{
-		Name: "exampleexample2",
-		Email: invalidEmail,
+		Name:     "exampleexample2",
+		Email:    invalidEmail,
 		Password: suite.MockUsers[0].Password,
 	}))
 
 	suite.Equal("Invalid email", createErr.Error(), "Expected to have an error")
 
 	_, createErr = suite.userservice.CreateNewUser((userservice.ICreateUser{
-		Name: "exampleexample3",
-		Email: "example@example.com.net",
+		Name:     "exampleexample3",
+		Email:    "example@example.com.net",
 		Password: invalidPassword,
 	}))
-	
+
 	suite.Equal("Invalid password size", createErr.Error(), "Expected to have an error")
+
+	_, createErr = suite.userservice.CreateNewUser((userservice.ICreateUser{
+		Name:     "exampleexample3",
+		Email:    suite.MockUsers[0].Email,
+		Password: suite.MockUsers[0].Password,
+	}))
+
+	suite.Equal("This email is already being used", createErr.Error(), "Expected to have an error")
+
+	_, createErr = suite.userservice.CreateNewUser((userservice.ICreateUser{
+		Name:     suite.MockUsers[0].Name,
+		Email:    "example@example.com.net",
+		Password: suite.MockUsers[0].Password,
+	}))
+
+	suite.Equal("This username is already being used", createErr.Error(), "Expected to have an error")
 }
 
-func (suite *UserServiceTestSuit) TestUpdateName(){
+func (suite *UserServiceTestSuit) TestUpdateName() {
 	newName := "newName"
 	updateName, updateErr := suite.userservice.UpdateName(suite.MockUsers[0].ID, newName)
 
@@ -59,7 +76,7 @@ func (suite *UserServiceTestSuit) TestUpdateName(){
 	suite.Equal(updateName.Name, newName)
 }
 
-func (suite *UserServiceTestSuit) TestUpdateNameErr(){
+func (suite *UserServiceTestSuit) TestUpdateNameErr() {
 	invalidID := uint(1231313)
 	invalidName := ""
 
@@ -68,13 +85,13 @@ func (suite *UserServiceTestSuit) TestUpdateNameErr(){
 
 	_, updateErr = suite.userservice.UpdateName(suite.MockUsers[0].ID, invalidName)
 	suite.Equal("Invalid username size", updateErr.Error(), "Expected to have an error")
-/*
-	_, updateErr = suite.userservice.UpdateName(suite.MockUsers[0].ID, suite.MockUsers[0].Name)
+
+	_, updateErr = suite.userservice.UpdateName(suite.MockUsers[0].ID, suite.MockUsers[1].Name)
 	suite.Equal("This name is already being used", updateErr.Error(), "Expected to have an error")
-*/
+
 }
 
-func (suite *UserServiceTestSuit) TestUpdatePassword(){
+func (suite *UserServiceTestSuit) TestUpdatePassword() {
 	newPassword := "newestPassword"
 	updatePassword, updateErr := suite.userservice.UpdatePassword(suite.MockUsers[0].ID, newPassword)
 
@@ -82,7 +99,7 @@ func (suite *UserServiceTestSuit) TestUpdatePassword(){
 	suite.Equal(true, userservice.PasswordMatch(newPassword, updatePassword.Password))
 }
 
-func (suite *UserServiceTestSuit) TestUpdatePasswordErr(){
+func (suite *UserServiceTestSuit) TestUpdatePasswordErr() {
 	invalidID := uint(1231313)
 	invalidPassword := ""
 
@@ -93,7 +110,7 @@ func (suite *UserServiceTestSuit) TestUpdatePasswordErr(){
 	suite.Equal("Invalid password size", updateErr.Error(), "Expected to have an error")
 }
 
-func (suite *UserServiceTestSuit) TestUpdateEmail(){
+func (suite *UserServiceTestSuit) TestUpdateEmail() {
 	newEmail := "newemail@example.com"
 	updateEmail, updateErr := suite.userservice.UpdateEmail(suite.MockUsers[0].ID, newEmail)
 
@@ -101,7 +118,7 @@ func (suite *UserServiceTestSuit) TestUpdateEmail(){
 	suite.Equal(updateEmail.Email, newEmail)
 }
 
-func (suite *UserServiceTestSuit) TestUpdateEmailErr(){
+func (suite *UserServiceTestSuit) TestUpdateEmailErr() {
 	invalidID := uint(1231313)
 	invalidEmail := ""
 
@@ -110,6 +127,9 @@ func (suite *UserServiceTestSuit) TestUpdateEmailErr(){
 
 	_, updateErr = suite.userservice.UpdateEmail(suite.MockUsers[0].ID, invalidEmail)
 	suite.Equal("Invalid email size", updateErr.Error(), "Expected to have an error")
+
+	_, updateErr = suite.userservice.UpdateEmail(suite.MockUsers[0].ID, suite.MockUsers[1].Email)
+	suite.Equal("This email is already being used", updateErr.Error(), "Expected to have an error")
 }
 
 func (suite *UserServiceTestSuit) TestUpdateStatus() {
@@ -120,7 +140,7 @@ func (suite *UserServiceTestSuit) TestUpdateStatus() {
 	suite.Equal(updateStatus.Status, newStatus)
 }
 
-func (suite *UserServiceTestSuit) TestUpdateStatusErr(){
+func (suite *UserServiceTestSuit) TestUpdateStatusErr() {
 	invalidID := uint(1231313)
 	invalidStatus := uint(11)
 
