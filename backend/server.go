@@ -5,6 +5,7 @@ import (
 	"log"
 	"orb-api/config"
 	"orb-api/controllers"
+	"orb-api/services"
 )
 
 func main() {
@@ -18,9 +19,11 @@ func main() {
 
 	defer config.CloseDB(repository)
 
-	handler := controllers.NewBaseHandler(repository)
+	services := services.SetupServices(repository)
 
-	server.Get("/", handler.HandleHello)
+	controllers := controllers.SetupControllers(services)
+
+	server.Post("/register", controllers.User.CreateUser)
 
 	server.Listen(":8000")
 }
