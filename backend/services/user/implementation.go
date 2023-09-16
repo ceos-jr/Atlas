@@ -75,17 +75,17 @@ func (service *UserService) CreateNewUser(credentials ICreateUser) (*models.User
 }
 
 func (service *UserService) UpdateName(id uint, name string) (*models.User, error) {
-	// Check if name has a valid length
-	if !user.ValidUserName(name) {
-		return nil, errors.New("Invalid username size")
-	}
-
 	// Check if the id belongs a valid user
 	if !service.UserRepo.ValidUser(id) {
 		return nil, errors.New("Invalid user id")
 	}
 
-	// Check if the email is not being used by anyone else and different by current
+	// Check if name has a valid length
+	if !user.ValidUserName(name) {
+		return nil, errors.New("Invalid username size")
+	}
+
+	// Check if the name is not being used by anyone else and different by current
 	userArray, readErr := service.UserRepo.ReadBy(user.IReadBy{
 		Name: &name,
 	})
@@ -145,6 +145,10 @@ func (service *UserService) UpdateEmail(id uint, email string) (*models.User, er
 	// Check if the id belongs a valid user
 	if !service.UserRepo.ValidUser(id) {
 		return nil, errors.New("Invalid user id")
+	}
+
+	if !user.ValidUserEmail(email) {
+		return nil, errors.New("Invalid email size")
 	}
 
 	// Check if the email is not being used by anyone else and different by current
