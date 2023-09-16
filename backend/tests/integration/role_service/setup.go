@@ -3,15 +3,15 @@ package roleservicetest
 import (
 	"orb-api/config"
 	"orb-api/models"
-	repository "orb-api/service/role"
-	"orb-api/service/role/implementation.go"
+	"orb-api/repositories/role"
+	roleservice "orb-api/service/role"
 
 	"github.com/stretchr/testify/suite"
 )
 
 type RoleServiceTestSuite struct {
 	suite.Suite
-	Repo *repository.Repository
+	Service   *roleservice.RoleService
 	MockRoles []models.Role
 }
 
@@ -22,12 +22,12 @@ func (suite *RoleServiceTestSuite) SetupSuite() {
 		panic(setupError)
 	}
 
-	suite.Repo = repo
+	suite.Service = roleservice.SetupRoleService(&repo.Role)
 }
 
 func (suite *RoleServiceTestSuite) TearDownSuite() {
 	for index := range suite.MockRoles {
-		_, deleteErr := suite.Repo.Role.Delete(role.IDelete{
+		_, deleteErr := suite.Service.RoleRepo.Delete(role.IDelete{
 			RoleID: suite.MockRoles[index].ID,
 		})
 
@@ -36,4 +36,3 @@ func (suite *RoleServiceTestSuite) TearDownSuite() {
 		}
 	}
 }
-
