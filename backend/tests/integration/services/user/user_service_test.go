@@ -57,7 +57,11 @@ func (suite *UserServiceTestSuit) TestCreateNewUserErr() {
 		suite.MockUsers[0].Password,
 	)
 
-	suite.Equal("This email is already being used", createErr.Error(), "Expected to have an error")
+	suite.Equal(
+		"This email is already being used",
+		createErr.Error(),
+		"Expected to have an error",
+	)
 
 	_, createErr = suite.Service.CreateNewUser(
 		suite.MockUsers[0].Name,
@@ -65,7 +69,11 @@ func (suite *UserServiceTestSuit) TestCreateNewUserErr() {
 		suite.MockUsers[0].Password,
 	)
 
-	suite.Equal("This username is already being used", createErr.Error(), "Expected to have an error")
+	suite.Equal(
+		"This username is already being used",
+		createErr.Error(),
+		"Expected to have an error",
+	)
 }
 
 func (suite *UserServiceTestSuit) TestUpdateName() {
@@ -86,14 +94,23 @@ func (suite *UserServiceTestSuit) TestUpdateNameErr() {
 	_, updateErr = suite.Service.UpdateName(suite.MockUsers[0].ID, invalidName)
 	suite.Equal("Invalid username size", updateErr.Error(), "Expected to have an error")
 
-	_, updateErr = suite.Service.UpdateName(suite.MockUsers[0].ID, suite.MockUsers[1].Name)
-	suite.Equal("This name is already being used", updateErr.Error(), "Expected to have an error")
+	_, updateErr = suite.Service.UpdateName(
+		suite.MockUsers[0].ID,
+		suite.MockUsers[1].Name,
+	)
+	suite.Equal(
+		"This name is already being used",
+		updateErr.Error(),
+		"Expected to have an error",
+	)
 
 }
 
 func (suite *UserServiceTestSuit) TestUpdatePassword() {
 	newPassword := "newestPassword"
-	updatePassword, updateErr := suite.Service.UpdatePassword(suite.MockUsers[0].ID, newPassword)
+	updatePassword, updateErr := suite.Service.UpdatePassword(
+		suite.MockUsers[0].ID, newPassword,
+	)
 
 	suite.Nil(updateErr, "Update error must be nil")
 	suite.Equal(true, user.PasswordMatch(newPassword, updatePassword.Password))
@@ -128,13 +145,22 @@ func (suite *UserServiceTestSuit) TestUpdateEmailErr() {
 	_, updateErr = suite.Service.UpdateEmail(suite.MockUsers[0].ID, invalidEmail)
 	suite.Equal("Invalid email size", updateErr.Error(), "Expected to have an error")
 
-	_, updateErr = suite.Service.UpdateEmail(suite.MockUsers[0].ID, suite.MockUsers[1].Email)
-	suite.Equal("This email is already being used", updateErr.Error(), "Expected to have an error")
+	_, updateErr = suite.Service.UpdateEmail(
+		suite.MockUsers[0].ID,
+		suite.MockUsers[1].Email,
+	)
+	suite.Equal(
+		"This email is already being used",
+		updateErr.Error(),
+		"Expected to have an error",
+	)
 }
 
 func (suite *UserServiceTestSuit) TestUpdateStatus() {
 	newStatus := uint(2)
-	updateStatus, updateErr := suite.Service.UpdateStatus(suite.MockUsers[0].ID, newStatus)
+	updateStatus, updateErr := suite.Service.UpdateStatus(
+		suite.MockUsers[0].ID, newStatus,
+	)
 
 	suite.Nil(updateErr, "Update erros must be nil")
 	suite.Equal(updateStatus.Status, newStatus)
