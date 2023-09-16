@@ -24,33 +24,33 @@ type UserRoleRepoTestSuite struct {
 	MockUserRole []models.UserRole
 }
 
-func (s *UserRoleRepoTestSuite) SetupSuite() {
+func (suite *UserRoleRepoTestSuite) SetupSuite() {
 	repo, setupErr := config.SetupDB("../../.env")
 
 	if setupErr != nil {
 		panic(setupErr)
 	}
 
-	s.Repo = repo
-	s.MockUser = make([]models.User, 3)
-	s.MockRole = make([]models.Role, MockArraySize)
-	s.MockUserRole = make([]models.UserRole, MockArraySize)
-	s.SetupMocks()
+	suite.Repo = repo
+	suite.MockUser = make([]models.User, 3)
+	suite.MockRole = make([]models.Role, MockArraySize)
+	suite.MockUserRole = make([]models.UserRole, MockArraySize)
+	suite.SetupMocks()
 }
 
-func (s *UserRoleRepoTestSuite) TearDownSuite() {
-	for index := range s.MockUser {
-		_, deleteErr := s.Repo.User.Delete(user.IDelete{
-			ID: s.MockUser[index].ID,
+func (suite *UserRoleRepoTestSuite) TearDownSuite() {
+	for index := range suite.MockUser {
+		_, deleteErr := suite.Repo.User.Delete(user.IDelete{
+			ID: suite.MockUser[index].ID,
 		})
 
 		if deleteErr != nil {
 			panic(deleteErr)
 		}
 	}
-	for index := range s.MockRole {
-		_, deleteErr := s.Repo.Role.Delete(role.IDelete{
-			RoleID: s.MockRole[index].ID,
+	for index := range suite.MockRole {
+		_, deleteErr := suite.Repo.Role.Delete(role.IDelete{
+			RoleID: suite.MockRole[index].ID,
 		})
 
 		if deleteErr != nil {
@@ -58,9 +58,9 @@ func (s *UserRoleRepoTestSuite) TearDownSuite() {
 		}
 	}
 
-	for index := range s.MockUserRole {
-		_, deleteErr := s.Repo.UserRole.Delete(userrole.IDelete{
-			UserRoleID: s.MockUserRole[index].ID,
+	for index := range suite.MockUserRole {
+		_, deleteErr := suite.Repo.UserRole.Delete(userrole.IDelete{
+			UserRoleID: suite.MockUserRole[index].ID,
 		})
 
 		if deleteErr != nil {
@@ -70,9 +70,9 @@ func (s *UserRoleRepoTestSuite) TearDownSuite() {
 	}
 }
 
-func (s *UserRoleRepoTestSuite) SetupMocks() {
+func (suite *UserRoleRepoTestSuite) SetupMocks() {
 	for index := 0; index < 3; index++ {
-		createdUser, createError := s.Repo.User.Create(user.ICreate{
+		createdUser, createError := suite.Repo.User.Create(user.ICreate{
 			Name:     faker.Name(),
 			Email:    faker.Email(),
 			Status:   models.UStatusActive,
@@ -83,11 +83,11 @@ func (s *UserRoleRepoTestSuite) SetupMocks() {
 			panic(createError)
 		}
 
-		s.MockUser[index] = *createdUser
+		suite.MockUser[index] = *createdUser
 	}
 
 	for index := 0; index < 2; index++ {
-		createdRole, createError := s.Repo.Role.Create(role.ICreate{
+		createdRole, createError := suite.Repo.Role.Create(role.ICreate{
 			Name:        faker.Name(),
 			Description: faker.Sentence(),
 		})
@@ -96,18 +96,18 @@ func (s *UserRoleRepoTestSuite) SetupMocks() {
 			panic(createError)
 		}
 
-		s.MockRole[index] = *createdRole
+		suite.MockRole[index] = *createdRole
 	}
 
-	userRole, createError := s.Repo.UserRole.Create(userrole.ICreate{
-		RoleID: s.MockRole[0].ID,
-		UserID: s.MockUser[0].ID,
+	userRole, createError := suite.Repo.UserRole.Create(userrole.ICreate{
+		RoleID: suite.MockRole[0].ID,
+		UserID: suite.MockUser[0].ID,
 	})
 
 	if createError != nil {
 		panic(createError)
 	}
 
-	s.MockUserRole[0] = *userRole
+	suite.MockUserRole[0] = *userRole
 
 }
