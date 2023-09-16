@@ -1,4 +1,4 @@
-package roleservice
+package role
 
 import (
 	"orb-api/models"
