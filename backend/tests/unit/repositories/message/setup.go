@@ -31,28 +31,6 @@ func (suite *MessageRepoTestSuite) SetupSuite() {
 	suite.SetupMocks()
 }
 
-func (suite *MessageRepoTestSuite) TearDownSuite() {
-	for index := range suite.MockUsers {
-		_, deleteErr := suite.Repo.User.Delete(user.IDelete{
-			ID: suite.MockUsers[index].ID,
-		})
-
-		if deleteErr != nil {
-			panic(deleteErr)
-		}
-	}
-
-	for index := range suite.MockMessages {
-		_, deleteErr := suite.Repo.Message.Delete(message.IDelete{
-			ID: suite.MockMessages[index].ID,
-		})
-
-		if deleteErr != nil {
-			panic(deleteErr)
-		}
-	}
-}
-
 func (suite *MessageRepoTestSuite) SetupMocks() {
 	for index := 0; index < 2; index++ {
 		user, createErr := suite.Repo.User.Create(user.ICreate{
@@ -80,4 +58,26 @@ func (suite *MessageRepoTestSuite) SetupMocks() {
 	}
 
 	suite.MockMessages[0] = *message
+}
+
+func (suite *MessageRepoTestSuite) TearDownSuite() {
+	for index := range suite.MockUsers {
+		_, deleteErr := suite.Repo.User.Delete(user.IDelete{
+			ID: suite.MockUsers[index].ID,
+		})
+
+		if deleteErr != nil {
+			panic(deleteErr)
+		}
+	}
+
+	for index := range suite.MockMessages {
+		_, deleteErr := suite.Repo.Message.Delete(message.IDelete{
+			ID: suite.MockMessages[index].ID,
+		})
+
+		if deleteErr != nil {
+			panic(deleteErr)
+		}
+	}
 }

@@ -38,38 +38,6 @@ func (suite *UserRoleRepoTestSuite) SetupSuite() {
 	suite.SetupMocks()
 }
 
-func (suite *UserRoleRepoTestSuite) TearDownSuite() {
-	for index := range suite.MockUser {
-		_, deleteErr := suite.Repo.User.Delete(user.IDelete{
-			ID: suite.MockUser[index].ID,
-		})
-
-		if deleteErr != nil {
-			panic(deleteErr)
-		}
-	}
-	for index := range suite.MockRole {
-		_, deleteErr := suite.Repo.Role.Delete(role.IDelete{
-			RoleID: suite.MockRole[index].ID,
-		})
-
-		if deleteErr != nil {
-			panic(deleteErr)
-		}
-	}
-
-	for index := range suite.MockUserRole {
-		_, deleteErr := suite.Repo.UserRole.Delete(userrole.IDelete{
-			UserRoleID: suite.MockUserRole[index].ID,
-		})
-
-		if deleteErr != nil {
-			panic(deleteErr)
-		}
-
-	}
-}
-
 func (suite *UserRoleRepoTestSuite) SetupMocks() {
 	for index := 0; index < 3; index++ {
 		createdUser, createError := suite.Repo.User.Create(user.ICreate{
@@ -109,5 +77,36 @@ func (suite *UserRoleRepoTestSuite) SetupMocks() {
 	}
 
 	suite.MockUserRole[0] = *userRole
+}
 
+func (suite *UserRoleRepoTestSuite) TearDownSuite() {
+	for index := range suite.MockUser {
+		_, deleteErr := suite.Repo.User.Delete(user.IDelete{
+			ID: suite.MockUser[index].ID,
+		})
+
+		if deleteErr != nil {
+			panic(deleteErr)
+		}
+	}
+	for index := range suite.MockRole {
+		_, deleteErr := suite.Repo.Role.Delete(role.IDelete{
+			RoleID: suite.MockRole[index].ID,
+		})
+
+		if deleteErr != nil {
+			panic(deleteErr)
+		}
+	}
+
+	for index := range suite.MockUserRole {
+		_, deleteErr := suite.Repo.UserRole.Delete(userrole.IDelete{
+			UserRoleID: suite.MockUserRole[index].ID,
+		})
+
+		if deleteErr != nil {
+			panic(deleteErr)
+		}
+
+	}
 }

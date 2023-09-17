@@ -24,18 +24,8 @@ func (suite *RoleRepoTestSuite) SetupSuite() {
 
 	suite.Repo = repo
 	suite.MockRoles = make([]models.Role, 2)
-}
 
-func (suite *RoleRepoTestSuite) TearDownSuite() {
-	for index := range suite.MockRoles {
-		_, deleteErr := suite.Repo.Role.Delete(role.IDelete{
-			RoleID: suite.MockRoles[index].ID,
-		})
-
-		if deleteErr != nil {
-			panic(deleteErr)
-		}
-	}
+	suite.SetupMocks()
 }
 
 func (suite *RoleRepoTestSuite) SetupMocks() {
@@ -49,4 +39,16 @@ func (suite *RoleRepoTestSuite) SetupMocks() {
 	}
 
 	suite.MockRoles[0] = *role
+}
+
+func (suite *RoleRepoTestSuite) TearDownSuite() {
+	for index := range suite.MockRoles {
+		_, deleteErr := suite.Repo.Role.Delete(role.IDelete{
+			RoleID: suite.MockRoles[index].ID,
+		})
+
+		if deleteErr != nil {
+			panic(deleteErr)
+		}
+	}
 }

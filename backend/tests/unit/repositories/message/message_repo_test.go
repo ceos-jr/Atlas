@@ -72,7 +72,6 @@ func (suite *MessageRepoTestSuite) TestReadMessageBySender() {
 
 	suite.Nil(readErr, "Read Error must be nil")
 	suite.Equal(suite.MockUsers[0].ID, messages[0].Sender, "IDs must match")
-
 }
 
 func (suite *MessageRepoTestSuite) TestReadMessageByReceiver() {

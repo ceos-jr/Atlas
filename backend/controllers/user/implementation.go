@@ -2,7 +2,6 @@ package user
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"orb-api/services/user"
 )
 
 type CreateUserRequestBody struct {

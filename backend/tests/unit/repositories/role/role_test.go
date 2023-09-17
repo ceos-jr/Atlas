@@ -20,13 +20,10 @@ func (suite *RoleRepoTestSuite) TestCreateRole() {
 }
 
 func (suite *RoleRepoTestSuite) TestReadAllRoles() {
-	limit := 2
-	roles, readErr := suite.Repo.Role.ReadAll(role.IReadAll{
-		Limit: &limit,
-	})
+	roles, readErr := suite.Repo.Role.ReadAll(role.IReadAll{})
 
 	suite.Nil(readErr, "Read error must be nil")
-	suite.Equal(2, len(roles), "Expected to have one role")
+	suite.Equal(2, len(roles), "Expected to have 2 roles")
 	suite.Equal(suite.MockRoles[0].ID, roles[0].ID, "Expected to have the same ID")
 	suite.Equal(suite.MockRoles[1].ID, roles[1].ID, "Expected to have the same ID")
 }
