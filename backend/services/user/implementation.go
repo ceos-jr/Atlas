@@ -12,10 +12,14 @@ func SetupService(repository *user.Repository) *Service {
 	}
 }
 
-func (service *Service) CreateNewUser(credentials ICreateUser) (*models.User, error) {
+func (service *Service) CreateNewUser(
+	name string,
+	email string,
+	password string,
+) (*models.User, error) {
 	// Check if the email is not being used by anyone else
 	userArray, readErr := service.UserRepo.ReadBy(user.IReadBy{
-		Email: &credentials.Email,
+		Email: &email,
 	})
 
 	if readErr != nil {
@@ -28,7 +32,7 @@ func (service *Service) CreateNewUser(credentials ICreateUser) (*models.User, er
 
 	// Check if the username is not being used by anyone else
 	userArray, readErr = service.UserRepo.ReadBy(user.IReadBy{
-		Name: &credentials.Name,
+		Name: &name,
 	})
 
 	if readErr != nil {
@@ -40,28 +44,28 @@ func (service *Service) CreateNewUser(credentials ICreateUser) (*models.User, er
 	}
 
 	// Check email, username and password length
-	if !user.ValidUserName(credentials.Name) {
+	if !user.ValidUserName(name) {
 		return nil, errors.New("Invalid username size")
 	}
 
-	if !user.ValidUserEmail(credentials.Email) {
+	if !user.ValidUserEmail(email) {
 		return nil, errors.New("Invalid email size")
 	}
 
-	if !user.ValidUserPassword(credentials.Password) {
+	if !user.ValidUserPassword(password) {
 		return nil, errors.New("Invalid password size")
 	}
 
 	// Hash the password to prevent security vulnerabilities
-	hashedPassword, hashErr := HashPassword(credentials.Password)
+	hashedPassword, hashErr := HashPassword(password)
 
 	if hashErr != nil {
 		return nil, hashErr
 	}
 
 	newUser, createErr := service.UserRepo.Create(user.ICreate{
-		Name:     credentials.Name,
-		Email:    credentials.Email,
+		Name:     name,
+		Email:    email,
 		Password: hashedPassword,
 		Status:   models.UStatusProcessing,
 	})
@@ -84,7 +88,7 @@ func (service *Service) UpdateName(id uint, name string) (*models.User, error) {
 		return nil, errors.New("Invalid user id")
 	}
 
-	// Check if the email is not being used by anyone else and different by current
+	// Check if the name is not being used by anyone else and different by current
 	userArray, readErr := service.UserRepo.ReadBy(user.IReadBy{
 		Name: &name,
 	})
@@ -93,7 +97,7 @@ func (service *Service) UpdateName(id uint, name string) (*models.User, error) {
 		return nil, readErr
 	}
 
-	if len(userArray) > 0 {
+	if len(userArray) == 1 {
 		return nil, errors.New("This name is already being used")
 	}
 
@@ -141,6 +145,10 @@ func (service *Service) UpdatePassword(id uint, password string) (*models.User, 
 }
 
 func (service *Service) UpdateEmail(id uint, email string) (*models.User, error) {
+	if !user.ValidUserEmail(email) {
+		return nil, errors.New("Invalid email size")
+	}
+
 	// Check if the id belongs a valid user
 	if !service.UserRepo.ValidUser(id) {
 		return nil, errors.New("Invalid user id")
@@ -155,7 +163,7 @@ func (service *Service) UpdateEmail(id uint, email string) (*models.User, error)
 		return nil, readErr
 	}
 
-	if len(userArray) > 0 {
+	if len(userArray) == 1 {
 		return nil, errors.New("This email is already being used")
 	}
 
