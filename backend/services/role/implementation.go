@@ -17,22 +17,19 @@ func (s *Service) CreateRole(name string, description string) (*models.Role, err
 		return nil, errors.New("name or description cannot be empty")
 	}
 
-	//calls the roleRepository to insert the new role in the database
 	createdRole, err := s.RoleRepo.Create(role.ICreate{
 		Name:        name,
 		Description: description,
 	})
 
-	//if there is an error, return nil and the error
 	if err != nil {
 		return nil, err
 	}
 
-	//if there is no error, return the created role and nil
 	return createdRole, nil
 }
 
-func (s *Service) UpdateRoleName(id uint, name string) (*models.Role, error) {
+func (s *Service) UpdateName(id uint, name string) (*models.Role, error) {
 	if name == "" {
 		return nil, errors.New("Name cannot be empty")
 	}
@@ -41,13 +38,13 @@ func (s *Service) UpdateRoleName(id uint, name string) (*models.Role, error) {
 		return nil, errors.New("This role doesn't exist")
 	}
 
-  roleArray, readErr := s.RoleRepo.ReadBy(role.IReadBy{
+	roleArray, readErr := s.RoleRepo.ReadBy(role.IReadBy{
 		Name: &name,
 	})
 
-  if readErr != nil {
-    return nil, readErr
-  }
+	if readErr != nil {
+		return nil, readErr
+	}
 
 	if len(roleArray) == 1 {
 		return nil, errors.New("This name is already being used")
@@ -65,12 +62,12 @@ func (s *Service) UpdateRoleName(id uint, name string) (*models.Role, error) {
 	return updateName, nil
 }
 
-func (s *Service) UpdateRoleDescription(id uint, description string) (*models.Role, error) {
-  if description == "" {
+func (s *Service) UpdateDescription(id uint, description string) (*models.Role, error) {
+	if description == "" {
 		return nil, errors.New("Description cannot be empty")
 	}
-	
-  if !s.RoleRepo.ValidRole(id) {
+
+	if !s.RoleRepo.ValidRole(id) {
 		return nil, errors.New("This role doesn't exist")
 	}
 
