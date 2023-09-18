@@ -21,13 +21,13 @@ func (suite *RoleServiceTestSuite) TestCreateRole() {
 }
 
 func (suite *RoleServiceTestSuite) TestUpdateName() {
-	role, updateErr := suite.Service.UpdateRoleName(suite.MockRoles[0].ID, "NewRole")
+	role, updateErr := suite.Service.UpdateName(suite.MockRoles[0].ID, "NewRole")
 	suite.Nil(updateErr, "Update error must be nil")
 	suite.Equal("NewRole", role.Name, "Name does not match")
 }
 
 func (suite *RoleServiceTestSuite) TestUpdateDescription() {
-	role, updateErr := suite.Service.UpdateRoleDescription(suite.MockRoles[0].ID, "New Description")
+	role, updateErr := suite.Service.UpdateDescription(suite.MockRoles[0].ID, "New Description")
 	suite.Nil(updateErr, "Update error must be nil")
 	suite.Equal("New Description", role.Description, "Description does not match")
 }

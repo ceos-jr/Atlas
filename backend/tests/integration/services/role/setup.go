@@ -22,7 +22,7 @@ func (suite *RoleServiceTestSuite) SetupSuite() {
 		panic(setupError)
 	}
 
-	suite.Service = roleservice.SetupService(&repo.Role)
+	suite.Service = roleservice.Setup(&repo.Role)
 }
 
 func (suite *RoleServiceTestSuite) TearDownSuite() {
