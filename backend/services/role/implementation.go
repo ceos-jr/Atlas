@@ -31,11 +31,11 @@ func (s *Service) CreateRole(name string, description string) (*models.Role, err
 
 func (s *Service) UpdateName(id uint, name string) (*models.Role, error) {
 	if name == "" {
-		return nil, errors.New("Name cannot be empty")
+		return nil, errors.New("name cannot be empty")
 	}
 
 	if !s.RoleRepo.ValidRole(id) {
-		return nil, errors.New("This role doesn't exist")
+		return nil, errors.New("this role doesn't exist")
 	}
 
 	roleArray, readErr := s.RoleRepo.ReadBy(role.IReadBy{
@@ -47,7 +47,7 @@ func (s *Service) UpdateName(id uint, name string) (*models.Role, error) {
 	}
 
 	if len(roleArray) == 1 {
-		return nil, errors.New("This name is already being used")
+		return nil, errors.New("this name is already being used")
 	}
 
 	updateName, updateErr := s.RoleRepo.Update(role.IUpdate{
@@ -64,11 +64,11 @@ func (s *Service) UpdateName(id uint, name string) (*models.Role, error) {
 
 func (s *Service) UpdateDescription(id uint, description string) (*models.Role, error) {
 	if description == "" {
-		return nil, errors.New("Description cannot be empty")
+		return nil, errors.New("description cannot be empty")
 	}
 
 	if !s.RoleRepo.ValidRole(id) {
-		return nil, errors.New("This role doesn't exist")
+		return nil, errors.New("this role doesn't exist")
 	}
 
 	updateDescription, updateErr := s.RoleRepo.Update(role.IUpdate{
