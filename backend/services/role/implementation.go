@@ -6,7 +6,7 @@ import (
 	"orb-api/repositories/role"
 )
 
-func SetupService(repo *role.Repository) *Service {
+func Setup(repo *role.Repository) *Service {
 	return &Service{
 		RoleRepo: repo,
 	}
