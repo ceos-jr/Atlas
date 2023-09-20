@@ -1,0 +1,7 @@
+# MacOs files ignore
+/.DS_Store
+**/.DS_Store
+
+# JetBrains files ignore
+/.idea
+**/.idea
