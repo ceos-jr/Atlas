@@ -9,13 +9,13 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
-type RoleServiceTestSuite struct {
+type TestSuite struct {
 	suite.Suite
 	Service   *roleservice.Service
 	MockRoles []models.Role
 }
 
-func (suite *RoleServiceTestSuite) SetupSuite() {
+func (suite *TestSuite) SetupSuite() {
 	repo, setupError := config.SetupDB("../../.env")
 
 	if setupError != nil {
@@ -25,7 +25,7 @@ func (suite *RoleServiceTestSuite) SetupSuite() {
 	suite.Service = roleservice.Setup(&repo.Role)
 }
 
-func (suite *RoleServiceTestSuite) TearDownSuite() {
+func (suite *TestSuite) TearDownSuite() {
 	for index := range suite.MockRoles {
 		_, deleteErr := suite.Service.RoleRepo.Delete(role.IDelete{
 			RoleID: suite.MockRoles[index].ID,

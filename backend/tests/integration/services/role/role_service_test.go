@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
-func (suite *RoleServiceTestSuite) TestCreateRole() {
+func (suite *TestSuite) TestCreateRole() {
 	var roles = make([]models.Role, 1)
 
 	role, createErr := suite.Service.CreateRole("Role01", "This is a test")
@@ -20,18 +20,18 @@ func (suite *RoleServiceTestSuite) TestCreateRole() {
 
 }
 
-func (suite *RoleServiceTestSuite) TestUpdateName() {
+func (suite *TestSuite) TestUpdateName() {
 	role, updateErr := suite.Service.UpdateName(suite.MockRoles[0].ID, "NewRole")
 	suite.Nil(updateErr, "Update error must be nil")
 	suite.Equal("NewRole", role.Name, "Name does not match")
 }
 
-func (suite *RoleServiceTestSuite) TestUpdateDescription() {
+func (suite *TestSuite) TestUpdateDescription() {
 	role, updateErr := suite.Service.UpdateDescription(suite.MockRoles[0].ID, "New Description")
 	suite.Nil(updateErr, "Update error must be nil")
 	suite.Equal("New Description", role.Description, "Description does not match")
 }
 
 func TestRoleRepository(test *testing.T) {
-	suite.Run(test, new(RoleServiceTestSuite))
+	suite.Run(test, new(TestSuite))
 }
