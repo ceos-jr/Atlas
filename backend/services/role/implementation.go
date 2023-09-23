@@ -12,7 +12,7 @@ func Setup(repo *role.Repository) *Service {
 	}
 }
 
-func (s *Service) CreateRole(name string, description string) (*models.Role, error) {
+func (s *Service) NewRole(name string, description string) (*models.Role, error) {
 	if name == "" || description == "" {
 		return nil, errors.New("name or description cannot be empty")
 	}

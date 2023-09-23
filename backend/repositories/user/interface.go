@@ -9,7 +9,7 @@ const (
 	emailMaxLen    = 128
 	emailMinLen    = 3
 	nameMaxLen     = 128
-	nameMinLen     = 5
+	nameMinLen     = 3
 	passwordMinLen = 8
 )
 

@@ -7,8 +7,8 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
-func (suite *UserServiceTestSuit) TestCreateNewUser() {
-	newUser, createErr := suite.Service.CreateNewUser(
+func (suite *TestSuit) TestCreateNewUser() {
+	newUser, createErr := suite.Service.NewUser(
 		"exampleexample",
 		"example@example.com.br",
 		suite.MockUsers[0].Password,
@@ -22,12 +22,12 @@ func (suite *UserServiceTestSuit) TestCreateNewUser() {
 	suite.MockUsers[1] = *newUser
 }
 
-func (suite *UserServiceTestSuit) TestCreateNewUserErr() {
+func (suite *TestSuit) TestCreateNewUserErr() {
 	invalidName := ""
 	invalidEmail := ""
 	invalidPassword := ""
 
-	_, createErr := suite.Service.CreateNewUser(
+	_, createErr := suite.Service.NewUser(
 		invalidName,
 		"example@example.com",
 		suite.MockUsers[0].Password,
@@ -35,7 +35,7 @@ func (suite *UserServiceTestSuit) TestCreateNewUserErr() {
 
 	suite.Equal("Invalid name", createErr.Error(), "Expected to have an error")
 
-	_, createErr = suite.Service.CreateNewUser(
+	_, createErr = suite.Service.NewUser(
 		"exampleexample2",
 		invalidEmail,
 		suite.MockUsers[0].Password,
@@ -43,7 +43,7 @@ func (suite *UserServiceTestSuit) TestCreateNewUserErr() {
 
 	suite.Equal("Invalid email", createErr.Error(), "Expected to have an error")
 
-	_, createErr = suite.Service.CreateNewUser(
+	_, createErr = suite.Service.NewUser(
 		"exampleexample3",
 		"example@example.com.net",
 		invalidPassword,
@@ -51,7 +51,7 @@ func (suite *UserServiceTestSuit) TestCreateNewUserErr() {
 
 	suite.Equal("Invalid password size", createErr.Error(), "Expected to have an error")
 
-	_, createErr = suite.Service.CreateNewUser(
+	_, createErr = suite.Service.NewUser(
 		"exampleexample3",
 		suite.MockUsers[0].Email,
 		suite.MockUsers[0].Password,
@@ -63,7 +63,7 @@ func (suite *UserServiceTestSuit) TestCreateNewUserErr() {
 		"Expected to have an error",
 	)
 
-	_, createErr = suite.Service.CreateNewUser(
+	_, createErr = suite.Service.NewUser(
 		suite.MockUsers[0].Name,
 		"example@example.com.net",
 		suite.MockUsers[0].Password,
@@ -76,7 +76,7 @@ func (suite *UserServiceTestSuit) TestCreateNewUserErr() {
 	)
 }
 
-func (suite *UserServiceTestSuit) TestUpdateName() {
+func (suite *TestSuit) TestUpdateName() {
 	newName := "newName"
 	updateName, updateErr := suite.Service.UpdateName(suite.MockUsers[0].ID, newName)
 
@@ -84,7 +84,7 @@ func (suite *UserServiceTestSuit) TestUpdateName() {
 	suite.Equal(updateName.Name, newName)
 }
 
-func (suite *UserServiceTestSuit) TestUpdateNameErr() {
+func (suite *TestSuit) TestUpdateNameErr() {
 	invalidID := uint(1231313)
 	invalidName := ""
 
@@ -106,7 +106,7 @@ func (suite *UserServiceTestSuit) TestUpdateNameErr() {
 
 }
 
-func (suite *UserServiceTestSuit) TestUpdatePassword() {
+func (suite *TestSuit) TestUpdatePassword() {
 	newPassword := "newestPassword"
 	updatePassword, updateErr := suite.Service.UpdatePassword(
 		suite.MockUsers[0].ID, newPassword,
@@ -116,7 +116,7 @@ func (suite *UserServiceTestSuit) TestUpdatePassword() {
 	suite.Equal(true, user.PasswordMatch(newPassword, updatePassword.Password))
 }
 
-func (suite *UserServiceTestSuit) TestUpdatePasswordErr() {
+func (suite *TestSuit) TestUpdatePasswordErr() {
 	invalidID := uint(1231313)
 	invalidPassword := ""
 
@@ -127,7 +127,7 @@ func (suite *UserServiceTestSuit) TestUpdatePasswordErr() {
 	suite.Equal("Invalid password size", updateErr.Error(), "Expected to have an error")
 }
 
-func (suite *UserServiceTestSuit) TestUpdateEmail() {
+func (suite *TestSuit) TestUpdateEmail() {
 	newEmail := "newemail@example.com"
 	updateEmail, updateErr := suite.Service.UpdateEmail(suite.MockUsers[0].ID, newEmail)
 
@@ -135,7 +135,7 @@ func (suite *UserServiceTestSuit) TestUpdateEmail() {
 	suite.Equal(updateEmail.Email, newEmail)
 }
 
-func (suite *UserServiceTestSuit) TestUpdateEmailErr() {
+func (suite *TestSuit) TestUpdateEmailErr() {
 	invalidID := uint(1231313)
 	invalidEmail := ""
 
@@ -156,7 +156,7 @@ func (suite *UserServiceTestSuit) TestUpdateEmailErr() {
 	)
 }
 
-func (suite *UserServiceTestSuit) TestUpdateStatus() {
+func (suite *TestSuit) TestUpdateStatus() {
 	newStatus := uint(2)
 	updateStatus, updateErr := suite.Service.UpdateStatus(
 		suite.MockUsers[0].ID, newStatus,
@@ -166,7 +166,7 @@ func (suite *UserServiceTestSuit) TestUpdateStatus() {
 	suite.Equal(updateStatus.Status, newStatus)
 }
 
-func (suite *UserServiceTestSuit) TestUpdateStatusErr() {
+func (suite *TestSuit) TestUpdateStatusErr() {
 	invalidID := uint(1231313)
 	invalidStatus := uint(11)
 
@@ -178,5 +178,5 @@ func (suite *UserServiceTestSuit) TestUpdateStatusErr() {
 }
 
 func TestUserRepository(t *testing.T) {
-	suite.Run(t, new(UserServiceTestSuit))
+	suite.Run(t, new(TestSuit))
 }
