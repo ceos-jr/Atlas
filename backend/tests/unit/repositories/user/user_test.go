@@ -7,8 +7,8 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
-func (suite *UserRepoTestSuite) TestCreateUser() {
-	user, createErr := suite.Repo.User.Create(user.ICreate{
+func (suite *TestSuite) TestCreateUser() {
+	newUser, createErr := suite.Repo.User.Create(user.ICreate{
 		Name:     "User 01",
 		Email:    "user01@example.com",
 		Password: "12345678",
@@ -16,15 +16,15 @@ func (suite *UserRepoTestSuite) TestCreateUser() {
 	})
 
 	suite.Nil(createErr, "Create error must be nil")
-	suite.Equal("User 01", user.Name, "Name does not match")
-	suite.Equal("user01@example.com", user.Email, "Email does not match")
-	suite.Equal(uint(1), user.Status, "Status does not match")
-	suite.Equal("12345678", user.Password, "Password does not match")
+	suite.Equal("User 01", newUser.Name, "Name does not match")
+	suite.Equal("user01@example.com", newUser.Email, "Email does not match")
+	suite.Equal(uint(1), newUser.Status, "Status does not match")
+	suite.Equal("12345678", newUser.Password, "Password does not match")
 
-	suite.MockUsers[1] = *user
+	suite.MockUsers[1] = *newUser
 }
 
-func (suite *UserRepoTestSuite) TestReadAllUsers() {
+func (suite *TestSuite) TestReadAllUsers() {
 	users, readErr := suite.Repo.User.ReadAll(user.IReadAll{})
 
 	suite.Nil(readErr, "Read error must be nil")
@@ -33,7 +33,7 @@ func (suite *UserRepoTestSuite) TestReadAllUsers() {
 
 }
 
-func (suite *UserRepoTestSuite) TestReadUserByID() {
+func (suite *TestSuite) TestReadUserByID() {
 	invalidID := uint(777)
 
 	users, readErr := suite.Repo.User.ReadBy(user.IReadBy{
@@ -52,7 +52,7 @@ func (suite *UserRepoTestSuite) TestReadUserByID() {
 	suite.Equal(0, len(users), "Expected to have one user")
 }
 
-func (suite *UserRepoTestSuite) TestReadUserByName() {
+func (suite *TestSuite) TestReadUserByName() {
 	users, readErr := suite.Repo.User.ReadBy(user.IReadBy{
 		Name: &suite.MockUsers[0].Name,
 	})
@@ -63,7 +63,7 @@ func (suite *UserRepoTestSuite) TestReadUserByName() {
 
 }
 
-func (suite *UserRepoTestSuite) TestReadUserByEmail() {
+func (suite *TestSuite) TestReadUserByEmail() {
 	users, readErr := suite.Repo.User.ReadBy(user.IReadBy{
 		Email: &suite.MockUsers[0].Email,
 	})
@@ -73,7 +73,7 @@ func (suite *UserRepoTestSuite) TestReadUserByEmail() {
 	suite.Equal(suite.MockUsers[0].ID, users[0].ID, "Expected to have the same ID")
 }
 
-func (suite *UserRepoTestSuite) TestReadUserByStatus() {
+func (suite *TestSuite) TestReadUserByStatus() {
 	users, readErr := suite.Repo.User.ReadBy(user.IReadBy{
 		Status: &suite.MockUsers[0].Status,
 	})
@@ -83,14 +83,14 @@ func (suite *UserRepoTestSuite) TestReadUserByStatus() {
 
 }
 
-func (suite *UserRepoTestSuite) TestReadByErr() {
+func (suite *TestSuite) TestReadByErr() {
 	_, readErr := suite.Repo.User.ReadBy(user.IReadBy{})
 
 	suite.Equal("No fields to read", readErr.Error(), "Expected to have fields error")
 }
 
-func (suite *UserRepoTestSuite) TestUpdateUser() {
-	name := "Iguinho"
+func (suite *TestSuite) TestUpdateUser() {
+	name := "Igor"
 	email := "iguinho@email.com"
 	status := uint(3)
 
@@ -121,7 +121,8 @@ func GenerateString(length int) string {
 	}
 	return generatedString
 }
-func (suite *UserRepoTestSuite) TestUpdateUserErr() {
+
+func (suite *TestSuite) TestUpdateUserErr() {
 	invalidName := GenerateString(129)
 	invalidEmail := GenerateString(129)
 	invalidStatus := uint(77)
@@ -177,7 +178,7 @@ func (suite *UserRepoTestSuite) TestUpdateUserErr() {
 	)
 }
 
-func (suite *UserRepoTestSuite) TestDeleteUser() {
+func (suite *TestSuite) TestDeleteUser() {
 	newUser, _ := suite.Repo.User.Create(user.ICreate{
 		Name:     "vanilla",
 		Email:    "vanilla@email.com",
@@ -194,5 +195,5 @@ func (suite *UserRepoTestSuite) TestDeleteUser() {
 }
 
 func TestUserRepository(t *testing.T) {
-	suite.Run(t, new(UserRepoTestSuite))
+	suite.Run(t, new(TestSuite))
 }

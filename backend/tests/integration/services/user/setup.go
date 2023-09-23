@@ -10,14 +10,14 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
-type UserServiceTestSuit struct {
+type TestSuit struct {
 	suite.Suite
 	Service   *user.Service
 	MockUsers []models.User
 }
 
-// Executed before all tests
-func (suite *UserServiceTestSuit) SetupSuite() {
+// SetupSuite Executed before all tests
+func (suite *TestSuit) SetupSuite() {
 	repositories, setupError := config.SetupDB("../../.env")
 
 	if setupError != nil {
@@ -29,8 +29,8 @@ func (suite *UserServiceTestSuit) SetupSuite() {
 	suite.SetupMocks()
 }
 
-func (suite *UserServiceTestSuit) SetupMocks() {
-	user, createErr := suite.Service.UserRepo.Create(userrepo.ICreate{
+func (suite *TestSuit) SetupMocks() {
+	newUser, createErr := suite.Service.UserRepo.Create(userrepo.ICreate{
 		Name:     "Gabrigas",
 		Email:    "gabrigas@example.com",
 		Password: "mostBeautiful",
@@ -41,11 +41,11 @@ func (suite *UserServiceTestSuit) SetupMocks() {
 		panic(createErr)
 	}
 
-	suite.MockUsers[0] = *user
+	suite.MockUsers[0] = *newUser
 }
 
-// Executed after all tests
-func (suite *UserServiceTestSuit) TearDownSuite() {
+// TearDownSuite Executed after all tests
+func (suite *TestSuit) TearDownSuite() {
 	for index := range suite.MockUsers {
 		_, deleteErr := suite.Service.UserRepo.Delete(userrepo.IDelete{
 			ID: suite.MockUsers[index].ID,
