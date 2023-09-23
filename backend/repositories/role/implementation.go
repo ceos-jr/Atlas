@@ -29,6 +29,18 @@ func NewRoleRepository(connection *gorm.DB) Repository {
 	}
 }
 
+func (r *Repository) ValidRole(id uint) bool {
+	role := models.Role{ID: id}
+
+	verifyRole := r.getDB().First(&role).Error
+
+	if verifyRole != nil {
+		return false
+	}
+
+	return true
+} 
+
 func (r *Repository) Create(createData ICreate) (*models.Role, error) {
 	var newRole = models.Role{
 		Name:        createData.Name,
