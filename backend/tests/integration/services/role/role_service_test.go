@@ -10,7 +10,7 @@ import (
 func (suite *TestSuite) TestCreateRole() {
 	var roles = make([]models.Role, 1)
 
-	role, createErr := suite.Service.CreateRole("Role01", "This is a test")
+	role, createErr := suite.Service.NewRole("Role01", "This is a test")
 	suite.Nil(createErr, "Create error must be nil")
 	suite.Equal("This is a test", role.Description, "Description does not match")
 	suite.Equal("Role01", role.Name, "Name does not match")

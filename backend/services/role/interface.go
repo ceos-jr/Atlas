@@ -11,7 +11,7 @@ type (
 	}
 
 	Interface interface {
-		CreateNewRole(name, description string) (*models.Role, error)
+		NewRole(name, description string) (*models.Role, error)
 		UpdateName(id uint, name string) (*models.Role, error)
 		UpdateDescription(id uint, description string) (*models.Role, error)
 	}
