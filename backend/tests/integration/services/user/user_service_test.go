@@ -7,8 +7,8 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
-func (suite *TestSuit) TestCreateNewUser() {
-	newUser, createErr := suite.Service.NewUser(
+func (suite *TestSuit) TestCreateUser() {
+	newUser, createErr := suite.Service.CreateUser(
 		"exampleexample",
 		"example@example.com.br",
 		suite.MockUsers[0].Password,
@@ -27,7 +27,7 @@ func (suite *TestSuit) TestCreateNewUserErr() {
 	invalidEmail := ""
 	invalidPassword := ""
 
-	_, createErr := suite.Service.NewUser(
+	_, createErr := suite.Service.CreateUser(
 		invalidName,
 		"example@example.com",
 		suite.MockUsers[0].Password,
@@ -35,7 +35,7 @@ func (suite *TestSuit) TestCreateNewUserErr() {
 
 	suite.Equal("Invalid name", createErr.Error(), "Expected to have an error")
 
-	_, createErr = suite.Service.NewUser(
+	_, createErr = suite.Service.CreateUser(
 		"exampleexample2",
 		invalidEmail,
 		suite.MockUsers[0].Password,
@@ -43,7 +43,7 @@ func (suite *TestSuit) TestCreateNewUserErr() {
 
 	suite.Equal("Invalid email", createErr.Error(), "Expected to have an error")
 
-	_, createErr = suite.Service.NewUser(
+	_, createErr = suite.Service.CreateUser(
 		"exampleexample3",
 		"example@example.com.net",
 		invalidPassword,
@@ -51,7 +51,7 @@ func (suite *TestSuit) TestCreateNewUserErr() {
 
 	suite.Equal("Invalid password size", createErr.Error(), "Expected to have an error")
 
-	_, createErr = suite.Service.NewUser(
+	_, createErr = suite.Service.CreateUser(
 		"exampleexample3",
 		suite.MockUsers[0].Email,
 		suite.MockUsers[0].Password,
@@ -63,7 +63,7 @@ func (suite *TestSuit) TestCreateNewUserErr() {
 		"Expected to have an error",
 	)
 
-	_, createErr = suite.Service.NewUser(
+	_, createErr = suite.Service.CreateUser(
 		suite.MockUsers[0].Name,
 		"example@example.com.net",
 		suite.MockUsers[0].Password,

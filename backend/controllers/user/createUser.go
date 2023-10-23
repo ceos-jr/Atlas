@@ -35,7 +35,7 @@ func (handler *BaseHandler) CreateUser(context *fiber.Ctx) error {
 		})
 	}
 
-	newUser, serviceError := handler.Service.NewUser(
+	newUser, serviceError := handler.Service.CreateUser(
 		body.Name,
 		body.Email,
 		body.Password,

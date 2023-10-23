@@ -12,7 +12,7 @@ func SetupService(repository *user.Repository) *Service {
 	}
 }
 
-func (service *Service) NewUser(
+func (service *Service) CreateUser(
 	name string,
 	email string,
 	password string,
