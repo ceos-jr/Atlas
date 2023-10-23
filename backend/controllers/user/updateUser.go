@@ -1,14 +1,21 @@
 package user
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"orb-api/repositories/user"
 
-type UpdateNameRequestBody struct {
+	"github.com/gofiber/fiber/v2"
+)
+
+type UpdateUserRequestBody struct {
 	ID   uint   `json:"id" validate:"required"`
 	Name string `json:"name" validate:"required"`
+	Email string `json:"email" validate:"required"`
+	Password string `json:"password" validate:"required"`
+	Status uint  `json:"status" validate:"required"`
 }
 
 func (handler *BaseHandler) UpdateUserName(context *fiber.Ctx) error {
-	body := new(UpdateNameRequestBody)
+	body := new(UpdateUserRequestBody)
 
 	if parseError := context.BodyParser(body); parseError != nil {
 		return context.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -32,10 +39,13 @@ func (handler *BaseHandler) UpdateUserName(context *fiber.Ctx) error {
 		})
 	}
 
-	newUpdate, serviceError := handler.Service.UpdateName(
-		body.ID,
-		body.Name,
-	)
+	newUpdate, serviceError := handler.Service.UpdateUser(user.IUpdate{
+		ID:       body.ID,
+		Name:     &body.Name,
+		Email:    &body.Email,
+		Password: &body.Password,
+		Status:   &body.Status,
+	})
 
 	if serviceError != nil {
 		return context.Status(fiber.StatusBadRequest).JSON(fiber.Map{
