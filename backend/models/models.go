@@ -77,3 +77,28 @@ type Message struct {
 	Content   string    `json:"content" gorm:"not null"`
 	Timestamp time.Time `json:"timestamp"`
 }
+
+type Project struct {
+	ID        uint      `json: "id" gorm:"primaryKey"`
+	Name      string    `json: "name" gorm:"size:128;not null;"`
+	SectorID  uint 		`json: "id" gorm:"foreingKey; not null";`
+	AdmID     uint		`json: "id" gorm:"foreingKey; not null";`
+}
+
+type TasksProject struct {
+	ID        uint     `json:"id" gorm:"primaryKey"`
+	TaskID	  uint     `json:"task_id"`
+	ProjectID uint     `json:"project_id"` 
+}
+
+type UsersProject struct {
+	ID        uint     `json:"id" gorm:"primaryKey"`
+	UserID	  uint     `json:"user_id"`
+	ProjectID uint     `json:"project_id"` 
+}
+
+
+//Criar model de setores
+//Conexão com mensagens do whatspp em projects
+//Calendário
+//Avisos: model (notificação)
