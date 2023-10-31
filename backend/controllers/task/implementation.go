@@ -46,6 +46,6 @@ func (handler *BaseHandler) MarkConcluded(context *fiber.Ctx) error {
 
 	return context.Status(fiber.StatusCreated).JSON(fiber.Map{
 		"message": "Task marked as concluded successfully",
-		"user":    newUser,
+		"task":    newTask,
 	})
 }
