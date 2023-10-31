@@ -12,7 +12,7 @@ func SetupTask(repository *task.Repository) *Service {
 	}
 }
 
-func ConcludedTask(id uint)(*models.Task, error) {
+func (service *Service) ConcludedTask(id uint)(*models.Task, error) {
 	return nil, nil
 }
 
