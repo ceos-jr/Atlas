@@ -79,10 +79,10 @@ type Message struct {
 }
 
 type Project struct {
-	ID        uint      `json: "id" gorm:"primaryKey"`
-	Name      string    `json: "name" gorm:"size:128;not null;"`
-	SectorID  uint 		`json: "id" gorm:"foreingKey; not null";`
-	AdmID     uint		`json: "id" gorm:"foreingKey; not null";`
+	ID        uint      `json:"id" gorm:"primaryKey"`
+	Name      string    `json:"name" gorm:"size:128;not null;"`
+	Sector    uint  	`json:"sector_id" gorm:"not null"`
+	AdmID     uint		`json:"adm_id" gorm:"not null"`
 }
 
 type TasksProject struct {
@@ -97,8 +97,10 @@ type UsersProject struct {
 	ProjectID uint     `json:"project_id"` 
 }
 
-
-//Criar model de setores
-//Conexão com mensagens do whatspp em projects
-//Calendário
-//Avisos: model (notificação)
+// *********** IMPORTANTE ***************
+//Precisamos criar:
+//	-Model de setores
+//	-Conexão com mensagens do whatsapp em projects
+//	-Calendário
+//	-Avisos: model (notificação)
+//Talvez seja necessário alterar configurações do campo Sector em Projects
