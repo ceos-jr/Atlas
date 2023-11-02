@@ -4,7 +4,10 @@ import (
 	"gorm.io/gorm"
 	"orb-api/models"
 )
-
+const(
+	nameMaxlen = 128
+	nameMinlen = 3
+)
 type(
 	Repository struct{
 		Get func() *gorm.DB
@@ -21,7 +24,7 @@ type(
 	}
 
 	IReadBy struct{
-		ID		*uint
+		ID			*uint
 		Name		*string
 		Sector		*uint
 		AdmID		*uint
@@ -29,7 +32,7 @@ type(
 	}
 	IUpdate struct{
 		ID 		uint
-		Name 		*string
+		Name 	*string
 		Sector	*uint
 	}
 
