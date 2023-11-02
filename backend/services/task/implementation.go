@@ -11,19 +11,19 @@ func SetupTask(repository *task.Repository) *Service {
 	}
 }
 
-func (service *Service) ConcludedTask(id uint)(*models.Task, error) {
+func (service *Service) ConcludedTask(id uint) (*models.Task, error) {
 
 	status := uint(1)
+	statusp := &status
 
 	taskUpdate, updateErr := service.TaskRepo.Update(task.IUpdate{
 		ID:     id,
-		Status: &status,
+		Status: statusp,
 	})
 
-	if updateErr != nil{
+	if updateErr != nil {
 		return nil, updateErr
 	}
 
 	return taskUpdate, nil
 }
-
