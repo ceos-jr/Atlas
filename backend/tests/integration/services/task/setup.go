@@ -4,41 +4,64 @@ import (
 	"orb-api/config"
 	"orb-api/models"
 	"orb-api/services/task"
+	"orb-api/services/user"
 	"time"
+	"fmt"
 
-	TaskRepo "orb-api/repositories/task"
+	repository "orb-api/repositories"
+	taskrepo "orb-api/repositories/task"
+	userrepo "orb-api/repositories/user"
 
 	"github.com/stretchr/testify/suite"
 )
 
 type TestSuit struct {
 	suite.Suite
-	Service   *task.Service
+	Repo      *repository.Repository
+	UserService   *user.Service
+	TaskService   *task.Service
+	MockUsers []models.User
 	MockTasks []models.Task
 }
 
 // SetupSuite Executed before all tests
 func (suite *TestSuit) SetupSuite() {
-	repositories, setupError := config.SetupDB("../../.env")
+	repository, setupError := config.SetupDB("../../.env")
 
 	if setupError != nil {
 		panic(setupError)
 	}
 
-	suite.Service = task.SetupService(&repositories.Task)
+	suite.Repo = repository
+	suite.MockUsers = make([]models.User, 2)
 	suite.MockTasks = make([]models.Task, 2)
 	suite.SetupMocks()
 }
 
 //setting up the mock task
 func (suite *TestSuit) SetupMocks() {
+	for i := 0; i < 2; i++ {
+		NewUser, createErr := suite.Repo.User.Create(userrepo.ICreate{
+			Name:     fmt.Sprintf("Gabrigas %v", i+1),
+			Email:    fmt.Sprintf("example0%v@example.com", i+1),
+			Password: "gabrigas123",
+			Status:   2,
+		})
+
+		if createErr != nil {
+			panic(createErr)
+		}
+
+		suite.MockUsers[i] =*NewUser
+	} 
+
 	deadline := time.Date(2023, time.November, 15, 12, 0, 0, 0, time.UTC)
 
-	newTask, createErr := suite.Service.TaskRepo.Create(taskrepo.ICreate{
+	newTask, createErr := suite.Repo.Task.Create(taskrepo.ICreate{
 		Description:	"Uma tarefa",
-		AssignedTo:  	2,
-		CreatedBy:   	1,
-		Status:      	0,
+		AssignedTo:  	suite.MockUsers[0].ID,
+		CreatedBy:   	suite.MockUsers[1].ID,
+		Status:      	2,
 		Deadline:    deadline,
 	})
 
@@ -51,8 +74,18 @@ func (suite *TestSuit) SetupMocks() {
 
 // TearDownSuite Executed after all tests
 func (suite *TestSuit) TearDownSuite() {
+	for index := range suite.MockUsers {
+		_, deleteErr := suite.Repo.User.Delete(userrepo.IDelete{
+			ID: suite.MockUsers[index].ID,
+		})
+
+		if deleteErr != nil {
+			panic(deleteErr)
+		}
+	}
+
 	for index := range suite.MockTasks {
-		_, deleteErr := suite.Service.TaskRepo.Delete(taskrepo.IDelete{
+		_, deleteErr := suite.Repo.Task.Delete(taskrepo.IDelete{
 			ID: suite.MockTasks[index].ID,
 		})
 

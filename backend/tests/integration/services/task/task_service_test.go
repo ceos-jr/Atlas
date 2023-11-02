@@ -1,17 +1,21 @@
 package taskservicetest
 
 import (
-	"orb-api/services/task"
 	"testing"
 
 	"github.com/stretchr/testify/suite"
 )
 
 func (suite TestSuit) TestConcludedTask() {
-	UpdateStatus, UpdateErr := suite.Service.ConcludedTask(suite.MockTasks[0].ID)
+	NewStatus := uint(1)
 
-	suite.Nil(UpdateErr, "Update error must be Nil")
+	UpdateStatus, UpdateErr := suite.TaskService.ConcludedTask(suite.MockTasks[0].ID)
 
-	suite.Equal(UpdateStatus.Status, 1)
+	suite.Nil(UpdateErr, "Update error must be nil")
+
+	suite.Equal(UpdateStatus.Status, NewStatus)
 }
 
+func TestTaskRepository(t *testing.T) {
+	suite.Run(t, new(TestSuit))
+}
