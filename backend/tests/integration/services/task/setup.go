@@ -1,12 +1,11 @@
 package taskservicetest
 
 import (
+	"fmt"
 	"orb-api/config"
 	"orb-api/models"
 	"orb-api/services/task"
-	"orb-api/services/user"
 	"time"
-	"fmt"
 
 	repository "orb-api/repositories"
 	taskrepo "orb-api/repositories/task"
@@ -17,11 +16,10 @@ import (
 
 type TestSuit struct {
 	suite.Suite
-	Repo      *repository.Repository
-	UserService   *user.Service
-	TaskService   *task.Service
-	MockUsers []models.User
-	MockTasks []models.Task
+	Repo        *repository.Repository
+	TaskService *task.Service
+	MockUsers   []models.User
+	MockTasks   []models.Task
 }
 
 // SetupSuite Executed before all tests
@@ -33,12 +31,13 @@ func (suite *TestSuit) SetupSuite() {
 	}
 
 	suite.Repo = repository
+  suite.TaskService = task.SetupTaskService(&repository.Task)
 	suite.MockUsers = make([]models.User, 2)
-	suite.MockTasks = make([]models.Task, 2)
+	suite.MockTasks = make([]models.Task, 1)
 	suite.SetupMocks()
 }
 
-//setting up the mock task
+// setting up the mock task
 func (suite *TestSuit) SetupMocks() {
 	for i := 0; i < 2; i++ {
 		NewUser, createErr := suite.Repo.User.Create(userrepo.ICreate{
@@ -52,16 +51,16 @@ func (suite *TestSuit) SetupMocks() {
 			panic(createErr)
 		}
 
-		suite.MockUsers[i] =*NewUser
-	} 
+		suite.MockUsers[i] = *NewUser
+	}
 
 	deadline := time.Date(2023, time.November, 15, 12, 0, 0, 0, time.UTC)
 
 	newTask, createErr := suite.Repo.Task.Create(taskrepo.ICreate{
-		Description:	"Uma tarefa",
-		AssignedTo:  	suite.MockUsers[0].ID,
-		CreatedBy:   	suite.MockUsers[1].ID,
-		Status:      	2,
+		Description: "Uma tarefa",
+		AssignedTo:  suite.MockUsers[0].ID,
+		CreatedBy:   suite.MockUsers[1].ID,
+		Status:      2,
 		Deadline:    deadline,
 	})
 
