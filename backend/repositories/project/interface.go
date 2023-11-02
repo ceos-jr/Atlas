@@ -31,13 +31,13 @@ type(
 		Limit		*uint
 	}
 	IUpdate struct{
-		ID 		uint
-		Name 	*string
-		Sector	*uint
+		ID 			uint
+		Name 		*string
+		Sector		*uint
 	}
 
 	IDelete struct{
-		ID uint
+		ID 			uint
 	}
 
 	Interface interface{
@@ -48,3 +48,5 @@ type(
 		Delete(IDelete)		(*models.Project, error)
 	}
 )
+
+// IReadByName, IReadBySectorID, IReadByAdmID
