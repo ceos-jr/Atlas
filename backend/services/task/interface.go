@@ -11,6 +11,6 @@ type (
 	}
 
 	Interface interface{
-		ConcludedTask(id uint)(*models.Task, error)
+		MarkTaskAsCompleted(id uint)(*models.Task, error)
 	}
 )

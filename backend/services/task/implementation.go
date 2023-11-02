@@ -5,14 +5,13 @@ import (
 	"orb-api/repositories/task"
 )
 
-func SetupTask(repository *task.Repository) *Service {
+func SetupTaskService(repository *task.Repository) *Service {
 	return &Service{
 		TaskRepo: repository,
 	}
 }
 
-func (service *Service) ConcludedTask(id uint) (*models.Task, error) {
-
+func (service *Service) MarkTaskAsCompleted(id uint) (*models.Task, error) {
 	status := uint(1)
 	statusp := &status
 
