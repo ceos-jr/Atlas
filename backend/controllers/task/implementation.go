@@ -8,7 +8,7 @@ type CreateUserRequestBodyId struct {
 	Id     uint `json:"id" validate:"required"`
 }
 
-func (handler *BaseHandler) MarkConcluded(context *fiber.Ctx) error {
+func (handler *BaseHandler) MarkAsCompleted(context *fiber.Ctx) error {
 	body := new(CreateUserRequestBodyId)
 
 	if parseError := context.BodyParser(body); parseError != nil {
@@ -33,7 +33,7 @@ func (handler *BaseHandler) MarkConcluded(context *fiber.Ctx) error {
 		})
 	}
 
-	newTask, serviceError := handler.Service.ConcludedTask(
+	newTask, serviceError := handler.Service.MarkTaskAsCompleted(
 		body.Id,
 	)
 
