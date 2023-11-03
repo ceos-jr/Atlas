@@ -147,6 +147,10 @@ func (r *Repository) Update(updateData IUpdate) (*models.Task, error) {
 		return nil, errors.New("No fields to update")
 	}
 
+	if !r.ValidTask(updateData.ID) {
+		return nil, errors.New("Invalid task ID")
+	}
+
 	if updateData.Description != nil {
 		fieldMap["description"] = *updateData.Description
 	}
