@@ -56,3 +56,47 @@ func (r *Repository) Create(createData ICreate) (*models.Project, error){
 	
 	return &project, nil
 }
+func (r *Repository) ReadBy(readBy IReadBy) ([]models.Project, error) {
+	var fieldMap = make(map[string]interface{})
+	var projectArray []models.Project
+	var result *gorm.DB
+
+	if readBy.ID == nil &&
+		readBy.AdmID == nil &&
+		readBy.Sector == nil &&
+		readBy.Name == nil {
+		return nil, errors.New("no fields to read")
+	}
+
+	if readBy.ID != nil {
+		fieldMap["id"] = *readBy.ID
+	}
+
+	if readBy.Name != nil {
+		if !ValidProjectName(*readBy.Name) {
+			return nil, errors.New("invalid name")
+		}
+
+		fieldMap["name"] = *readBy.Name
+	}
+
+	if readBy.AdmID != nil {
+		fieldMap["admid"] = *readBy.AdmID
+	}
+
+	if readBy.Sector != nil{
+		fieldMap["sector"] = *readBy.Sector
+	}
+
+	if readBy.Limit != nil {
+		result = r.GetDB().Where(fieldMap).Find(&projectArray).Limit(int(*readBy.Limit))
+	} else {
+		result = r.GetDB().Where(fieldMap).Find(&projectArray)
+	}
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return projectArray, nil
+}
