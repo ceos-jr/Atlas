@@ -10,7 +10,7 @@ const(
 )
 type(
 	Repository struct{
-		Get func() *gorm.DB
+		GetDB func() *gorm.DB
 	}
 
 	ICreate struct{
