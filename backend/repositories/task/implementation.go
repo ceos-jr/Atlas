@@ -41,6 +41,18 @@ func (r *Repository) ValidUser(id uint) bool {
 	return true
 }
 
+func (r *Repository) ValidTask (id uint) bool {
+	task := models.Task{ID: id}
+
+	verifyTask := r.GetDB().First(&task).Error
+
+	if verifyTask != nil{
+		return false
+	}
+
+	return true
+}
+
 func (r *Repository) Create(createData ICreate) (*models.Task, error) {
 	var task = models.Task{
 		Description: createData.Description,
