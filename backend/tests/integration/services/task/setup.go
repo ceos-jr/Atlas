@@ -32,14 +32,14 @@ func (suite *TestSuit) SetupSuite() {
 
 	suite.Repo = repository
   suite.TaskService = task.SetupTaskService(&repository.Task)
-	suite.MockUsers = make([]models.User, 2)
+	suite.MockUsers = make([]models.User, 3)
 	suite.MockTasks = make([]models.Task, 1)
 	suite.SetupMocks()
 }
 
 // setting up the mock task
 func (suite *TestSuit) SetupMocks() {
-	for i := 0; i < 2; i++ {
+	for i := 0; i < 3; i++ {
 		NewUser, createErr := suite.Repo.User.Create(userrepo.ICreate{
 			Name:     fmt.Sprintf("Gabrigas %v", i+1),
 			Email:    fmt.Sprintf("example0%v@example.com", i+1),
