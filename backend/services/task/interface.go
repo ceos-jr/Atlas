@@ -12,5 +12,7 @@ type (
 
 	Interface interface{
 		MarkTaskAsCompleted(id uint)(*models.Task, error)
+
+		AssignTask(idTask uint, idUser uint) (*models.Task, error)
 	}
 )
