@@ -40,6 +40,18 @@ func (r *Repository) ValidUser(id uint) bool {
 	return true
 }
 
+func (r *Repository) ValidTask (id uint) bool {
+	task := models.Task{ID: id}
+
+	verifyTask := r.GetDB().First(&task).Error
+
+	if verifyTask != nil{
+		return false
+	}
+
+	return true
+}
+
 func (r *Repository) Create(createData ICreate) (*models.Task, error) {
 	var task = models.Task{
 		Description: createData.Description,
@@ -144,6 +156,10 @@ func (r *Repository) Update(updateData IUpdate) (*models.Task, error) {
 		updateData.Status == nil &&
 		updateData.Deadline == nil {
 		return nil, errors.New("No fields to update")
+	}
+	
+	if !r.ValidTask(updateData.ID) {
+		return nil, errors.New("Invalid task ID")
 	}
 
 	if updateData.Description != nil {
