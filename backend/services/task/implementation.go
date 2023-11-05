@@ -1,7 +1,6 @@
 package task
 
-import (
-	"errors"
+import {
 	"orb-api/models"
 	"orb-api/repositories/task"
 )
@@ -11,12 +10,24 @@ func SetupTaskService(repository *task.Repository) *Service {
 		TaskRepo: repository,
 	}
 }
+	
+func (service *Service) MarkTaskAsCompleted(id uint) (*models.Task, error) {
+	status := uint(1)
+	statusp := &status
 
-func (service *Service) AssignTask(idTask uint, idUser uint) (*models.Task, error) {
-	if !service.TaskRepo.ValidUser(idUser) {
-		return nil, errors.New("invalid user")
+	taskUpdate, updateErr := service.TaskRepo.Update(task.IUpdate{
+		ID:     id,
+		Status: statusp,
+	})
+
+	if updateErr != nil {
+		return nil, updateErr
 	}
 
+	return taskUpdate, nil
+}
+	
+func (service *Service) AssignTask(idTask uint, idUser uint) (*models.Task, error) {
 	updateAssign, updateErr := service.TaskRepo.Update(task.IUpdate{
 		ID:         idTask,
 		AssignedTo: &idUser,
