@@ -8,15 +8,15 @@ import (
 
 func (suite *ProjectTestSuite) TestCreateProject() {
 	project, createErr := suite.Repo.Project.Create(project.ICreate{
-		Name:     "Project 01",
-		AdmID:	  suite.MockUser[0].ID,
-		Sector:	  1,
+		Name: "Projeto",
+		AdmID: suite.MockUser[0].ID,
+		Sector: 1,
 	})
 
 	suite.Nil(createErr, "Create error must be nil")
-	suite.Equal("Project 01", project.Name, "Name does not match")
-	suite.Equal(suite.MockProject[0],project.AdmID, "Adm ID does not match")
-	suite.Equal(uint(1), project.Sector, "Sector does not match")
+	suite.Equal(suite.MockProject[0].Name, project.Name, "Name does not match")
+	suite.Equal(suite.MockProject[0].AdmID, project.AdmID, "Adm ID does not match")
+	suite.Equal(suite.MockProject[0].Sector, project.Sector, "Sector does not match")
 
 	suite.MockProject[1] = *project
 }
@@ -56,7 +56,7 @@ func (suite *ProjectTestSuite) TestReadBySector(){
 func (suite *ProjectTestSuite) TestReadByErr(){
 	_, readErr := suite.Repo.Project.ReadBy(project.IReadBy{})
 
-	suite.Equal("No fields to read", readErr.Error(),
+	suite.Equal("no fields to read", readErr.Error(),
 		"Empty fields it should return an error",
 	)
 }

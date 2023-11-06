@@ -25,7 +25,9 @@ func ValidProjectName(name string) bool{
 func (r *Repository) Create(createData ICreate) (*models.Project, error){
 	//Criar os models de sector para implantar sua validação de existencia
 	//var sectorid = models.Sector{ID: createData.Sector}
-	var adm = models.User{ID: createData.AdmID}
+	var adm = models.User{
+		ID: createData.AdmID,
+	}
 	var project = models.Project{
 		Name:		createData.Name,
 		Sector:		createData.Sector,
@@ -80,7 +82,7 @@ func (r *Repository) ReadBy(readBy IReadBy) ([]models.Project, error) {
 	}
 
 	if readBy.AdmID != nil {
-		fieldMap["admid"] = *readBy.AdmID
+		fieldMap["adm_id"] = *readBy.AdmID
 	}
 
 	if readBy.Sector != nil{
