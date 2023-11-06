@@ -101,10 +101,6 @@ func (r *Repository) ReadBy(readBy IReadBy) ([]models.Project, error) {
 	return projectArray, nil
 }
 
-
-///////////////////////////////////////////////////////////////////
-//  var updateData do tipo IUpdate
-//  
 func (r *Repository) Update(updateData IUpdate) (*models.Project, error) {
 	var project = models.Project{ID: updateData.ID}
 	var fieldMap = make(map[string]interface{})

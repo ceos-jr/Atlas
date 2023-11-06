@@ -30,6 +30,7 @@ type(
 		AdmID		*uint
 		Limit		*uint
 	}
+	
 	IUpdate struct{
 		ID 			uint
 		Name 		*string
