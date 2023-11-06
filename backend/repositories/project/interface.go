@@ -34,6 +34,7 @@ type(
 		ID 			uint
 		Name 		*string
 		Sector		*uint
+		AdmID		*uint
 	}
 
 	IDelete struct{

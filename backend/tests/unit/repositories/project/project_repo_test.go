@@ -60,7 +60,30 @@ func (suite *ProjectTestSuite) TestReadByErr(){
 		"Empty fields it should return an error",
 	)
 }
+func (suite *ProjectTestSuite) TestUpdateProject(){
+	name := "Project"
+	admid := uint(2)
+	sector := uint(2)
 
+	updatedUser, updateError := suite.Repo.Project.Update(project.IUpdate{
+		ID:     suite.MockProject[0].ID,
+		Name:   &name,
+		AdmID:  &admid,
+		Sector: &sector,
+	})
+
+	suite.Nil(updateError, "Update error must be nil")
+	suite.Equal(updatedUser.Name, name,
+		"Names do not match",
+	)
+	suite.Equal(updatedUser.Sector, sector,
+		"Sector do not match",
+	)
+
+	suite.Equal(updatedUser.AdmID, admid,
+		"Adm do not match",
+	)
+}
 func TestProjectRepository(test *testing.T) {
 	suite.Run(test, new(ProjectTestSuite))
 }

@@ -4,7 +4,6 @@ import (
 	"errors"
 	"gorm.io/gorm"
 	"orb-api/models"
-	"time"
 )
 func NewProjectRepository(db *gorm.DB) Repository {
 	return Repository{
@@ -116,17 +115,20 @@ func (r *Repository) Update(updateData IUpdate) (*models.Project, error) {
 		}
 	
 	if updateData.Name != nil {
-		//if !r.ValidProjectName(*&updateData.Name) {
-		//	return nil, errors.New("Invalid Project Name")
-		//}
-		fieldMap["project_name"] = *updateData.Name
+		if !ValidProjectName(*updateData.Name){
+			return nil, errors.New("invalid project name")
+		}
+		fieldMap["name"] = *updateData.Name
 	}
 
 	if updateData.Sector != nil {
-		fieldMap["sector_number"] = *updateData.Sector
+		fieldMap["sector"] = *updateData.Sector
 	}
 
-	fieldMap["updated_at"] = time.Now()
+	if updateData.AdmID != nil {
+		fieldMap["adm_id"] = *updateData.AdmID
+	}
+
 	result := r.GetDB().Model(&project).Updates(fieldMap)
 
 	if result.Error != nil {
