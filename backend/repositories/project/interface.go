@@ -19,9 +19,9 @@ type(
 		AdmID		uint
 	}
 
-	IReadAll struct{
+	/*IReadAll struct{
 		Limit		*uint
-	}
+	}*/
 
 	IReadBy struct{
 		ID			*uint
@@ -42,7 +42,7 @@ type(
 
 	Interface interface{
 		Create(ICreate)		(*models.Project, error)
-		ReadAll(IReadAll)	([]models.Project, error)
+		//ReadAll(IReadAll)	([]models.Project, error)
 		ReadBy(IReadBy)		([]models.Project, error)
 		Update(IUpdate)		(*models.Project, error)
 		Delete(IDelete)		(*models.Project, error)
