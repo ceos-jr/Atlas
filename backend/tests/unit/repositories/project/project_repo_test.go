@@ -98,7 +98,7 @@ func GenerateString(length int) string {
 func (suite *ProjectTestSuite) TestUpdateProjectErr() {
 	invalidProjectName := GenerateString(129)
 	invalidSector := uint(22)
-	invalidAdmId := uint(128)
+	invalidAdmId := suite.MockUser[0].ID
 
 	// Test 01: Try to update with no fields
 	_, updateError := suite.Repo.Project.Update(project.IUpdate{
@@ -115,7 +115,7 @@ func (suite *ProjectTestSuite) TestUpdateProjectErr() {
 		Name: &invalidProjectName,		      
 	})
 	
-	suite.Equal("Invalid name", updateError.Error(),
+	suite.Equal("Invalid project name", updateError.Error(),
 		"Invalid project name it should return an error",
 	)
 
@@ -144,7 +144,7 @@ func (suite *ProjectTestSuite) TestDeleteProject() {
 	newProject, _ := suite.Repo.Project.Create(project.ICreate{
 		Name: "Atlas",
 		Sector: 1,
-		AdmID: 2,
+		AdmID: suite.MockUser[0].ID,
 	})
 
 	deletedProject, deleteErr := suite.Repo.Project.Delete(project.IDelete{

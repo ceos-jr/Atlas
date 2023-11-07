@@ -107,12 +107,12 @@ func (r *Repository) Update(updateData IUpdate) (*models.Project, error) {
 
 	if updateData.Name == nil &&
 		updateData.Sector == nil {
-			return nil, errors.New("no fields to update")
+			return nil, errors.New("No fields to update")
 		}
 	
 	if updateData.Name != nil {
 		if !ValidProjectName(*updateData.Name){
-			return nil, errors.New("invalid project name")
+			return nil, errors.New("Invalid project name")
 		}
 		fieldMap["name"] = *updateData.Name
 	}
