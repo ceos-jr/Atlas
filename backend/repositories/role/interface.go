@@ -6,6 +6,13 @@ import (
 	"gorm.io/gorm"
 )
 
+const (
+	nameMaxLen        = 128
+	nameMinLen        = 3
+	descriptionMaxLen = 128
+	descriptionMinLen = 3
+)
+
 type (
 	Repository struct {
 		getDB func() *gorm.DB

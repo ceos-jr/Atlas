@@ -7,6 +7,20 @@ import (
 	"gorm.io/gorm"
 )
 
+func ValidRoleName(name string) bool {
+	if len(name) < nameMinLen || len(name) > nameMaxLen {
+		return false
+	}
+	return true
+}
+
+func ValidRoleDescription(description string) bool {
+	if len(description) < descriptionMinLen || len(description) > descriptionMaxLen {
+		return false
+	}
+	return true
+}
+
 func NewRoleRepository(connection *gorm.DB) Repository {
 	return Repository{
 		getDB: func() *gorm.DB {
@@ -15,10 +29,30 @@ func NewRoleRepository(connection *gorm.DB) Repository {
 	}
 }
 
+func (r *Repository) ValidRole(id uint) bool {
+	role := models.Role{ID: id}
+
+	verifyRole := r.getDB().First(&role).Error
+
+	if verifyRole != nil {
+		return false
+	}
+
+	return true
+} 
+
 func (r *Repository) Create(createData ICreate) (*models.Role, error) {
 	var newRole = models.Role{
 		Name:        createData.Name,
 		Description: createData.Description,
+	}
+
+	if !ValidRoleName(createData.Name) {
+		return nil, errors.New("invalid name value")
+	}
+
+	if !ValidRoleDescription(createData.Description) {
+		return nil, errors.New("invalid description value")
 	}
 
 	result := r.getDB().Create(&newRole)
@@ -31,8 +65,8 @@ func (r *Repository) Create(createData ICreate) (*models.Role, error) {
 }
 
 func (r *Repository) ReadAll(all IReadAll) ([]models.Role, error) {
-	var rolesArray []models.Role
 	var result *gorm.DB
+	var rolesArray []models.Role
 
 	if all.Limit != nil {
 		result = r.getDB().Find(&rolesArray).Limit(*all.Limit)

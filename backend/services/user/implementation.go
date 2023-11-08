@@ -1,22 +1,28 @@
-package userservice
+package user
+
 
 import (
 	"errors"
 	"orb-api/models"
-	repository "orb-api/repositories"
+
 	"orb-api/repositories/user"
 )
 
-func SetupUserService(repo repository.Repository) *UserService {
-	return &UserService{
-		UserRepo: repo.User,
+func SetupService(repository *user.Repository) *Service {
+	return &Service{
+		UserRepo: repository,
 	}
 }
 
-func (service *UserService) CreateNewUser(credentials ICreateUser) (*models.User, error) {
+func (service *Service) NewUser(
+	name string,
+	email string,
+	password string,
+) (*models.User, error) {
 	// Check if the email is not being used by anyone else
 	userArray, readErr := service.UserRepo.ReadBy(user.IReadBy{
-		Email: &credentials.Email,
+		Email: &email,
+
 	})
 
 	if readErr != nil {
@@ -29,7 +35,9 @@ func (service *UserService) CreateNewUser(credentials ICreateUser) (*models.User
 
 	// Check if the username is not being used by anyone else
 	userArray, readErr = service.UserRepo.ReadBy(user.IReadBy{
-		Name: &credentials.Name,
+
+		Name: &name,
+
 	})
 
 	if readErr != nil {
@@ -41,28 +49,34 @@ func (service *UserService) CreateNewUser(credentials ICreateUser) (*models.User
 	}
 
 	// Check email, username and password length
-	if !user.ValidUserName(credentials.Name) {
+
+	if !user.ValidUserName(name) {
 		return nil, errors.New("Invalid username size")
 	}
 
-	if !user.ValidUserEmail(credentials.Email) {
+	if !user.ValidUserEmail(email) {
 		return nil, errors.New("Invalid email size")
 	}
 
-	if !user.ValidUserPassword(credentials.Password) {
+	if !user.ValidUserPassword(password) {
+
 		return nil, errors.New("Invalid password size")
 	}
 
 	// Hash the password to prevent security vulnerabilities
-	hashedPassword, hashErr := HashPassword(credentials.Password)
+
+	hashedPassword, hashErr := HashPassword(password)
+
 
 	if hashErr != nil {
 		return nil, hashErr
 	}
 
 	newUser, createErr := service.UserRepo.Create(user.ICreate{
-		Name:     credentials.Name,
-		Email:    credentials.Email,
+
+		Name:     name,
+		Email:    email,
+
 		Password: hashedPassword,
 		Status:   models.UStatusProcessing,
 	})
@@ -74,7 +88,9 @@ func (service *UserService) CreateNewUser(credentials ICreateUser) (*models.User
 	return newUser, nil
 }
 
-func (service *UserService) UpdateName(id uint, name string) (*models.User, error) {
+
+func (service *Service) UpdateName(id uint, name string) (*models.User, error) {
+
 	// Check if name has a valid length
 	if !user.ValidUserName(name) {
 		return nil, errors.New("Invalid username size")
@@ -85,7 +101,9 @@ func (service *UserService) UpdateName(id uint, name string) (*models.User, erro
 		return nil, errors.New("Invalid user id")
 	}
 
-	// Check if the email is not being used by anyone else and different by current
+
+	// Check if the name is not being used by anyone else and different by current
+
 	userArray, readErr := service.UserRepo.ReadBy(user.IReadBy{
 		Name: &name,
 	})
@@ -94,7 +112,9 @@ func (service *UserService) UpdateName(id uint, name string) (*models.User, erro
 		return nil, readErr
 	}
 
-	if len(userArray) > 0 {
+
+	if len(userArray) == 1 {
+
 		return nil, errors.New("This name is already being used")
 	}
 
@@ -111,7 +131,9 @@ func (service *UserService) UpdateName(id uint, name string) (*models.User, erro
 	return updatedUser, nil
 }
 
-func (service *UserService) UpdatePassword(id uint, password string) (*models.User, error) {
+
+func (service *Service) UpdatePassword(id uint, password string) (*models.User, error) {
+
 	// Check if it is password has a valid length
 	if !user.ValidUserPassword(password) {
 		return nil, errors.New("Invalid password size")
@@ -141,7 +163,13 @@ func (service *UserService) UpdatePassword(id uint, password string) (*models.Us
 	return updatedUser, nil
 }
 
-func (service *UserService) UpdateEmail(id uint, email string) (*models.User, error) {
+
+func (service *Service) UpdateEmail(id uint, email string) (*models.User, error) {
+	if !user.ValidUserEmail(email) {
+		return nil, errors.New("Invalid email size")
+	}
+
+
 	// Check if the id belongs a valid user
 	if !service.UserRepo.ValidUser(id) {
 		return nil, errors.New("Invalid user id")
@@ -156,7 +184,9 @@ func (service *UserService) UpdateEmail(id uint, email string) (*models.User, er
 		return nil, readErr
 	}
 
-	if len(userArray) > 0 {
+
+	if len(userArray) == 1 {
+
 		return nil, errors.New("This email is already being used")
 	}
 
@@ -173,7 +203,9 @@ func (service *UserService) UpdateEmail(id uint, email string) (*models.User, er
 	return userUpdate, nil
 }
 
-func (service *UserService) UpdateStatus(id uint, status uint) (*models.User, error) {
+
+func (service *Service) UpdateStatus(id uint, status uint) (*models.User, error) {
+
 	// Check if the status is valid
 	if !user.ValidUserStatus(status) {
 		return nil, errors.New("Invalid status")

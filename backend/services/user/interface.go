@@ -1,4 +1,5 @@
-package userservice
+package user
+
 
 import (
 	"orb-api/models"
@@ -9,30 +10,19 @@ const (
 	emailMaxLen    = 128
 	emailMinLen    = 3
 	nameMaxLen     = 128
-	nameMinLen     = 5
+	nameMinLen     = 3
+
 	passwordMinLen = 8
 )
 
 type (
-	UserService struct {
-		UserRepo user.Repository
-	}
-
-	ICreateUser struct {
-		Name     string
-		Email    string
-		Password string
-	}
-
-	IUpdate struct {
-		ID     uint
-		Name   *string
-		Email  *string
-		Status *uint
+	Service struct {
+		UserRepo *user.Repository
 	}
 
 	Interface interface {
-		CreateNewUser(ICreateUser) (*models.User, error)
+		NewUser(name, email, password string) (*models.User, error)
+
 		UpdateName(id uint, name string) (*models.User, error)
 		UpdateEmail(id uint, email string) (*models.User, error)
 		UpdatePassword(id uint, password string) (*models.User, error)

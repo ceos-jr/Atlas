@@ -2,9 +2,10 @@ package task
 
 import (
 	"errors"
-	"gorm.io/gorm"
 	"orb-api/models"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 func NewTaskRepository(db *gorm.DB) Repository {
@@ -34,6 +35,18 @@ func (r *Repository) ValidUser(id uint) bool {
 	verifyUser := r.GetDB().First(&user).Error
 
 	if verifyUser != nil {
+		return false
+	}
+
+	return true
+}
+
+func (r *Repository) ValidTask (id uint) bool {
+	task := models.Task{ID: id}
+
+	verifyTask := r.GetDB().First(&task).Error
+
+	if verifyTask != nil{
 		return false
 	}
 
@@ -144,6 +157,10 @@ func (r *Repository) Update(updateData IUpdate) (*models.Task, error) {
 		updateData.Status == nil &&
 		updateData.Deadline == nil {
 		return nil, errors.New("No fields to update")
+	}
+
+	if !r.ValidTask(updateData.ID) {
+		return nil, errors.New("Invalid task ID")
 	}
 
 	if updateData.Description != nil {
