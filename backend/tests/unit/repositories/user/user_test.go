@@ -1,10 +1,9 @@
 package userrepotest
 
 import (
+	"github.com/stretchr/testify/suite"
 	"orb-api/repositories/user"
 	"testing"
-
-	"github.com/stretchr/testify/suite"
 )
 
 func (suite *TestSuite) TestCreateUser() {
@@ -33,7 +32,9 @@ func (suite *TestSuite) TestReadAllUsers() {
 
 }
 
+
 func (suite *TestSuite) TestReadUserByID() {
+
 	invalidID := uint(777)
 
 	users, readErr := suite.Repo.User.ReadBy(user.IReadBy{

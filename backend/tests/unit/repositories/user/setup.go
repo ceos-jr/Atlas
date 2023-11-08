@@ -15,7 +15,9 @@ type TestSuite struct {
 	MockUsers []models.User
 }
 
+
 func (suite *TestSuite) SetupSuite() {
+
 	repo, setupError := config.SetupDB("../../.env")
 
 	if setupError != nil {

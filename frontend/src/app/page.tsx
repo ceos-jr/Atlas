@@ -10,6 +10,10 @@ const Home: React.FC = () => {
     router.push("/login");
   };
 
+  const goToSignupPage = () => {
+    router.push("/sign"); 
+  };
+
   return (
     <div className="flex justify-center items-center h-screen text-center font-quick">
       <div className="card bg-white rounded-lg shadow-md p-6">
@@ -19,12 +23,20 @@ const Home: React.FC = () => {
         <p className="text-lg text-gray-600">
           Uma plataforma para gerenciamento de demandas e equipes.
         </p>
+        <div className="space-x-4 space-y-4">
         <button
           onClick={goToLoginPage}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300"
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300 mb-2"
         >
           Login
         </button>
+        <button
+          onClick={goToSignupPage}
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300"
+        >
+          Cadastre-se
+        </button>
+        </div>
       </div>
     </div>
   );
