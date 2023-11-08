@@ -21,6 +21,11 @@ func ValidProjectName(name string) bool{
 	return true
 }
 
+// Imaginando que um setor só possa ser identificado por números de 1 a 5
+func ValidSector(numero uint) bool{
+	return numero >= 1 && numero <= 5
+}
+
 func (r *Repository) Create(createData ICreate) (*models.Project, error){
 	//Criar os models de sector para implantar sua validação de existencia
 	//var sectorid = models.Sector{ID: createData.Sector}
@@ -118,6 +123,9 @@ func (r *Repository) Update(updateData IUpdate) (*models.Project, error) {
 	}
 
 	if updateData.Sector != nil {
+		if !ValidSector(*updateData.Sector){
+			return nil, errors.New("Invalid Sector")
+		}
 		fieldMap["sector"] = *updateData.Sector
 	}
 
