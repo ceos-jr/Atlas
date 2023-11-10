@@ -5,7 +5,8 @@ import (
 )
 
 type CreateUserRequestBodyId struct {
-	Id     uint `json:"id" validate:"required"`
+	TaskId     uint `json:"taskid" validate:"required"`
+	UserId 	   uint `json:"userid" validate:"required"`
 }
 
 func (handler *BaseHandler) MarkAsCompleted(context *fiber.Ctx) error {
@@ -34,7 +35,7 @@ func (handler *BaseHandler) MarkAsCompleted(context *fiber.Ctx) error {
 	}
 
 	newTask, serviceError := handler.Service.MarkTaskAsCompleted(
-		body.Id,
+		body.TaskId,
 	)
 
 	if serviceError != nil {
@@ -76,8 +77,8 @@ func (handler *BaseHandler) AssignedTo(context *fiber.Ctx) error {
 	}
 
 	newTask, serviceError := handler.Service.AssignTask(
-		body.Id,
-		body.AssignedTo,
+		body.TaskId,
+		body.UserId,
 	)
 
 	if serviceError != nil {
