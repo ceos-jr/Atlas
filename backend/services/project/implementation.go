@@ -36,4 +36,3 @@ func (service *Service) CreateProject(createData project.ICreate) (*models.Proje
 
 	return newProject, nil
 }
-
