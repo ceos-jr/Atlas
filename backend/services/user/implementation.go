@@ -296,8 +296,14 @@ func (service *Service) UnassignRole(IdUser uint, IdRole uint) (*models.UserRole
 		return nil, errors.New("Role already unassigned")
 	}
 	
-	updateRoleUser, readErr := service.UserRoleRepo.Update(userrole.IUpdate{
+	updateRoleUser, updateErr := service.UserRoleRepo.Update(userrole.IUpdate{
 		IdRole: IdRole
 		IdUser: nil,
 	})
+
+	if updateErr != nil {
+		return nil, updateErr
+	}
+
+	return updateRoleUser, nil
 }
