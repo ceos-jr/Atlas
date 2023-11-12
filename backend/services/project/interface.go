@@ -1,21 +1,16 @@
 package project
 
 import (
-	//"orb-api/models"
+	"orb-api/models"
 	"orb-api/repositories/project"
 )
 
 type (
 	Service struct {
-		ProjectRepo* project.Repository
+		ProjectRepo *project.Repository
+	}
+
+	Interface interface {
+		CreateProject(createData project.ICreate) (*models.Project, error)
 	}
 )
-
-type ICreate struct {
-	Name		string
-	//Sector		uint
-	AdmID		uint
-	EmployeeIDs []uint
-}
-
-//I did that to include EmployeesIDs 
