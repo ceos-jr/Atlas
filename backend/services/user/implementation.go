@@ -253,7 +253,7 @@ func (service *Service) AssigneRole(IdUser uint, IdRole uint) (*models.UserRole,
 		return nil, errors.New("Invalid user status")
 	}
 
-	userroleArray, readErr := service.UserRoleRepo.ReadBy(user.IReadBy{
+	userroleArray, readErr := service.UserRoleRepo.ReadBy(userrole.IReadBy{
 		RoleID: &IdRole,
 	})
 
@@ -265,7 +265,7 @@ func (service *Service) AssigneRole(IdUser uint, IdRole uint) (*models.UserRole,
 		return nil, errors.New("This role is already assigne")
 	}
 
-	newRoleUser, createErr := service.UserRoleRepo.Create(user.ICreate{
+	newRoleUser, createErr := service.UserRoleRepo.Create(userrole.ICreate{
 
 		UserID:     IdUser,
 		RoleID:    IdRole,
@@ -277,5 +277,27 @@ func (service *Service) AssigneRole(IdUser uint, IdRole uint) (*models.UserRole,
 	}
 
 	return newRoleUser, nil
+}
 
+func (service *Service) UnassignRole(IdUser uint, IdRole uint) (*models.UserRole, error){
+	if !service.UserRepo.ValidUser(IdUser){
+		return nil, errors.New("Invalid user id")
+	}
+
+	if !service.RoleRepo.ValidRole(IdRole){
+		return nil, errors.New("Invalid role id")
+	}
+
+	userroleArray, readErr := service.UserRoleRepo.ReadBy(userrole.IReadBy{
+		RoleID: &IdRole,
+	})
+
+	if userroleArray[0].UserID == nil{
+		return nil, errors.New("Role already unassigned")
+	}
+	
+	updateRoleUser, readErr := service.UserRoleRepo.Update(userrole.IUpdate{
+		IdRole: IdRole
+		IdUser: nil,
+	})
 }
