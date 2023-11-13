@@ -27,7 +27,5 @@ type (
 		UpdateEmail(id uint, email string) (*models.User, error)
 		UpdatePassword(id uint, password string) (*models.User, error)
 		UpdateStatus(id uint, status uint) (*models.User, error)
-		AssigneRole(IdUser uint, IdRole uint) (*models.UserRole, error)
-		UnassignRole(IdUser uint, IdRole uint) (*models.UserRole, error)
 	}
 )
