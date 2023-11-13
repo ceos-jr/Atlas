@@ -29,32 +29,34 @@ func ValidSector(numero uint) bool{
 func (r *Repository) Create(createData ICreate) (*models.Project, error){
 	//Criar os models de sector para implantar sua validação de existencia
 	//var sectorid = models.Sector{ID: createData.Sector}
-	var adm = models.User{
+	/*var adm = models.User{
 		ID: createData.AdmID,
-	}
+	}*/
 	var project = models.Project{
 		Name:		createData.Name,
 		Sector:		createData.Sector,
 		AdmID:		createData.AdmID,
 	}
 
-
 	if !ValidProjectName(createData.Name){
 		return nil, errors.New("invalid name value")
 	}
 
-	verifyAdmIDExistence := r.GetDB().First(&adm)
+	//validar quando forem feitos os models de Adm e Sector
+	
+	/*verifyAdmIDExistence := r.GetDB().First(&adm)
 
 	if verifyAdmIDExistence.Error != nil{
 		return nil, verifyAdmIDExistence.Error
 	}
 	
-	//Funções já criadas para validar a existencia do setor
-	/*verifySectorIDExistence := r.GetDB().First(&sectorid)
+	Funções já criadas para validar a existencia do setor
+	verifySectorIDExistence := r.GetDB().First(&sectorid)
 
 	if verifySectorIDExistence.Error != nil {
 		return nil, verifySectorIDExistence.Error
 	}*/
+
 	result := r.GetDB().Create(&project)
 
 	if result.Error != nil{

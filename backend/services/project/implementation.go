@@ -11,8 +11,13 @@ func SetupProjectService(repository *project.Repository) *Service {
 	}
 }
 
-func (service *Service) CreateProject(createData project.ICreate) (*models.Project, error) {
-	NewProject, err := service.ProjectRepo.Create(createData)
+func (service *Service) CreateProject(name string, Sector uint, AdmID uint) (*models.Project, error) {
+
+	NewProject, err := service.ProjectRepo.Create(project.ICreate{
+		Name:	name,
+		Sector: Sector,
+		AdmID:	AdmID,
+	})
 
 	if err != nil {
 		return nil, err

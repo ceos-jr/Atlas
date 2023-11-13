@@ -11,6 +11,6 @@ type (
 	}
 
 	Interface interface {
-		CreateProject(createData project.ICreate) (*models.Project, error)
+		CreateProject(name string, Sector uint, AdmID uint) (*models.Project, error)
 	}
 )
