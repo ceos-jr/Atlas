@@ -8,12 +8,11 @@ import (
 	"orb-api/repositories/user_role"
 )
 
-func SetupService(repositoryUser *user.Repository, repositoryRole *role.Repository, repositoryRoleUser *user_role.Repository) *Service {
+func SetupService(repositoryUser *user.Repository, repositoryRole *role.Repository, repositoryRoleUser *userrole.Repository) *Service {
 	return &Service{
 		UserRepo: repositoryUser,
 		RoleRepo: repositoryRole,
 		UserRoleRepo: repositoryRoleUser,
-
 	}
 }
 
@@ -38,7 +37,7 @@ func (service *Service) AssigneRole(IdUser uint, IdRole uint) (*models.UserRole,
 		return nil, errors.New("Invalid user status")
 	}
 
-	userroleArray, readErr := service.UserRoleRepo.ReadBy(user_role.IReadBy{
+	userroleArray, readErr := service.UserRoleRepo.ReadBy(userrole.IReadBy{
 		RoleID: &IdRole,
 	})
 
@@ -50,7 +49,7 @@ func (service *Service) AssigneRole(IdUser uint, IdRole uint) (*models.UserRole,
 		return nil, errors.New("This role is already assigne")
 	}
 
-	newRoleUser, createErr := service.UserRoleRepo.Create(user_role.ICreate{
+	newRoleUser, createErr := service.UserRoleRepo.Create(userrole.ICreate{
 
 		UserID:     IdUser,
 		RoleID:    IdRole,
@@ -73,17 +72,17 @@ func (service *Service) UnassignRole(IdUser uint, IdRole uint) (*models.UserRole
 		return nil, errors.New("Invalid role id")
 	}
 
-	userroleArray, readErr := service.UserRoleRepo.ReadBy(user_role.IReadBy{
+	userroleArray, _ := service.UserRoleRepo.ReadBy(userrole.IReadBy{
 		RoleID: &IdRole,
 	})
 
-	if userroleArray[0].UserID == nil{
+	if userroleArray[0].UserID == 0{
 		return nil, errors.New("Role already unassigned")
 	}
 	
-	updateRoleUser, updateErr := service.UserRoleRepo.Update(user_role.IUpdate{
-		IdRole: IdRole
-		IdUser: nil,
+	updateRoleUser, updateErr := service.UserRoleRepo.Update(userrole.IUpdate{
+		RoleID: &IdRole,
+		UserID: nil,
 	})
 
 	if updateErr != nil {

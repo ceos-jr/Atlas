@@ -77,7 +77,7 @@ func (service *Service) NewUser(
 		Email:    email,
 
 		Password: hashedPassword,
-		Status:   models.UStatusProcessing,we
+		Status:   models.UStatusProcessing,
 	})
 
 	if createErr != nil {
