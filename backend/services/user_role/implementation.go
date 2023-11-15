@@ -18,11 +18,11 @@ func SetupService(repositoryUser *user.Repository, repositoryRole *role.Reposito
 
 func (service *Service) AssigneRole(IdUser uint, IdRole uint) (*models.UserRole, error) {
 	if !service.UserRepo.ValidUser(IdUser){
-		return nil, errors.New("Invalid user id")
+		return nil, errors.New("invalid user id")
 	}
 
 	if !service.RoleRepo.ValidRole(IdRole){
-		return nil, errors.New("Invalid role id")
+		return nil, errors.New("invalid role id")
 	}
 
 	userArray, readErr := service.UserRepo.ReadBy(user.IReadBy{
@@ -34,7 +34,7 @@ func (service *Service) AssigneRole(IdUser uint, IdRole uint) (*models.UserRole,
 	}
 
 	if userArray[0].Status != 2 {
-		return nil, errors.New("Invalid user status")
+		return nil, errors.New("invalid user status")
 	}
 
 	userroleArray, readErr := service.UserRoleRepo.ReadBy(userrole.IReadBy{
@@ -46,7 +46,7 @@ func (service *Service) AssigneRole(IdUser uint, IdRole uint) (*models.UserRole,
 	}
 
 	if len(userroleArray) > 0 {
-		return nil, errors.New("This role is already assigne")
+		return nil, errors.New("this role is already assigne")
 	}
 
 	newRoleUser, createErr := service.UserRoleRepo.Create(userrole.ICreate{
@@ -65,29 +65,30 @@ func (service *Service) AssigneRole(IdUser uint, IdRole uint) (*models.UserRole,
 
 func (service *Service) UnassignRole(IdUser uint, IdRole uint) (*models.UserRole, error){
 	if !service.UserRepo.ValidUser(IdUser){
-		return nil, errors.New("Invalid user id")
+		return nil, errors.New("invalid user id")
 	}
 
 	if !service.RoleRepo.ValidRole(IdRole){
-		return nil, errors.New("Invalid role id")
+		return nil, errors.New("invalid role id")
 	}
 
-	userroleArray, _ := service.UserRoleRepo.ReadBy(userrole.IReadBy{
-		RoleID: &IdRole,
+	userroleArray, readErr := service.UserRoleRepo.ReadBy(userrole.IReadBy{
+		UserID: &IdUser,
 	})
 
-	if userroleArray[0].UserID == 0{
-		return nil, errors.New("Role already unassigned")
+	if readErr != nil{
+		return nil, readErr
+	}
+
+	IDuserrole := userroleArray[0].ID
+
+	deletedUserRole, deleteErr := service.UserRoleRepo.Delete(userrole.IDelete{
+		UserRoleID: IDuserrole,
+	})
+
+	if deleteErr != nil {
+		return nil, deleteErr
 	}
 	
-	updateRoleUser, updateErr := service.UserRoleRepo.Update(userrole.IUpdate{
-		RoleID: &IdRole,
-		UserID: nil,
-	})
-
-	if updateErr != nil {
-		return nil, updateErr
-	}
-
-	return updateRoleUser, nil
+	return deletedUserRole, nil
 }
