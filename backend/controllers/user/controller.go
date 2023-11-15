@@ -20,7 +20,7 @@ func (uc *Controller) Create(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	newUser, err := uc.UserService.CreateNewUser(createUser)
+	newUser, err := uc.UserService.NewUser(createUser)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"error": err.Error()})
 	}
