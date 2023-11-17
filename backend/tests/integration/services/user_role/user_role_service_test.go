@@ -48,12 +48,15 @@ func (suite *TestSuite) TestAssigneRole(){
 func (suite *TestSuite) TestAssigneRoleErr() {
 	Invalid_UserID := uint(500)
 	Invalid_RoleID := uint(500)
-
-	_, err := suite.Service.AssigneRole(Invalid_UserID, suite.MockRoles[0].ID,)
+	
+	_, err := suite.Service.AssigneRole(suite.MockUsers[0].ID,Invalid_RoleID,)
+	suite.Equal("invalid role id", err.Error(), "Expected to have an error")
+	
+	_, err = suite.Service.AssigneRole(Invalid_UserID, suite.MockRoles[0].ID,)
 	suite.Equal("invalid user id", err.Error(), "Expected to have an error")
 
-	_, err = suite.Service.UnassignRole(suite.MockUsers[0].ID,Invalid_RoleID,)
-	suite.Equal("invalid role id", err.Error(), "Expected to have an error")
+	_, err = suite.Service.AssigneRole(Invalid_UserID, Invalid_RoleID)
+	suite.Equal("Invalid role id and invalid user id", err.Error(), "Expected to have an error")
 
 }
 
