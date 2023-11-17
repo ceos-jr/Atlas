@@ -85,8 +85,8 @@ func (suite *TestSuite) TearDownSuite() {
 	}
 
 	for index := range suite.MockRoles {
-		_, deleteErr := suite.Service.UserRepo.Delete(userrepo.IDelete{
-			ID: suite.MockRoles[index].ID,
+		_, deleteErr := suite.Service.RoleRepo.Delete(rolerepo.IDelete{
+			RoleID: suite.MockRoles[index].ID,
 		})
 
 		if deleteErr != nil {
