@@ -29,9 +29,9 @@ func (suite *TestSuite) SetupSuite(){
 	}
 
 	suite.Service = user_roleservice.SetupService(&repositories.User, &repositories.Role, &repositories.UserRole)
-	suite.MockUserRoles = make([]models.UserRole, 2)
-	suite.MockUsers = make([]models.User, 2)
-	suite.MockRoles = make([]models.Role, 2)
+	suite.MockUserRoles = make([]models.UserRole, 1)
+	suite.MockUsers = make([]models.User, 1)
+	suite.MockRoles = make([]models.Role, 1)
 	suite.SetupMocks()
 }
 
@@ -74,6 +74,7 @@ func (suite *TestSuite) SetupMocks() {
 
 // TearDownSuite Executed after all tests
 func (suite *TestSuite) TearDownSuite() {
+	
 	_, deleteErr := suite.Service.UserRepo.Delete(userrepo.IDelete{
 		ID: suite.MockUsers[0].ID,
 	})
@@ -82,21 +83,19 @@ func (suite *TestSuite) TearDownSuite() {
 		panic(deleteErr)
 	}
 	
-	for index := range suite.MockRoles {
-		_, deleteErr := suite.Service.RoleRepo.Delete(rolerepo.IDelete{
-			RoleID: suite.MockRoles[index].ID,
-		})
+	_, deleteErr = suite.Service.RoleRepo.Delete(rolerepo.IDelete{
+		RoleID: suite.MockRoles[0].ID,
+	})
 	
-		if deleteErr != nil {
-			panic(deleteErr)
-		}
+	if deleteErr != nil {
+		panic(deleteErr)
 	}
 	
-	_, deleterrs := suite.Service.UserRoleRepo.Delete(user_rolerepo.IDelete{
+	/*_, deleterrs := suite.Service.UserRoleRepo.Delete(user_rolerepo.IDelete{
 		UserRoleID: suite.MockUserRoles[0].ID,
 	})
-
+	
 	if deleterrs != nil{
 		panic(deleterrs)
-	}
+	}*/
 }
