@@ -45,7 +45,7 @@ func (service *Service) AssigneRole(IdUser uint, IdRole uint) (*models.UserRole,
 		return nil, readErr
 	}
 
-	if len(userroleArray) > 0 {
+	if len(userroleArray) == 0 {
 		return nil, errors.New("this role is already assigne")
 	}
 

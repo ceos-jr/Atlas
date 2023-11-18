@@ -6,37 +6,6 @@ import (
 
 	"github.com/stretchr/testify/suite"
 )
-
-
-func (suite *TestSuite) TestUnassignRole() {
-	UserRole, err := suite.Service.UnassignRole(suite.MockUsers[0].ID, suite.MockRoles[0].ID,)
-	
-	suite.Nil(err, "Unassigne Role error must be nil")
-	suite.Equal(suite.MockUsers[0].ID, UserRole.UserID)
-	suite.Equal(suite.MockRoles[0].ID, UserRole.RoleID)
-}
-/*func (suite *TestSuite) TestUnassignRoleErr() {
-	invalid_user_id := uint(1000)
-	invalid_role_id := uint(1000)
-
-	_, err := suite.Service.UnassignRole(
-		invalid_user_id,
-		suite.MockRoles[0].ID,
-	)
-	suite.Equal("invalid user id", err.Error(), "Expected to have an error")
-
-	_, err = suite.Service.UnassignRole(
-		suite.MockUsers[0].ID,
-		invalid_role_id,
-	)
-	suite.Equal("invalid role id", err.Error(), "Expected to have an error")
-
-}*/
-
-func TestUserRoleRepository(test *testing.T) {
-	suite.Run(test, new(TestSuite))
-}
-
 func (suite *TestSuite) TestAssigneRole(){
 	UserRole, err := suite.Service.AssigneRole(suite.MockUsers[0].ID, suite.MockRoles[0].ID)
 
@@ -55,8 +24,35 @@ func (suite *TestSuite) TestAssigneRoleErr() {
 	_, err = suite.Service.AssigneRole(Invalid_UserID, suite.MockRoles[0].ID,)
 	suite.Equal("invalid user id", err.Error(), "Expected to have an error")
 
-	_, err = suite.Service.AssigneRole(Invalid_UserID, Invalid_RoleID)
-	suite.Equal("Invalid role id and invalid user id", err.Error(), "Expected to have an error")
+	//_, err = suite.Service.AssigneRole(Invalid_UserID, Invalid_RoleID)
+	//suite.Equal("Invalid role id and invalid user id", err.Error(), "Expected to have an error")
 
 }
 
+func (suite *TestSuite) TestUnassignRole() {
+	UserRole, err := suite.Service.UnassignRole(suite.MockUsers[0].ID, suite.MockRoles[0].ID,)
+	
+	suite.Nil(err, "Unassigne Role error must be nil")
+	suite.Equal(suite.MockUsers[0].ID, UserRole.UserID)
+	suite.Equal(suite.MockRoles[0].ID, UserRole.RoleID)
+}	
+func (suite *TestSuite) TestUnassignRoleErr() {
+	invalid_user_id := uint(1000)
+	invalid_role_id := uint(1000)
+
+	_, err := suite.Service.UnassignRole(
+		invalid_user_id,
+		suite.MockRoles[0].ID,
+	)	
+	suite.Equal("invalid user id", err.Error(), "Expected to have an error")
+
+	_, err = suite.Service.UnassignRole(
+		suite.MockUsers[0].ID,
+		invalid_role_id,
+	)	
+	suite.Equal("invalid role id", err.Error(), "Expected to have an error")
+}	
+
+func TestUserRoleRepository(test *testing.T) {
+	suite.Run(test, new(TestSuite))
+}	

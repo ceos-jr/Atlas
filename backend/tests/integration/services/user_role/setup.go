@@ -3,9 +3,9 @@ package user_roleservicetest
 import (
 	"orb-api/config"
 	"orb-api/models"
-	user_rolerepo	"orb-api/repositories/user_role"
-	userrepo	"orb-api/repositories/user"
-	rolerepo	"orb-api/repositories/role"
+	rolerepo "orb-api/repositories/role"
+	userrepo "orb-api/repositories/user"
+	user_rolerepo "orb-api/repositories/user_role"
 
 	user_roleservice "orb-api/services/user_role"
 
@@ -43,7 +43,7 @@ func (suite *TestSuite) SetupMocks() {
 		Name:     "User 01",
 		Email:    "user01@example.com",
 		Password: "mostBeautiful",
-		Status:   1,
+		Status:   2,
 	})
 	if createErr != nil {
 		panic(createErr)
@@ -74,33 +74,29 @@ func (suite *TestSuite) SetupMocks() {
 
 // TearDownSuite Executed after all tests
 func (suite *TestSuite) TearDownSuite() {
-	for index := range suite.MockUsers {
-		_, deleteErr := suite.Service.UserRepo.Delete(userrepo.IDelete{
-			ID: suite.MockUsers[index].ID,
-		})
-
-		if deleteErr != nil {
-			panic(deleteErr)
-		}
+	_, deleteErr := suite.Service.UserRepo.Delete(userrepo.IDelete{
+		ID: suite.MockUsers[0].ID,
+	})
+	
+	if deleteErr != nil {
+		panic(deleteErr)
 	}
-
+	
 	for index := range suite.MockRoles {
 		_, deleteErr := suite.Service.RoleRepo.Delete(rolerepo.IDelete{
 			RoleID: suite.MockRoles[index].ID,
 		})
-
+	
 		if deleteErr != nil {
 			panic(deleteErr)
 		}
 	}
+	
+	_, deleterrs := suite.Service.UserRoleRepo.Delete(user_rolerepo.IDelete{
+		UserRoleID: suite.MockUserRoles[0].ID,
+	})
 
-	for index := range suite.MockUserRoles {
-		_, deleteErr := suite.Service.UserRoleRepo.Delete(user_rolerepo.IDelete{
-			UserRoleID: suite.MockUserRoles[index].ID,
-		})
-
-		if deleteErr != nil {
-			panic(deleteErr)
-		}
+	if deleterrs != nil{
+		panic(deleterrs)
 	}
 }
