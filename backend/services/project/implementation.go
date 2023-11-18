@@ -3,6 +3,7 @@ package project
 import (
 	"orb-api/models"
 	"orb-api/repositories/project"
+	"errors"
 )
 
 func SetupProjectService(repository *project.Repository) *Service {
@@ -24,4 +25,16 @@ func (service *Service) CreateProject(name string, Sector uint, AdmID uint) (*mo
 	}
 
 	return NewProject, nil
+}
+
+func (service *Service) AssignUser(ProjectID uint, UserID uint) (*models.UsersProject, error) {
+	if !service.ProjectRepo.ValidProject(ProjectID) {
+		return nil, errors.New("invalid Project passed to AssignUser")
+	}
+
+	if !service.ProjectRepo.ValidUser(UserID) {
+		return nil, error.New("invalid User passed to AssignUser")
+	}
+
+	
 }

@@ -94,7 +94,7 @@ type TasksProject struct {
 type UsersProject struct {
 	ID        uint     `json:"id" gorm:"primaryKey"`
 	UserID	  uint     `json:"user_id"`
-	ProjectID uint     `json:"project_id"` 
+	ProjectID uint     `json:"project_id"`
 }
 
 // *********** IMPORTANTE ***************
