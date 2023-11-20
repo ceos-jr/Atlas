@@ -1,6 +1,7 @@
 package user_roleservicetest
 
 import (
+	"fmt"
 	"orb-api/config"
 	"orb-api/models"
 	rolerepo "orb-api/repositories/role"
@@ -30,35 +31,42 @@ func (suite *TestSuite) SetupSuite(){
 
 	suite.Service = user_roleservice.SetupService(&repositories.User, &repositories.Role, &repositories.UserRole)
 	suite.MockUserRoles = make([]models.UserRole, 1)
-	suite.MockUsers = make([]models.User, 1)
-	suite.MockRoles = make([]models.Role, 1)
+	suite.MockUsers = make([]models.User, 2)
+	suite.MockRoles = make([]models.Role, 2)
 	suite.SetupMocks()
 }
 
 // setting up the mock UserRole
 func (suite *TestSuite) SetupMocks() {
 
-	//criar o mock de user
-	newUser, createErr := suite.Service.UserRepo.Create(userrepo.ICreate{
-		Name:     "User 01",
-		Email:    "user01@example.com",
-		Password: "mostBeautiful",
-		Status:   2,
-	})
-	if createErr != nil {
-		panic(createErr)
-	}
-	suite.MockUsers[0] = *newUser
+	//criar os mocks de user
+	for i := 0; i < 2; i++ {
+		NewUser, createErr := suite.Service.UserRepo.Create(userrepo.ICreate{
+			Name:     fmt.Sprintf("User 0%v", i+1),
+			Email:    fmt.Sprintf("example0%v@example.com", i+1),
+			Password: "gabrigas123",
+			Status:   2,
+		})
 
-	//Criar o mock de role
-	newRole, Err := suite.Service.RoleRepo.Create(rolerepo.ICreate{
-		Name:     "role 01",
-		Description: "description 01",
-	})
-	if Err != nil {
-		panic(Err)
+		if createErr != nil {
+			panic(createErr)
+		}
+
+		suite.MockUsers[i] = *NewUser
 	}
-	suite.MockRoles[0] = *newRole
+	//Criar os mocks de role
+	for i := 0; i < 2; i++ {
+		newRole, createErr := suite.Service.RoleRepo.Create(rolerepo.ICreate{
+			Name:     fmt.Sprintf("Role 0%v", i+1),
+			Description:     fmt.Sprintf("description 0%v", i+1),
+		})
+
+		if createErr != nil {
+			panic(createErr)
+		}
+
+		suite.MockRoles[i] = *newRole
+	}
 
 	//Criação do mock UserRole
 	newUserRole, errs := suite.Service.UserRoleRepo.Create(user_rolerepo.ICreate{
@@ -91,11 +99,11 @@ func (suite *TestSuite) TearDownSuite() {
 		panic(deleteErr)
 	}
 	
-	/*_, deleterrs := suite.Service.UserRoleRepo.Delete(user_rolerepo.IDelete{
+	_, deleterrs := suite.Service.UserRoleRepo.Delete(user_rolerepo.IDelete{
 		UserRoleID: suite.MockUserRoles[0].ID,
 	})
 	
 	if deleterrs != nil{
 		panic(deleterrs)
-	}*/
+	}
 }
