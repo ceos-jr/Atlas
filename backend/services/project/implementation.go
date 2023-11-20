@@ -33,8 +33,15 @@ func (service *Service) AssignUser(ProjectID uint, UserID uint) (*models.UsersPr
 	}
 
 	if !service.ProjectRepo.ValidUser(UserID) {
-		return nil, error.New("invalid User passed to AssignUser")
+		return nil, errors.New("invalid User passed to AssignUser")
 	}
 
-	
+	NewUserProject := &models.UsersProject{
+		UserID:    UserID,
+		ProjectID: ProjectID,
+	}
+
+
+	return NewUserProject, nil
 }
+
