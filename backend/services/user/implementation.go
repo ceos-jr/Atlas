@@ -4,13 +4,12 @@ package user
 import (
 	"errors"
 	"orb-api/models"
-
 	"orb-api/repositories/user"
 )
 
-func SetupService(repository *user.Repository) *Service {
+func SetupService(repositoryUser *user.Repository) *Service {
 	return &Service{
-		UserRepo: repository,
+		UserRepo: repositoryUser,
 	}
 }
 
@@ -228,3 +227,4 @@ func (service *Service) UpdateStatus(id uint, status uint) (*models.User, error)
 
 	return userUpdate, nil
 }
+
