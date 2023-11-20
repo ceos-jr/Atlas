@@ -54,7 +54,7 @@ func (suite *TestSuit) SetupMocks() {
 		suite.MockUsers[i] = *NewUser
 	}
 
-	deadline := time.Date(2023, time.November, 15, 12, 0, 0, 0, time.UTC)
+	deadline := time.Date(2077, 4, 12, 12, 0, 0, 0, time.UTC)
 
 	newTask, createErr := suite.Repo.Task.Create(taskrepo.ICreate{
 		Description: "Uma tarefa",
