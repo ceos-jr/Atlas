@@ -14,6 +14,14 @@ const Home: React.FC = () => {
     router.push("/sign"); 
   };
 
+  const goSeeCards = () => {
+    router.push("/cards")
+  }
+
+  const goSeeTemplates = () => {
+    router.push("/template")
+  }
+
   return (
     <div className="flex justify-center items-center h-screen text-center font-quick">
       <div className="card bg-white rounded-lg shadow-md p-6">
@@ -35,6 +43,18 @@ const Home: React.FC = () => {
           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300"
         >
           Cadastre-se
+        </button>
+        <button
+          onClick={goSeeCards}
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300"
+        >
+          Cards
+        </button>
+        <button
+          onClick={goSeeTemplates}
+          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300"
+        >
+          Templates
         </button>
         </div>
       </div>
