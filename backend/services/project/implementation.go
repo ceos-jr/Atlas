@@ -41,7 +41,6 @@ func (service *Service) AssignUser(ProjectID uint, UserID uint) (*models.UsersPr
 		ProjectID: ProjectID,
 	}
 
-
 	return NewUserProject, nil
 }
 

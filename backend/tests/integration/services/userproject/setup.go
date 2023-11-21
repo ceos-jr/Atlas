@@ -5,7 +5,6 @@ import (
 	"orb-api/config"
 	"orb-api/models"
 	"orb-api/services/project"
-	"time"
 
 	repository "orb-api/repositories"
 	projectrepo "orb-api/repositories/project"
@@ -17,7 +16,7 @@ import (
 type TestSuit struct {
 	suite.Suite
 	Repo        *repository.Repository
-	ProjectService *Project.Service
+	ProjectService *project.Service
 	MockProjects   []models.Project
 	MockUsers   []models.User
 	MockUserProjects []models.UsersProject
@@ -34,7 +33,7 @@ func (suite *TestSuit) SetupSuite() {
 	suite.Repo = repository
   	suite.ProjectService = project.SetupProjectService(&repository.Project)
 	suite.MockUsers = make([]models.User, 1)
-	suite.MockTasks = make([]models.Project, 1)
+	suite.MockProjects = make([]models.Project, 1)
 	suite.SetupMocks()
 }
 
@@ -76,11 +75,11 @@ func (suite *TestSuit) TearDownSuite() {
 		panic(deleteErr)
 	}
 
-	_, deleteErr := suite.Repo.Project.Delete(projectrepo.IDelete{
+	_, deleteErr2 := suite.Repo.Project.Delete(projectrepo.IDelete{
 		ID: suite.MockProjects[0].ID,
 	})
 
-	if deleteErr != nil {
-		panic(deleteErr)
+	if deleteErr2 != nil {
+		panic(deleteErr2)
 	}
 }
