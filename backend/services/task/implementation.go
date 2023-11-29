@@ -5,19 +5,6 @@ import (
 	"orb-api/models"
 	"orb-api/repositories/task"
 )
-type taskList []models.Task
-
-func (t taskList) less(i int,j int) bool {
-	return (t[i].Deadline).Before(t[j].Deadline)
-}
-
-func (t taskList) swap(i int,j int) {
-	t[i], t[j] = t[j], t[i]
-}
-
-func (t taskList) Len() int {
-	return len(t)
-}
 
 func SetupTaskService(repository *task.Repository) *Service {
 	return &Service{
@@ -55,8 +42,7 @@ func (service *Service) AssignTask(idTask uint, idUser uint) (*models.Task, erro
 }
 
 
-func (service *Service) OrganizeTasks(idUser uint) (*models.Task, error) {
-	var taskSlice []taskList
+func (service *Service) OrganizeTasks(idUser uint) (*[]models.Task, error) {
 
 	taskArray, readErr := service.TaskRepo.ReadBy(task.IReadBy{
 		AssignedTo: &idUser,
@@ -67,9 +53,22 @@ func (service *Service) OrganizeTasks(idUser uint) (*models.Task, error) {
 	}
 
 	if len(taskArray) == 0 {
-		return nil, errors.New("No tasks to organize")
+		return nil, errors.New("no tasks to organize")
 	}
-	
+	//use of the insertion sort to organize the array
+	n := len(taskArray)
+    for i := 1; i < n; i++ {
+        key := taskArray[i]
+        j := i - 1
+   
+        for j >= 0 && taskArray[j].Deadline.Unix() > key.Deadline.Unix() {
+            taskArray[j+1] = taskArray[j]
+            j = j - 1
+		}
+        taskArray[j+1] = key
+	}
+
+	return &taskArray, nil
 	
 	
 	
