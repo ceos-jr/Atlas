@@ -234,7 +234,7 @@ func partition(arr []models.Task, low, high int) ([]models.Task, int){
 	i := low
 
 	for j := low; j < high; j++{
-		if time.arr[j].Deadline.compare(pivot) == -1 {
+		if arr[j].Deadline.before(pivot) {
 			arr[i], arr[j] = arr[j], arr[i]
 			i++
 		}
