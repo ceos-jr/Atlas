@@ -1,17 +1,21 @@
 package project
 
 import (
+	"fmt"
+
 	"orb-api/models"
 	"orb-api/repositories/project"
 	"orb-api/repositories/userproject"
 	"orb-api/repositories/taskproject"
+	"orb-api/repositories/task"
 )
 
-func SetupProjectService(repository1 *project.Repository, repository2 *userproject.Repository, repository3 *taskproject.Repository) *Service {
+func SetupProjectService(repository1 *project.Repository, repository2 *userproject.Repository, repository3 *taskproject.Repository, repository4 *task.Repository) *Service {
 	return &Service{
 		ProjectRepo: repository1,
 		UserProjectRepo: repository2,
 		TaskProjectRepo: repository3,
+		TaskRepo: repository4,
 	}
 }
 
@@ -58,15 +62,31 @@ func (service *Service) AssignTask(ProjectID uint, TaskID uint) (*models.UsersPr
 	return NewTaskProject, nil
 }
 
-func (service *Service) SortTaskDeadline(ProjectID uint) ([]*models.Task, error) {
+func (service *Service) SortByDeadline(ProjectID uint) ([]models.Task, error) {
 
-	TaskProjects, Err := srvice.TaskProjectRepo.ReadBy(taskproject.IReadBy{
+	TaskProjects, ReadErr := service.TaskProjectRepo.ReadBy(taskproject.IReadBy{
 		ProjectID: ProjectID,
 	})
 
-	if Err != nil {
-		return nil, Err
+	if ReadErr != nil {
+		return nil, ReadErr
 	}
 
-	
+	Tasks := []models.task{}
+
+	for i := 0; i < len(TasksProject); i++{
+		App, Err := Tasks, service.TaskRepo.ReadBy(task.IReadBy{
+			TaskID: TaskProjects[i].TaskID,
+		})
+
+		if Err != nil {
+			return nil, Err
+		}
+
+		Tasks = append(Tasks, App...)
+	}
+
+	Tasks = service.TaskRepo.Sort(Tasks)
+
+	return Tasks, nil
 }
