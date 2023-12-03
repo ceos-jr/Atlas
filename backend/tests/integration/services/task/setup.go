@@ -31,9 +31,9 @@ func (suite *TestSuit) SetupSuite() {
 	}
 
 	suite.Repo = repository
-  suite.TaskService = task.SetupTaskService(&repository.Task)
+	suite.TaskService = task.SetupTaskService(&repository.Task)
 	suite.MockUsers = make([]models.User, 3)
-	suite.MockTasks = make([]models.Task, 1)
+	suite.MockTasks = make([]models.Task, 2)
 	suite.SetupMocks()
 }
 
@@ -53,8 +53,8 @@ func (suite *TestSuit) SetupMocks() {
 
 		suite.MockUsers[i] = *NewUser
 	}
-
-	deadline := time.Date(2077, 4, 12, 12, 0, 0, 0, time.UTC)
+	
+	deadline := time.Date(2077, 4, 12, 12, 0, 0, 0, time.Local)
 
 	newTask, createErr := suite.Repo.Task.Create(taskrepo.ICreate{
 		Description: "Uma tarefa",
@@ -70,14 +70,14 @@ func (suite *TestSuit) SetupMocks() {
 
 	suite.MockTasks[0] = *newTask
 
-	deadline2 := time.Date(2050, 4, 12, 12, 0, 0, 0, time.UTC)
+	deadline2 := time.Date(2050, 4, 12, 12, 0, 0, 0, time.Local)
 
 	newTask2, createErr := suite.Repo.Task.Create(taskrepo.ICreate{
 		Description: "Uma tarefa2",
-		AssignedTo: suite.MockUsers[0].ID,
-		CreatedBy: suite.MockUsers[1].ID,
-		Status: 2,
-		Deadline: deadline2,
+		AssignedTo:  suite.MockUsers[0].ID,
+		CreatedBy:   suite.MockUsers[1].ID,
+		Status:      2,
+		Deadline:    deadline2,
 	})
 
 	if createErr != nil {
