@@ -41,5 +41,5 @@ func (suite *TestSuit) TestOrganizeTasksErr() {
 	id := uint(524) 
 
 	_, err := suite.TaskService.OrganizeTasks(id)
-	suite.Equal("invalid role id", err.Error(), "Expected to have an error")
+	suite.Equal("invalid user id", err.Error(), "Expected to have an error")
 }
