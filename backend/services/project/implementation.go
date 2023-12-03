@@ -3,44 +3,70 @@ package project
 import (
 	"orb-api/models"
 	"orb-api/repositories/project"
-	"errors"
+	"orb-api/repositories/userproject"
+	"orb-api/repositories/taskproject"
 )
 
-func SetupProjectService(repository *project.Repository) *Service {
+func SetupProjectService(repository1 *project.Repository, repository2 *userproject.Repository, repository3 *taskproject.Repository) *Service {
 	return &Service{
-		ProjectRepo: repository,
+		ProjectRepo: repository1,
+		UserProjectRepo: repository2,
+		TaskProjectRepo: repository3,
 	}
 }
 
 func (service *Service) CreateProject(name string, Sector uint, AdmID uint) (*models.Project, error) {
 
-	NewProject, err := service.ProjectRepo.Create(project.ICreate{
+	NewProject, Err := service.ProjectRepo.Create(project.ICreate{
 		Name:	name,
 		Sector: Sector,
 		AdmID:	AdmID,
 	})
 
-	if err != nil {
-		return nil, err
+	if Err != nil {
+		return nil, Err
 	}
 
 	return NewProject, nil
 }
 
 func (service *Service) AssignUser(ProjectID uint, UserID uint) (*models.UsersProject, error) {
-	if !service.ProjectRepo.ValidProject(ProjectID) {
-		return nil, errors.New("invalid Project passed to AssignUser")
-	}
 
-	if !service.ProjectRepo.ValidUser(UserID) {
-		return nil, errors.New("invalid User passed to AssignUser")
-	}
+	NewUserProject, Err := service.UserProjectRepo.Create(userproject.ICreate{
+		ProjectID:	ProjectID,
+		UserID:		UserID,
+	})
 
-	NewUserProject := &models.UsersProject{
-		UserID:    UserID,
-		ProjectID: ProjectID,
+	if Err != nil {
+		return nil, Err
 	}
 
 	return NewUserProject, nil
 }
 
+func (service *Service) AssignTask(ProjectID uint, TaskID uint) (*models.UsersProject, error) {
+
+	NewTaskProject, Err := service.TaskProjectRepo.Create(taskproject.ICreate{
+		ProjectID:	ProjectID,
+		TaskID:		TaskID,
+	})
+
+	if Err != nil {
+		return nil, Err
+	}
+
+	return NewTaskProject, nil
+}
+
+func (service *Service) SortTaskDeadline(ProjectID uint) ([]*models.Task, error) {
+
+	TaskProjects, Err := srvice.TaskProjectRepo.ReadBy(taskproject.IReadBy{
+		ProjectID: ProjectID,
+	})
+
+	if Err != nil {
+		return nil, Err
+	}
+
+	
+}

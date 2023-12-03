@@ -6,6 +6,8 @@ import (
 	"orb-api/repositories/role"
 	"orb-api/repositories/task"
 	"orb-api/repositories/user"
+	"orb-api/repositories/userproject"
+	"orb-api/repositories/taskproject"
 	userrole "orb-api/repositories/user_role"
 	project  "orb-api/repositories/project"
 
@@ -21,6 +23,8 @@ type Repository struct {
 	Message  message.Repository
 	Relation relation.Repository
 	Project  project.Repository
+	UserProject userproject.Repository
+	TaskProject taskproject.Repository
 }
 
 func SetupRepository(connection *gorm.DB) *Repository {
@@ -33,5 +37,7 @@ func SetupRepository(connection *gorm.DB) *Repository {
 		Message:  message.NewMessageRepository(connection),
 		Relation: relation.NewRepository(connection),
 		Project: project.NewProjectRepository(connection),
+		UserProject: userproject.NewUserProjectRepository(connection),
+		TaskProject: taskproject.NewTaskProjectRepository(connection),
 	}
 }

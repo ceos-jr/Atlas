@@ -25,19 +25,6 @@ func (r *Repository) ValidProject(id uint) bool {
 	return true
 }
 
-//Used for AssignUser in Service
-func (r *Repository) ValidUser(id uint) bool {
-	user := models.User{ID: id}
-
-	verifyUser := r.GetDB().First(&user).Error
-
-	if verifyUser != nil {
-		return false
-	}
-
-	return true
-}
-
 func ValidProjectName(name string) bool{
 	if len(name) < nameMinlen || len(name) > nameMaxlen{
 		return false

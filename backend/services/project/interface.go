@@ -3,11 +3,15 @@ package project
 import (
 	"orb-api/models"
 	"orb-api/repositories/project"
+	"orb-api/repositories/userproject"
+	"orb-api/repositories/taskproject"
 )
 
 type (
 	Service struct {
 		ProjectRepo *project.Repository
+		UserProjectRepo	*userproject.Repository
+		TaskProjectRepo *taskproject.Repository
 	}
 
 	Interface interface {

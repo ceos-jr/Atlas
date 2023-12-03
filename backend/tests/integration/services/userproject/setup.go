@@ -31,7 +31,7 @@ func (suite *TestSuit) SetupSuite() {
 	}
 
 	suite.Repo = repository
-  	suite.ProjectService = project.SetupProjectService(&repository.Project)
+  	suite.ProjectService = project.SetupProjectService(&repository.Project, &repository.UserProject)
 	suite.MockUsers = make([]models.User, 1)
 	suite.MockProjects = make([]models.Project, 1)
 	suite.SetupMocks()
