@@ -27,3 +27,19 @@ func (suite *TestSuit) TestAssignTask() {
 func TestTaskRepository(t *testing.T) {
 	suite.Run(t, new(TestSuit))
 }
+
+func (suite *TestSuit) TestOrganizeTasks() {
+	OrganizedTasks, OrganizeErr := suite.TaskService.OrganizeTasks(suite.MockUsers[0].ID)
+
+	suite.Nil(OrganizeErr, "Organize error must be Nil")
+
+	suite.Equal((*OrganizedTasks)[0], suite.MockUsers[1])
+	suite.Equal((*OrganizedTasks)[1], suite.MockUsers[0])
+}
+
+func (suite *TestSuit) TestOrganizeTasksErr() {
+	id := uint(524) 
+
+	_, err := suite.TaskService.OrganizeTasks(id)
+	suite.Equal("invalid role id", err.Error(), "Expected to have an error")
+}
