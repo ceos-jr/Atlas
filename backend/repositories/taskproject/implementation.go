@@ -6,7 +6,7 @@ import (
 	"orb-api/models"
 )
 
-func NewUserProjectRepository(db *gorm.DB) Repository {
+func NewTaskProjectRepository(db *gorm.DB) Repository {
 	return Repository{
 		GetDB: func() *gorm.DB {
 			return db
@@ -42,7 +42,7 @@ func (r *Repository) Create(createData ICreate) (*models.TasksProject, error){
 
 	var taskproject = models.TasksProject{
 		ProjectID:	createData.ProjectID,
-		UserID:		createData.TaskID,
+		TaskID:		createData.TaskID,
 	}
 
 	if !r.ValidProject(createData.ProjectID){
@@ -78,11 +78,11 @@ func (r *Repository) ReadBy(readBy IReadBy) ([]models.TasksProject, error){
 	}
 
 	if readBy.ProjectID != nil {
-		fieldMap["adm_id"] = *readBy.ProjectID
+		fieldMap["project_id"] = *readBy.ProjectID
 	}
 
 	if readBy.TaskID != nil {
-		fieldMap["adm_id"] = *readBy.TaskID
+		fieldMap["task_id"] = *readBy.TaskID
 	}
 
 	if readBy.Limit != nil {
@@ -99,7 +99,7 @@ func (r *Repository) ReadBy(readBy IReadBy) ([]models.TasksProject, error){
 }
 
 func (r *Repository) Delete(deleteData IDelete) (*models.TasksProject, error) {
-	var userproject = models.TasksProject{ID: deleteData.ID}
+	var taskproject = models.TasksProject{ID: deleteData.ID}
 
 	verifyExistence := r.GetDB().First(&taskproject)
 

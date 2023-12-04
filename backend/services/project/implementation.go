@@ -1,8 +1,6 @@
 package project
 
 import (
-	"fmt"
-
 	"orb-api/models"
 	"orb-api/repositories/project"
 	"orb-api/repositories/userproject"
@@ -48,7 +46,7 @@ func (service *Service) AssignUser(ProjectID uint, UserID uint) (*models.UsersPr
 	return NewUserProject, nil
 }
 
-func (service *Service) AssignTask(ProjectID uint, TaskID uint) (*models.UsersProject, error) {
+func (service *Service) AssignTask(ProjectID uint, TaskID uint) (*models.TasksProject, error) {
 
 	NewTaskProject, Err := service.TaskProjectRepo.Create(taskproject.ICreate{
 		ProjectID:	ProjectID,
@@ -65,18 +63,18 @@ func (service *Service) AssignTask(ProjectID uint, TaskID uint) (*models.UsersPr
 func (service *Service) SortByDeadline(ProjectID uint) ([]models.Task, error) {
 
 	TaskProjects, ReadErr := service.TaskProjectRepo.ReadBy(taskproject.IReadBy{
-		ProjectID: ProjectID,
+		ProjectID: &ProjectID,
 	})
 
 	if ReadErr != nil {
 		return nil, ReadErr
 	}
 
-	Tasks := []models.task{}
+	Tasks := []models.Task{}
 
-	for i := 0; i < len(TasksProject); i++{
-		App, Err := Tasks, service.TaskRepo.ReadBy(task.IReadBy{
-			TaskID: TaskProjects[i].TaskID,
+	for i := 0; i < len(TaskProjects); i++{
+		App, Err := service.TaskRepo.ReadBy(task.IReadBy{
+			ID: &(TaskProjects[i].TaskID),
 		})
 
 		if Err != nil {

@@ -62,13 +62,13 @@ func (r *Repository) Create(createData ICreate) (*models.Task, error) {
 		Deadline:    createData.Deadline,
 	}
 
-	if !r.ValidUser(createData.CreatedBy) {
+	/*if !r.ValidUser(createData.CreatedBy) {
 		return nil, errors.New("Invalid user passed to createBy")
 	}
 
 	if !r.ValidUser(createData.AssignedTo) {
 		return nil, errors.New("Invalid user passed to assignedTo")
-	}
+	}*/
 
 	if !ValidTaskStatus(createData.Status) {
 		return nil, errors.New("Invalid task status")
@@ -234,7 +234,7 @@ func partition(arr []models.Task, low, high int) ([]models.Task, int){
 	i := low
 
 	for j := low; j < high; j++{
-		if arr[j].Deadline.before(pivot) {
+		if arr[j].Deadline.Before(pivot) {
 			arr[i], arr[j] = arr[j], arr[i]
 			i++
 		}
@@ -254,6 +254,6 @@ func quickSort(arr []models.Task, low, high int) []models.Task {
 	return arr
 }
 
-func (r *Repository) Sort(arr []models.Task) ([]models.Task, error) {
+func (r *Repository) Sort(arr []models.Task) ([]models.Task) {
 	return quickSort(arr, 0, len(arr)-1)
 }
