@@ -43,6 +43,7 @@ func (service *Service) AssignTask(idTask uint, idUser uint) (*models.Task, erro
 
 
 func (service *Service) OrganizeTasks(UserId uint) (*[]models.Task, error) {
+	//validation of the user
 	if !service.TaskRepo.ValidUser(UserId){
 		return nil, errors.New("invalid user id")
 	}
