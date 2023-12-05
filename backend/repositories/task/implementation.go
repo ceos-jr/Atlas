@@ -41,7 +41,7 @@ func (r *Repository) ValidUser(id uint) bool {
 	return true
 }
 
-func (r *Repository) ValidTask (id uint) bool {
+func (r *Repository) ValidTask(id uint) bool {
 	task := models.Task{ID: id}
 
 	verifyTask := r.GetDB().First(&task).Error

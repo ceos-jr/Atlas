@@ -18,28 +18,22 @@ func (suite *TestSuit) TestConcludedTask() {
 
 func (suite *TestSuit) TestAssignTask() {
 
-	AssignedTask, AssignErr := suite.TaskService.AssignTask(suite.MockTasks[0].ID, suite.MockUsers[2].ID)
+	AssignedTask, AssignErr := suite.TaskService.AssignTask(suite.MockTasks[0].ID, suite.MockUsers[1].ID)
 
 	suite.Nil(AssignErr, "Assing error must be Nil")
 
-	suite.Equal(AssignedTask.AssignedTo, suite.MockUsers[2].ID)
+	suite.Equal(AssignedTask.AssignedTo, suite.MockUsers[1].ID)
 }
 
-func TestTaskRepository(t *testing.T) {
-	suite.Run(t, new(TestSuit))
-}
 
 func (suite *TestSuit) TestOrganizeTasks() {
 
-	OrganizedTasks, OrganizeErr := suite.TaskService.OrganizeTasks(suite.MockUsers[0].ID)
+	OrganizedTasks, OrganizeErr := suite.TaskService.OrganizeTasks(suite.MockUsers[2].ID)
 
 	suite.Nil(OrganizeErr, "Organize error must be Nil")
-	print(suite.MockTasks[0].AssignedTo)
-	print("aaaaaaaaaa")
-	print(suite.MockTasks[1].AssignedTo)
 	
-	suite.Equal((*OrganizedTasks)[1].Description, suite.MockTasks[0].Description)
-	suite.Equal((*OrganizedTasks)[0].Description, suite.MockTasks[1].Description)
+	suite.Equal((*OrganizedTasks)[1].Description, suite.MockTasks[1].Description)
+	suite.Equal((*OrganizedTasks)[0].Description, suite.MockTasks[2].Description)
 }
 
 func (suite *TestSuit) TestOrganizeTasksErr() {
@@ -47,4 +41,7 @@ func (suite *TestSuit) TestOrganizeTasksErr() {
 
 	_, err := suite.TaskService.OrganizeTasks(id)
 	suite.Equal("invalid user id", err.Error(), "Expected to have an error")
+}
+func TestTaskRepository(t *testing.T) {
+	suite.Run(t, new(TestSuit))
 }

@@ -33,7 +33,7 @@ func (suite *TestSuit) SetupSuite() {
 	suite.Repo = repository
 	suite.TaskService = task.SetupTaskService(&repository.Task)
 	suite.MockUsers = make([]models.User, 3)
-	suite.MockTasks = make([]models.Task, 2)
+	suite.MockTasks = make([]models.Task, 3)
 	suite.SetupMocks()
 }
 
@@ -68,13 +68,12 @@ func (suite *TestSuit) SetupMocks() {
 		panic(createErr)
 	}
 
-	suite.MockTasks[0] = *newTask
-
-	deadline2 := time.Date(2050, 4, 12, 12, 0, 0, 0, time.Local)
-
+	
+	deadline2 := time.Date(2077, 4, 12, 12, 0, 0, 0, time.Local)
+	
 	newTask2, createErr := suite.Repo.Task.Create(taskrepo.ICreate{
 		Description: "Uma tarefa2",
-		AssignedTo:  suite.MockUsers[0].ID,
+		AssignedTo:  suite.MockUsers[2].ID,
 		CreatedBy:   suite.MockUsers[1].ID,
 		Status:      2,
 		Deadline:    deadline2,
@@ -84,8 +83,25 @@ func (suite *TestSuit) SetupMocks() {
 		panic(createErr)
 	}
 
-	suite.MockTasks[1] = *newTask2
+	deadline3 := time.Date(2050, 4, 12, 12, 0, 0, 0, time.Local)
 
+	newTask3, createErr := suite.Repo.Task.Create(taskrepo.ICreate{
+		Description: "Uma tarefa3",
+		AssignedTo:  suite.MockUsers[2].ID,
+		CreatedBy:   suite.MockUsers[1].ID,
+		Status:      2,
+		Deadline:    deadline3,
+	})
+
+	if createErr != nil {
+		panic(createErr)
+	}
+
+
+	suite.MockTasks[0] = *newTask
+	suite.MockTasks[1] = *newTask2
+	suite.MockTasks[2] = *newTask3
+	
 }
 
 // TearDownSuite Executed after all tests

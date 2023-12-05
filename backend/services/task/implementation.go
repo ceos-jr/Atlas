@@ -42,14 +42,15 @@ func (service *Service) AssignTask(idTask uint, idUser uint) (*models.Task, erro
 }
 
 
-func (service *Service) OrganizeTasks(idUser uint) (*[]models.Task, error) {
-	if !service.TaskRepo.ValidUser(idUser){
+func (service *Service) OrganizeTasks(UserId uint) (*[]models.Task, error) {
+	if !service.TaskRepo.ValidUser(UserId){
 		return nil, errors.New("invalid user id")
 	}
 
 	taskArray, readErr := service.TaskRepo.ReadBy(task.IReadBy{
-		AssignedTo: &idUser,
+		AssignedTo: &UserId,
 	})
+
 
 	if readErr != nil {
 		return nil, readErr
