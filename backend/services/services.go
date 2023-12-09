@@ -6,6 +6,7 @@ import (
 	"orb-api/services/task"
 	"orb-api/services/user"
 	"orb-api/services/user_role"
+	"orb-api/services/project"
 )
 
 type Service struct {
@@ -13,6 +14,7 @@ type Service struct {
 	Role role.Service
 	Task task.Service
 	UserRole user_role.Service
+	Project project.Service
 }
 
 func SetupServices(repository *repository.Repository) *Service {
@@ -21,5 +23,6 @@ func SetupServices(repository *repository.Repository) *Service {
 		Role: *role.Setup(&repository.Role),
 		UserRole:	*user_role.SetupService(&repository.User, &repository.Role, &repository.UserRole),
 		Task: *task.SetupTaskService(&repository.Task),
+		Project: *project.SetupTask(&repository.Project),
 	}
 }
