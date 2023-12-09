@@ -13,6 +13,17 @@ func NewProjectRepository(db *gorm.DB) Repository {
 	}
 }
 
+func (r *Repository) ValidProject(id uint) bool {
+	project := models.Project{ID: id}
+
+	verifyProject := r.GetDB().First(&project).Error
+
+	if verifyProject != nil {
+		return false
+	}
+
+	return true
+}
 
 func ValidProjectName(name string) bool{
 	if len(name) < nameMinlen || len(name) > nameMaxlen{
@@ -29,9 +40,9 @@ func ValidSector(numero uint) bool{
 func (r *Repository) Create(createData ICreate) (*models.Project, error){
 	//Criar os models de sector para implantar sua validação de existencia
 	//var sectorid = models.Sector{ID: createData.Sector}
-	var adm = models.User{
+	/*var adm = models.User{
 		ID: createData.AdmID,
-	}
+	}*/
 	var project = models.Project{
 		Name:		createData.Name,
 		Sector:		createData.Sector,
@@ -47,6 +58,10 @@ func (r *Repository) Create(createData ICreate) (*models.Project, error){
 	if verifyAdmIDExistence.Error != nil{
 		return nil, verifyAdmIDExistence.Error
 	}
+	//validar quando forem feitos os models de Adm e Sector
+
+	/*verifyAdmIDExistence := r.GetDB().First(&adm)
+ 
 	//Funções já criadas para validar a existencia do setor
 	/*verifySectorIDExistence := r.GetDB().First(&sectorid)
 
