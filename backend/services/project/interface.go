@@ -21,5 +21,6 @@ type (
 		AssignUser(ProjectID uint, UserID uint) (*models.UsersProject, error)
 		AssignTask(ProjectID uint, TaskID uint) (*models.TasksProject, error)
 		SortByDeadline(ProjectID uint) ([]models.Task, error)
+		UpdateProject(ProjectID uint) (*models.Project, error)
 	}
 )

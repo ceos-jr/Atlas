@@ -1,11 +1,12 @@
 package project
 
 import (
+	"errors"
 	"orb-api/models"
 	"orb-api/repositories/project"
-	"orb-api/repositories/userproject"
-	"orb-api/repositories/taskproject"
 	"orb-api/repositories/task"
+	"orb-api/repositories/taskproject"
+	"orb-api/repositories/userproject"
 )
 
 func SetupProjectService(repository1 *project.Repository, repository2 *userproject.Repository, repository3 *taskproject.Repository, repository4 *task.Repository) *Service {
@@ -87,4 +88,51 @@ func (service *Service) SortByDeadline(ProjectID uint) ([]models.Task, error) {
 	Tasks = service.TaskRepo.Sort(Tasks)
 
 	return Tasks, nil
+}
+
+func (service *Service) UpdateProject(updateData project.IUpdate ) (*models.Project, error){
+	if  updateData.AdmID == nil &&
+		updateData.Sector == nil &&
+		updateData.Name == nil {
+		return nil, errors.New("no fields to update")
+	}
+
+	if !service.ProjectRepo.ValidProject(updateData.ID){
+		return nil, errors.New("Invalid Project")
+	}
+
+	if !project.ValidProjectName(*updateData.Name){
+		return nil, errors.New("Invalid project name")
+	}
+	
+
+	if !project.ValidSector(*updateData.Sector){
+		return nil, errors.New("Invalid Sector")
+	}
+	
+	updateProject, updateErr := service.ProjectRepo.Update(project.IUpdate{
+		ID: updateData.ID,
+		Name: updateData.Name,
+		Sector: updateData.Sector,
+		AdmID: updateData.AdmID,
+	})
+
+	if updateErr != nil{
+		return nil, updateErr
+	}
+
+	return updateProject, nil
+
+	
+
+	
+
+	
+
+
+
+
+
+
+
 }
