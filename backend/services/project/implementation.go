@@ -90,7 +90,7 @@ func (service *Service) SortByDeadline(ProjectID uint) ([]models.Task, error) {
 	return Tasks, nil
 }
 
-func (service *Service) UpdateProject(updateData project.IUpdate ) (*models.Project, error){
+func (service *Service) UpdateProject(updateData Update ) (*models.Project, error){
 	if  updateData.AdmID == nil &&
 		updateData.Sector == nil &&
 		updateData.Name == nil {

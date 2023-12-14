@@ -195,3 +195,50 @@ func (handler *BaseHandler) AssignTask(context *fiber.Ctx) error{
 		"project":    sortedtask,
 	})
 }
+
+func (handler *BaseHandler) CreateProject(context *fiber.Ctx) error{
+	body := new(CreateProjectRequestBody)
+
+	if parseError := context.BodyParser(body); parseError != nil {
+		return context.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Invalid request body",
+			"error":   parseError.Error(),
+		})
+	}
+
+	validationErrors := handler.Validator.Validate(body)
+
+	if validationErrors != nil {
+		errorMessages := make([]string, len(validationErrors))
+
+		for index := range validationErrors {
+			errorMessages[index] = validationErrors[index].Message
+		}
+
+		return context.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Invalid request body",
+			"errors":  errorMessages,
+		})
+	}
+
+	updateProject, serviceError := handler.Service.UpdateProject(Update{
+		ID: body.ProjectID,
+		Name: body.Name,
+		Sector: body.SectorID,
+		AdmID: body.AdmID,
+	}
+	)
+
+	if serviceError != nil {
+		return context.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "project update error",
+			"error":   serviceError.Error(),
+		})
+	}
+
+	return context.Status(fiber.StatusCreated).JSON(fiber.Map{
+		"message": "project updated successfully",
+		"project":    updateProject,
+	})
+}
+
