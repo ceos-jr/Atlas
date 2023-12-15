@@ -23,6 +23,6 @@ func SetupServices(repository *repository.Repository) *Service {
 		Role: *role.Setup(&repository.Role),
 		UserRole:	*user_role.SetupService(&repository.User, &repository.Role, &repository.UserRole),
 		Task: *task.SetupTaskService(&repository.Task),
-		Project: *project.SetupTask(&repository.Project),
+		Project: *project.SetupProjectService(&repository.Project,&repository.UserProject, &repository.TaskProject, &repository.Task),
 	}
 }
