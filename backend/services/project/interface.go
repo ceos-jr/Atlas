@@ -9,6 +9,13 @@ import (
 )
 
 type (
+	Update struct{
+		ID     uint
+    	Name   *string
+    	Sector *uint
+    	AdmID  *uint
+	}
+
 	Service struct {
 		ProjectRepo *project.Repository
 		UserProjectRepo	*userproject.Repository
@@ -21,5 +28,6 @@ type (
 		AssignUser(ProjectID uint, UserID uint) (*models.UsersProject, error)
 		AssignTask(ProjectID uint, TaskID uint) (*models.TasksProject, error)
 		SortByDeadline(ProjectID uint) ([]models.Task, error)
+		UpdateProject(Update) (*models.Project, error)
 	}
 )
