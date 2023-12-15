@@ -2,6 +2,7 @@ package projectservicetest
 
 import (
 	"orb-api/models"
+	"orb-api/services/project"
 	"testing"
 
 	"github.com/stretchr/testify/suite"
@@ -38,6 +39,37 @@ func (suite *TestSuit) TestSortByDeadline () {
 	suite.Equal(SortedTasks[1].CreatedBy, suite.MockTasks[0].CreatedBy, "Second task CreatedBy does not match")
 	suite.Equal(SortedTasks[1].Status, suite.MockTasks[0].Status, "Second task Status does not match")
 	suite.Equal(SortedTasks[1].Deadline, suite.MockTasks[0].Deadline, "Second task Deadline does not match")
+}
+
+func (suite *TestSuit) TestUpdateProject () {
+	newName := "projectupdated"
+	newSector := uint(3)
+	newAdmID := uint(5)
+	
+	UpdatedProject, updateErr := suite.ProjectService.UpdateProject(project.Update{
+		ID: suite.MockProjects[1].ID,
+		Name: &newName,
+		Sector: &newSector,
+		AdmID: &newAdmID,
+	})
+	
+	suite.Nil(updateErr, "Update error must be nil")
+	
+	suite.Equal(UpdatedProject.ID, suite.MockProjects[1].ID)
+	suite.Equal(UpdatedProject.Name, newName)
+	suite.Equal(UpdatedProject.Sector, newSector)
+	suite.Equal(UpdatedProject.AdmID, newAdmID)
+}
+
+func (suite *TestSuit) TestUpdateProjectErr() {
+	id := uint(1)
+	newName := "projectupdated"
+	
+	_, err := suite.ProjectService.UpdateProject(project.Update{
+		ID: id,
+		Name: &newName,
+	})
+	suite.Equal("Invalid Project ID", err.Error(), "expected to have an error")
 }
 
 func TestProjectService(test *testing.T) {

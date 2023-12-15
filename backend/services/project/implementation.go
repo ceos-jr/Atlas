@@ -98,7 +98,7 @@ func (service *Service) UpdateProject(updateData Update ) (*models.Project, erro
 	}
 
 	if !service.ProjectRepo.ValidProject(updateData.ID){
-		return nil, errors.New("Invalid Project")
+		return nil, errors.New("Invalid Project ID")
 	}
 
 	if !project.ValidProjectName(*updateData.Name){
