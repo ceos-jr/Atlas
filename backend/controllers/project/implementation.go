@@ -5,23 +5,23 @@ import (
 )
 
 type CreateProjectRequestBody struct {
-	Name: 		string `json:"name" validate:"required"`
-	SectorID:	uint`json:"sectorid" validate:"required"`
-	AdmID:		uint`json:"admid" validate:"required"`
+	Name 		string `json:"name" validate:"required"`
+	SectorID	uint`json:"sectorid" validate:"required"`
+	AdmID		uint`json:"admid" validate:"required"`
 }
 
 type CreateUserProjectRequestBody struct {
-	ProjectID:	uint`json:"projectid" validate:"required"`
-	UserID:	uint`json:"userid" validate:"required"`
+	ProjectID	uint`json:"projectid" validate:"required"`
+	UserID	uint`json:"userid" validate:"required"`
 }
 
 type CreateTaskProjectRequestBody struct {
-	ProjectID:	uint`json:"projectid" validate:"required"`
-	TaskID:	uint`json:"taskid" validate:"required"`
+	ProjectID	uint`json:"projectid" validate:"required"`
+	TaskID	uint`json:"taskid" validate:"required"`
 }
 
 type CreateSortTaskRequestBody struct {
-	ProjectID:	uint`json:"projectid" validate:"required"`
+	ProjectID	uint`json:"projectid" validate:"required"`
 }
 
 func (handler *BaseHandler) CreateProject(context *fiber.Ctx) error{
@@ -94,8 +94,8 @@ func (handler *BaseHandler) AssignUser(context *fiber.Ctx) error{
 	}
 
 	userassign, serviceError := handler.Service.AssignUser(
-		body.ProjectID
-		body.UserID
+		body.ProjectID,
+		body.UserID,
 	)
 
 	if serviceError != nil {
@@ -137,8 +137,8 @@ func (handler *BaseHandler) AssignTask(context *fiber.Ctx) error{
 	}
 
 	taskassign, serviceError := handler.Service.AssignTask(
-		body.ProjectID
-		body.UserID
+		body.ProjectID,
+		body.UserID,
 	)
 
 	if serviceError != nil {
@@ -154,7 +154,7 @@ func (handler *BaseHandler) AssignTask(context *fiber.Ctx) error{
 	})
 }
 
-func (handler *BaseHandler) AssignTask(context *fiber.Ctx) error{
+func (handler *BaseHandler) SortByDeadline(context *fiber.Ctx) error{
 	body := new(CreateUserProjectRequestBody)
 
 	if parseError := context.BodyParser(body); parseError != nil {
@@ -180,7 +180,7 @@ func (handler *BaseHandler) AssignTask(context *fiber.Ctx) error{
 	}
 
 	sortedtask, serviceError := handler.Service.SortByDeadline(
-		body.ProjectID
+		body.ProjectID,
 	)
 
 	if serviceError != nil {

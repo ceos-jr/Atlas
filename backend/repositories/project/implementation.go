@@ -53,9 +53,9 @@ func (r *Repository) Create(createData ICreate) (*models.Project, error){
 	if !ValidProjectName(createData.Name){
 		return nil, errors.New("invalid name value")
 	}
-	verifyAdmIDExistence := r.GetDB().First(&adm)
+	//verifyAdmIDExistence := r.GetDB().First(&adm)
 
-	if verifyAdmIDExistence.Error != nil{
+	/*if verifyAdmIDExistence.Error != nil{
 		return nil, verifyAdmIDExistence.Error
 	}
 	//validar quando forem feitos os models de Adm e Sector
