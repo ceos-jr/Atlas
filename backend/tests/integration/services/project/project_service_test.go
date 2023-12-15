@@ -63,6 +63,8 @@ func (suite *TestSuit) TestUpdateProject () {
 
 func (suite *TestSuit) TestUpdateProjectErr() {
 	id := uint(1)
+	min := "aa"
+	max := "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 	newName := "projectupdated"
 	
 	_, err := suite.ProjectService.UpdateProject(project.Update{
@@ -70,6 +72,18 @@ func (suite *TestSuit) TestUpdateProjectErr() {
 		Name: &newName,
 	})
 	suite.Equal("Invalid Project ID", err.Error(), "expected to have an error")
+
+	_, err2 := suite.ProjectService.UpdateProject(project.Update{
+		ID: suite.MockProjects[2].ID,
+		Name: &min,
+	})
+	suite.Equal("Invalid project name", err2.Error(), "expected to have an error")
+
+	_, err3 := suite.ProjectService.UpdateProject(project.Update{
+		ID: suite.MockProjects[3].ID,
+		Name: &max,
+	})
+	suite.Equal("Invalid project name", err3.Error(), "expected to have an error")
 }
 
 func TestProjectService(test *testing.T) {

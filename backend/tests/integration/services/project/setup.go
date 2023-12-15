@@ -36,7 +36,7 @@ func (suite *TestSuit) SetupSuite() {
 
 	suite.Repo = repository
   	suite.ProjectService = project.SetupProjectService(&repository.Project, &repository.UserProject, &repository.TaskProject, &repository.Task)
-	suite.MockProjects = make([]models.Project, 3)
+	suite.MockProjects = make([]models.Project, 4)
 	suite.MockTasks = make([]models.Task, 2)
 	suite.MockUsers = make([]models.User, 3)
 	suite.SetupMocks()
@@ -135,6 +135,18 @@ func (suite *TestSuit) SetupMocks() {
 	}
 
 	suite.MockProjects[2] = *NewProject3
+
+	NewProject4, createErr4 := suite.Repo.Project.Create(projectrepo.ICreate{
+		Name: fmt.Sprintf("Projeto4"),
+		Sector: 2,
+		AdmID: 2,
+	})
+
+	if createErr4 != nil {
+		panic(createErr3)
+	}
+
+	suite.MockProjects[3] = *NewProject4
 
 }
 
