@@ -13,19 +13,6 @@ Closes # (linke sua issue aqui)
 - [ ] Mudança crítica (Concerto ou uma feature que pode quebrar funcionalidades antigas)
 - [ ] Apenas mudança de documentação
 
-# Como ele tem sido testado?
-
-<!-- Por favor, descreva que testes você rodou para verificar suas mudanças. Também liste qualquer outro detalhe relevante na configuração dos seus testes -->
-
-- [ ] Teste A
-- [ ] Teste B
-
-**Configuração de testes**:
-
-- Firmware version:
-- Hardware:
-- Toolchain:
-
 # Checklist:
 
 - [ ] Realizei uma revisão do meu código
