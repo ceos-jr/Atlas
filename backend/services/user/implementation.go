@@ -13,7 +13,7 @@ func SetupService(repositoryUser *user.Repository) *Service {
 	}
 }
 
-func (service *Service) NewUser(
+func (service *Service) CreateUser(
 	name string,
 	email string,
 	password string,
@@ -227,4 +227,3 @@ func (service *Service) UpdateStatus(id uint, status uint) (*models.User, error)
 
 	return userUpdate, nil
 }
-
