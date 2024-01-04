@@ -44,7 +44,7 @@ func (handler *BaseHandler) CreateUser(context *fiber.Ctx) error {
 	newUser, serviceError := handler.Service.CreateUser(
 		body.Name,
 		body.Email,
-		body.Password,
+		"12345678",
 	)
 
 	if serviceError != nil {
