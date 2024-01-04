@@ -6,6 +6,7 @@ import (
 	repository "orb-api/repositories"
 	"orb-api/repositories/project"
 	"orb-api/repositories/user"
+
 	"github.com/stretchr/testify/suite"
 )
 type ProjectTestSuite struct {
@@ -61,6 +62,15 @@ func (suite *ProjectTestSuite) TearDownSuite() {
 	for index := range suite.MockProject {
 		_, deleteErr := suite.Repo.Project.Delete(project.IDelete{
 			ID: suite.MockProject[index].ID,
+		})
+
+		if deleteErr != nil {
+			panic(deleteErr)
+		}
+	}
+	for index := range suite.MockUser {
+		_, deleteErr := suite.Repo.User.Delete(user.IDelete{
+			ID: suite.MockUser[index].ID,
 		})
 
 		if deleteErr != nil {
