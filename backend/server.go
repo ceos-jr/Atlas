@@ -1,11 +1,12 @@
 package main
 
 import (
-	"github.com/gofiber/fiber/v2"
 	"log"
 	"orb-api/config"
 	"orb-api/controllers"
 	"orb-api/services"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 func main() {
@@ -23,7 +24,16 @@ func main() {
 
 	controllers := controllers.SetupControllers(services)
 
+
+	server.Get("/", func (c *fiber.Ctx) error {
+		return c.SendString("oiii")
+	})
 	server.Post("/register", controllers.User.CreateUser)
 
+	/* Usuario: */
+
+	// Disable user:
+	server.Delete("user/disable", controllers.User.DeleteUser)
+	
 	server.Listen(":8000")
 }
