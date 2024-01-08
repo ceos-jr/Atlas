@@ -227,3 +227,15 @@ func (service *Service) UpdateStatus(id uint, status uint) (*models.User, error)
 
 	return userUpdate, nil
 }
+
+func (service *Service) ReadUsers() ([]models.User, error) {
+	userArray, readErr := service.UserRepo.ReadAll(user.IReadAll{
+		Limit:	nil,
+	})
+
+	if readErr != nil {
+		return nil, readErr
+	}
+
+	return userArray, nil
+}

@@ -194,7 +194,18 @@ func (handler *BaseHandler) DeleteUser(context *fiber.Ctx) error {
 		"user":    DeleteUser,
 	})
 }
+func (handler* BaseHandler) readUsers(context* fiber.Ctx) error {
+	UserArr, serviceErr := handler.Service.ReadUsers()
 
+	if serviceErr != nil {
+		return context.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "user read error",
+			"error":   serviceErr.Error(),
+		})
+	}
 
-
-
+	return context.Status(fiber.StatusCreated).JSON(fiber.Map{
+		"message": "users read sucssefully",
+		"user":    UserArr,
+	})
+}
