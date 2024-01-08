@@ -1,7 +1,7 @@
 package user
 
 import (
-	"orb-api/repositories/user"
+	//"orb-api/repositories/user"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -60,98 +60,98 @@ func (handler *BaseHandler) CreateUser(context *fiber.Ctx) error {
 	})
 }
 
-func (handler *BaseHandler) ReadUser(context *fiber.Ctx) error {
-	body := new(CreateUserRequestBody)
+// func (handler *BaseHandler) ReadUser(context *fiber.Ctx) error {
+// 	body := new(CreateUserRequestBody)
 
-	if parseError := context.BodyParser(body); parseError != nil {
-		return context.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "Invalid request body",
-			"error":   parseError.Error(),
-		})
-	}
+// 	if parseError := context.BodyParser(body); parseError != nil {
+// 		return context.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+// 			"message": "Invalid request body",
+// 			"error":   parseError.Error(),
+// 		})
+// 	}
 
-	validationErrors := handler.Validator.Validate(body)
+// 	validationErrors := handler.Validator.Validate(body)
 
-	if validationErrors != nil {
-		errorMessages := make([]string, len(validationErrors))
+// 	if validationErrors != nil {
+// 		errorMessages := make([]string, len(validationErrors))
 
-		for index := range validationErrors {
-			errorMessages[index] = validationErrors[index].Message
-		}
+// 		for index := range validationErrors {
+// 			errorMessages[index] = validationErrors[index].Message
+// 		}
 
-		return context.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "Invalid request body",
-			"errors":  errorMessages,
-		})
-	}
+// 		return context.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+// 			"message": "Invalid request body",
+// 			"errors":  errorMessages,
+// 		})
+// 	}
 
-	ReadUser, serviceError := handler.Service.ReadUser(user.IReadBy{
-		ID: &body.ID,
-		Name: &body.Name,
-		Email: &body.Email,
-		Status: &body.Status,
-	})
+// 	ReadUser, serviceError := handler.Service.ReadUser(user.IReadBy{
+// 		ID: &body.ID,
+// 		Name: &body.Name,
+// 		Email: &body.Email,
+// 		Status: &body.Status,
+// 	})
 
-	if serviceError != nil {
-		return context.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "user read error",
-			"error":   serviceError.Error(),
-		})
-	}
+// 	if serviceError != nil {
+// 		return context.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+// 			"message": "user read error",
+// 			"error":   serviceError.Error(),
+// 		})
+// 	}
 
-	return context.Status(fiber.StatusCreated).JSON(fiber.Map{
-		"message": "user read successfully",
-		"user":    ReadUser,
-	})
-}
+// 	return context.Status(fiber.StatusCreated).JSON(fiber.Map{
+// 		"message": "user read successfully",
+// 		"user":    ReadUser,
+// 	})
+// }
 
-func (handler *BaseHandler) UpdateUser(context *fiber.Ctx) error {
-	body := new(CreateUserRequestBody)
+// func (handler *BaseHandler) UpdateUser(context *fiber.Ctx) error {
+// 	body := new(CreateUserRequestBody)
 
-	if parseError := context.BodyParser(body); parseError != nil {
-		return context.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "Invalid request body",
-			"error":   parseError.Error(),
-		})
-	}
+// 	if parseError := context.BodyParser(body); parseError != nil {
+// 		return context.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+// 			"message": "Invalid request body",
+// 			"error":   parseError.Error(),
+// 		})
+// 	}
 
-	validationErrors := handler.Validator.Validate(body)
+// 	validationErrors := handler.Validator.Validate(body)
 
-	if validationErrors != nil {
-		errorMessages := make([]string, len(validationErrors))
+// 	if validationErrors != nil {
+// 		errorMessages := make([]string, len(validationErrors))
 
-		for index := range validationErrors {
-			errorMessages[index] = validationErrors[index].Message
-		}
+// 		for index := range validationErrors {
+// 			errorMessages[index] = validationErrors[index].Message
+// 		}
 
-		return context.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "Invalid request body",
-			"errors":  errorMessages,
-		})
-	}
+// 		return context.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+// 			"message": "Invalid request body",
+// 			"errors":  errorMessages,
+// 		})
+// 	}
 
-	UpdateUser, serviceError := handler.Service.UpdateUser(user.IUpdate{
-		ID: body.ID,
-		Name: &body.Name,
-		Email: &body.Email,
-		Password: &body.Password,
-		Status: &body.Status,
+// 	UpdateUser, serviceError := handler.Service.UpdateUser(user.IUpdate{
+// 		ID: body.ID,
+// 		Name: &body.Name,
+// 		Email: &body.Email,
+// 		Password: &body.Password,
+// 		Status: &body.Status,
 	
-	})
+// 	})
 		
 
-	if serviceError != nil {
-		return context.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "user update error",
-			"error":   serviceError.Error(),
-		})
-	}
+// 	if serviceError != nil {
+// 		return context.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+// 			"message": "user update error",
+// 			"error":   serviceError.Error(),
+// 		})
+// 	}
 
-	return context.Status(fiber.StatusCreated).JSON(fiber.Map{
-		"message": "user update successfully",
-		"user":    UpdateUser,
-	})
-}
+// 	return context.Status(fiber.StatusCreated).JSON(fiber.Map{
+// 		"message": "user update successfully",
+// 		"user":    UpdateUser,
+// 	})
+// }
 
 func (handler *BaseHandler) DeleteUser(context *fiber.Ctx) error {
 	body := new(CreateUserRequestBody)
