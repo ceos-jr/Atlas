@@ -227,3 +227,35 @@ func (service *Service) UpdateStatus(id uint, status uint) (*models.User, error)
 
 	return userUpdate, nil
 }
+
+func (service *Service) DeleteUser(id uint) (*models.User, error) {
+	if !service.UserRepo.ValidUser(id) {
+		return nil, errors.New("Invalid user id")
+	}
+
+	userArray, readErr := service.UserRepo.ReadBy(user.IReadBy{
+		ID: &id,
+	})
+
+	if readErr != nil {
+		return nil, readErr
+	}
+
+	if userArray[0].Status == uint(1) {
+		return nil, errors.New("User already disabled")
+	}
+	
+	status := uint(1)
+
+	userUpdate, updateErr := service.UserRepo.Update(user.IUpdate{
+		ID:     id,
+		Status: &status,
+	})
+
+	if updateErr != nil {
+		return nil, updateErr
+	}
+
+	return userUpdate, nil
+
+}

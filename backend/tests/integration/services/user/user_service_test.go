@@ -177,6 +177,25 @@ func (suite *TestSuit) TestUpdateStatusErr() {
 	suite.Equal("Invalid status", updateErr.Error(), "Expected to have an error")
 }
 
+func (suite *TestSuit) TestDeleteUser() {
+	deletedUser, deleteErr := suite.Service.DeleteUser(suite.MockUsers[1].ID)
+
+	suite.Nil(deleteErr, "Delete erros must be nil")
+	suite.Equal(deletedUser.Status, uint(1))
+}
+
+func (suite *TestSuit) TestDeleteUserErr() {
+	id := uint(546)
+
+	_, deleteErr := suite.Service.DeleteUser(id)
+	suite.Equal("Invalid user id", deleteErr.Error(), "expected to have an error")
+
+	_,deleteErr2 := suite.Service.DeleteUser(suite.MockUsers[2].ID)
+	suite.Equal("User already disabled", deleteErr2.Error(), "expected to have an error")
+
+
+}
+
 func TestUserRepository(t *testing.T) {
 	suite.Run(t, new(TestSuit))
 }

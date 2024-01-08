@@ -25,7 +25,7 @@ func (suite *TestSuit) SetupSuite() {
 	}
 
 	suite.Service = user.SetupService(&repositories.User)
-	suite.MockUsers = make([]models.User, 2)
+	suite.MockUsers = make([]models.User, 3)
 	suite.SetupMocks()
 }
 
@@ -42,6 +42,33 @@ func (suite *TestSuit) SetupMocks() {
 	}
 
 	suite.MockUsers[0] = *newUser
+
+	newUser2, createErr2 := suite.Service.UserRepo.Create(userrepo.ICreate{
+		Name:     "Gabrigas2",
+		Email:    "gabrigas2@example.com",
+		Password: "mostBeautiful",
+		Status:   2,
+	})
+
+	if createErr2 != nil {
+		panic(createErr)
+	}
+
+	suite.MockUsers[1] = *newUser2
+
+	newUser3, createErr3 := suite.Service.UserRepo.Create(userrepo.ICreate{
+		Name:     "Gabrigas3",
+		Email:    "gabrigas3@example.com",
+		Password: "mostBeautiful",
+		Status:   1,
+	})
+
+	if createErr3 != nil {
+		panic(createErr)
+	}
+
+	suite.MockUsers[2] = *newUser3
+
 }
 
 // TearDownSuite Executed after all tests
