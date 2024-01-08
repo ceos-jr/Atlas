@@ -24,8 +24,7 @@ func main() {
 
 	controllers := controllers.SetupControllers(services)
 
-
-	server.Get("/", func (c *fiber.Ctx) error {
+	server.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("oiii")
 	})
 	server.Post("/register", controllers.User.CreateUser)
@@ -33,7 +32,7 @@ func main() {
 	/* Usuario: */
 
 	// Disable user:
-	server.Delete("user/disable", controllers.User.DeleteUser)
-	
+	server.Delete("/user/disable/:id", controllers.User.DeleteUser)
+
 	server.Listen(":8000")
 }
