@@ -78,11 +78,11 @@ func (r *Repository) ReadBy(readBy IReadBy) ([]models.UsersProject, error){
 	}
 
 	if readBy.ProjectID != nil {
-		fieldMap["adm_id"] = *readBy.ProjectID
+		fieldMap["project_id"] = *readBy.ProjectID
 	}
 
 	if readBy.UserID != nil {
-		fieldMap["adm_id"] = *readBy.UserID
+		fieldMap["user_id"] = *readBy.UserID
 	}
 
 	if readBy.Limit != nil {

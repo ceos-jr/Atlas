@@ -157,7 +157,7 @@ func (handler *BaseHandler) AssignTask(context *fiber.Ctx) error{
 	})
 }
 
-func (handler *BaseHandler) SortByDeadline(context *fiber.Ctx) error{
+func (handler *BaseHandler) SortTaskByDeadline(context *fiber.Ctx) error{
 	body := new(CreateUserProjectRequestBody)
 
 	if parseError := context.BodyParser(body); parseError != nil {
@@ -182,7 +182,7 @@ func (handler *BaseHandler) SortByDeadline(context *fiber.Ctx) error{
 		})
 	}
 
-	sortedtask, serviceError := handler.Service.SortByDeadline(
+	sortedtask, serviceError := handler.Service.SortTaskByDeadline(
 		body.ProjectID,
 	)
 
