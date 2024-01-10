@@ -4,6 +4,8 @@ package user
 import (
 	"orb-api/models"
 	"orb-api/repositories/user"
+	"orb-api/repositories/userproject"
+	"orb-api/repositories/project"
 )
 
 const (
@@ -18,6 +20,8 @@ const (
 type (
 	Service struct {
 		UserRepo *user.Repository
+		UserProjectRepo	*userproject.Repository
+		ProjectRepo *project.Repository
 	}
 
 	Interface interface {
@@ -28,5 +32,6 @@ type (
 		UpdatePassword(id uint, password string) (*models.User, error)
 		UpdateStatus(id uint, status uint) (*models.User, error)
 		DeleteUser(id uint) (*models.User, error)
+		SortProjects(id uint) ([]models.Project, error)
 	}
 )

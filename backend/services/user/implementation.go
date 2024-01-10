@@ -5,11 +5,15 @@ import (
 	"errors"
 	"orb-api/models"
 	"orb-api/repositories/user"
+	"orb-api/repositories/userproject"
+	"orb-api/repositories/project"
 )
 
-func SetupService(repositoryUser *user.Repository) *Service {
+func SetupService(repository1 *user.Repository, repository2 *userproject.Repository, repository3 *project.Repository) *Service {
 	return &Service{
-		UserRepo: repositoryUser,
+		UserRepo: 			repository1,
+		UserProjectRepo:	repository2,
+		ProjectRepo:		repository3,
 	}
 }
 
@@ -258,4 +262,29 @@ func (service *Service) DeleteUser(id uint) (*models.User, error) {
 
 	return userUpdate, nil
 
+}
+func (service *Service) SortProjects(UserID uint) ([]models.Project, error){
+	UserProjects, ReadErr := service.UserProjectRepo.ReadBy(userproject.IReadBy{
+		UserID: &UserID,
+	})
+
+	if ReadErr != nil {
+		return nil, ReadErr
+	}
+
+	Projects := []models.Project{}
+
+	for i := 0; i < len(UserProjects); i++{
+		App, Err := service.ProjectRepo.ReadBy(project.IReadBy{
+			ID: &(UserProjects[i].ProjectID),
+		})
+
+		if Err != nil {
+			return nil, Err
+		}
+
+		Projects = append(Projects, App...)
+	}
+
+	return Projects, nil
 }

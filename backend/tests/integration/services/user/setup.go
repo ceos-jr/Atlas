@@ -6,14 +6,19 @@ import (
 	"orb-api/services/user"
 
 	userrepo "orb-api/repositories/user"
+	projectrepo "orb-api/repositories/project"
+	userprojectrepo "orb-api/repositories/userproject"
 
 	"github.com/stretchr/testify/suite"
+	"fmt"
 )
 
 type TestSuit struct {
 	suite.Suite
 	Service   *user.Service
 	MockUsers []models.User
+	MockProject models.Project
+	MockUserProject models.UsersProject
 }
 
 // SetupSuite Executed before all tests
@@ -24,7 +29,7 @@ func (suite *TestSuit) SetupSuite() {
 		panic(setupError)
 	}
 
-	suite.Service = user.SetupService(&repositories.User)
+	suite.Service = user.SetupService(&repositories.User, &repositories.UserProject, &repositories.Project)
 	suite.MockUsers = make([]models.User, 3)
 	suite.SetupMocks()
 }
@@ -69,6 +74,28 @@ func (suite *TestSuit) SetupMocks() {
 
 	suite.MockUsers[2] = *newUser3
 
+	NewProject, createErr4 := suite.Service.ProjectRepo.Create(projectrepo.ICreate{
+		Name:	fmt.Sprintf("Projeto"),
+		Sector:	1,
+		AdmID:	1,
+	})
+
+	if createErr4 != nil {
+		panic(createErr4)
+	}
+
+	suite.MockProject = *NewProject
+
+	newUserProject, createErr5 := suite.Service.UserProjectRepo.Create(userprojectrepo.ICreate{
+		UserID:	suite.MockUsers[0].ID,
+		ProjectID: NewProject.ID,
+	})
+
+	if createErr5 != nil{
+		panic(createErr5)
+	}
+
+	suite.MockUserProject = *newUserProject
 }
 
 // TearDownSuite Executed after all tests
@@ -81,5 +108,21 @@ func (suite *TestSuit) TearDownSuite() {
 		if deleteErr != nil {
 			panic(deleteErr)
 		}
+	}
+
+	_, deleteErr2 := suite.Service.ProjectRepo.Delete(projectrepo.IDelete{
+		ID: suite.MockProject.ID,
+	})
+
+	if deleteErr2 != nil {
+		panic(deleteErr2)
+	}
+
+	_, deleteErr3 := suite.Service.UserProjectRepo.Delete(userprojectrepo.IDelete{
+		ID: suite.MockUserProject.ID,
+	})
+
+	if deleteErr3 != nil{
+		panic(deleteErr3)
 	}
 }
