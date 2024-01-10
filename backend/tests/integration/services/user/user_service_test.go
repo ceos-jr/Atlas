@@ -196,6 +196,16 @@ func (suite *TestSuit) TestDeleteUserErr() {
 
 }
 
-func TestUserRepository(t *testing.T) {
+func (suite *TestSuit) TestSortProjects() {
+	projects, readErr := suite.Service.SortProjects(suite.MockUsers[0].ID)
+
+	suite.Nil(readErr, "Create error must be nil")
+	suite.Equal(1, len(projects), "lenght must be 1")
+	suite.Equal(projects[0].ID, suite.MockProject.ID)
+	suite.Equal(projects[0].AdmID, suite.MockProject.AdmID)
+	suite.Equal(projects[0].Sector, suite.MockProject.Sector)
+}
+
+func TestTaskRepository(t *testing.T) {
 	suite.Run(t, new(TestSuit))
 }

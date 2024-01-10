@@ -19,7 +19,7 @@ type Service struct {
 
 func SetupServices(repository *repository.Repository) *Service {
 	return &Service{
-		User: *user.SetupService(&repository.User),
+		User: *user.SetupService(&repository.User, &repository.UserProject, &repository.Project),
 		Role: *role.Setup(&repository.Role),
 		UserRole:	*user_role.SetupService(&repository.User, &repository.Role, &repository.UserRole),
 		Task: *task.SetupTaskService(&repository.Task),

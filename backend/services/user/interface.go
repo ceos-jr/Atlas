@@ -24,7 +24,7 @@ type (
 		ProjectRepo *project.Repository
 	}
 
-	Interface interface {(
+	Interface interface {
 		NewUser(name, email, password string) (*models.User, error)
 
 		UpdateName(id uint, name string) (*models.User, error)

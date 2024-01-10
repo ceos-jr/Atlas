@@ -276,14 +276,14 @@ func (service *Service) SortProjects(UserID uint) ([]models.Project, error){
 
 	for i := 0; i < len(UserProjects); i++{
 		App, Err := service.ProjectRepo.ReadBy(project.IReadBy{
-			ID: &(UserProjects[i].UserID),
+			ID: &(UserProjects[i].ProjectID),
 		})
 
 		if Err != nil {
 			return nil, Err
 		}
 
-		Projects = append(Tasks, App...)
+		Projects = append(Projects, App...)
 	}
 
 	return Projects, nil
