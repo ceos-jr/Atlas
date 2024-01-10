@@ -42,6 +42,7 @@ func (suite *TestSuit) TestOrganizeTasksErr() {
 	_, err := suite.TaskService.OrganizeTasks(id)
 	suite.Equal("invalid user id", err.Error(), "Expected to have an error")
 }
+
 func TestTaskRepository(t *testing.T) {
 	suite.Run(t, new(TestSuit))
 }
