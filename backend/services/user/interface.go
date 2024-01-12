@@ -33,5 +33,6 @@ type (
 		UpdateStatus(id uint, status uint) (*models.User, error)
 		DeleteUser(id uint) (*models.User, error)
 		SortProjects(id uint) ([]models.Project, error)
+		ReadUser(read user.IReadBy) ([]models.User, error)
 	}
 )

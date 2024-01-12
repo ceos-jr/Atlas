@@ -287,4 +287,26 @@ func (service *Service) SortProjects(UserID uint) ([]models.Project, error){
 	}
 
 	return Projects, nil
+
+}
+
+func (service *Service) ReadUser(read user.IReadBy) ([]models.User, error) {
+	if  read.ID == nil &&
+		read.Name == nil &&
+		read.Email == nil &&
+		read.Status == nil {
+		usersArray, readErr := service.UserRepo.ReadAll(user.IReadAll{})
+
+		if readErr != nil{
+			return nil, readErr
+		}
+		return usersArray, nil
+	} 
+
+	usersArray, readErr := service.UserRepo.ReadBy(read)
+	
+	if readErr != nil{
+		return nil, readErr
+	}
+	return usersArray, nil
 }
