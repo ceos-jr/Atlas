@@ -30,7 +30,7 @@ func (suite *TestSuit) SetupSuite() {
 	}
 
 	suite.Service = user.SetupService(&repositories.User, &repositories.UserProject, &repositories.Project)
-	suite.MockUsers = make([]models.User, 3)
+	suite.MockUsers = make([]models.User, 6)
 	suite.SetupMocks()
 }
 
@@ -59,7 +59,7 @@ func (suite *TestSuit) SetupMocks() {
 		panic(createErr)
 	}
 
-	suite.MockUsers[1] = *newUser2
+	suite.MockUsers[5] = *newUser2
 
 	newUser3, createErr3 := suite.Service.UserRepo.Create(userrepo.ICreate{
 		Name:     "Gabrigas3",
@@ -74,6 +74,32 @@ func (suite *TestSuit) SetupMocks() {
 
 	suite.MockUsers[2] = *newUser3
 
+	newUser4, createErr4 := suite.Service.UserRepo.Create(userrepo.ICreate{
+		Name:     "Gabrigas4",
+		Email:    "gabrigas4@example.com",
+		Password: "mostBeautiful",
+		Status:   2,
+	})
+
+	if createErr4 != nil {
+		panic(createErr)
+	}
+
+	suite.MockUsers[3] = *newUser4
+
+	newUser5, createErr5 := suite.Service.UserRepo.Create(userrepo.ICreate{
+		Name:     "Gabrigas5",
+		Email:    "gabrigas5@example.com",
+		Password: "mostBeautiful",
+		Status:   2,
+	})
+
+	if createErr5 != nil {
+		panic(createErr)
+	}
+
+	suite.MockUsers[4] = *newUser5
+	
 	NewProject, createErr4 := suite.Service.ProjectRepo.Create(projectrepo.ICreate{
 		Name:	fmt.Sprintf("Projeto"),
 		Sector:	1,

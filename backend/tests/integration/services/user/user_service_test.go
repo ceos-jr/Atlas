@@ -1,6 +1,7 @@
 package userservicetest
 
 import (
+	userrepo "orb-api/repositories/user"
 	"orb-api/services/user"
 	"testing"
 
@@ -18,6 +19,8 @@ func (suite *TestSuit) TestCreateUser() {
 	suite.Equal("exampleexample", newUser.Name)
 	suite.Equal("example@example.com.br", newUser.Email)
 	suite.Equal(true, user.PasswordMatch(suite.MockUsers[0].Password, newUser.Password))
+
+
 
 	suite.MockUsers[1] = *newUser
 }
@@ -190,9 +193,8 @@ func (suite *TestSuit) TestDeleteUserErr() {
 	_, deleteErr := suite.Service.DeleteUser(id)
 	suite.Equal("Invalid user id", deleteErr.Error(), "expected to have an error")
 
-	_,deleteErr2 := suite.Service.DeleteUser(suite.MockUsers[2].ID)
+	_, deleteErr2 := suite.Service.DeleteUser(suite.MockUsers[2].ID)
 	suite.Equal("User already disabled", deleteErr2.Error(), "expected to have an error")
-
 
 }
 
@@ -204,6 +206,43 @@ func (suite *TestSuit) TestSortProjects() {
 	suite.Equal(projects[0].ID, suite.MockProject.ID)
 	suite.Equal(projects[0].AdmID, suite.MockProject.AdmID)
 	suite.Equal(projects[0].Sector, suite.MockProject.Sector)
+}
+
+func (suite *TestSuit) TestReadAllUser() {
+	userArray, readErr := suite.Service.ReadUser(userrepo.IReadBy{
+		ID:     nil,
+		Name:   nil,
+		Email:  nil,
+		Status: nil,
+		Limit:  nil,
+	})
+
+
+	suite.Nil(readErr, "Read error must be nil")
+	suite.Equal(len(userArray), len(suite.MockUsers))
+
+}
+
+func (suite *TestSuit) TestReadByUser() {
+	name := "Gabrigas5"
+	userArray, readErr := suite.Service.ReadUser(userrepo.IReadBy{
+		Name: &name,
+	})
+
+	suite.Nil(readErr, "Read error must be nil")
+	suite.Equal(len(userArray), 1)
+	suite.Equal(userArray[0].ID, suite.MockUsers[4].ID)
+}
+
+func (suite *TestSuit) TestReadByUserErr () {
+	id := uint(5000)
+
+	userArray, readErr := suite.Service.ReadUser(userrepo.IReadBy{
+		ID: &id,
+	})
+
+	suite.Nil(readErr, "Read error must be nil")
+	suite.Equal(len(userArray), 0)
 }
 
 func TestTaskRepository(t *testing.T) {
