@@ -294,7 +294,8 @@ func (service *Service) ReadUser(read user.IReadBy) ([]models.User, error) {
 	if  read.ID == nil &&
 		read.Name == nil &&
 		read.Email == nil &&
-		read.Status == nil {
+		read.Status == nil &&
+		read.Limit == nil {
 		usersArray, readErr := service.UserRepo.ReadAll(user.IReadAll{})
 
 		if readErr != nil{
