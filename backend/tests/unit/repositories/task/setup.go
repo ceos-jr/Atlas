@@ -33,29 +33,6 @@ func (suite *TaskRepoTestSuite) SetupSuite() {
 	suite.SetupMocks()
 }
 
-// Executed after all tests
-func (suite *TaskRepoTestSuite) TearDownSuite() {
-	for index := range suite.MockUsers {
-		_, deleteErr := suite.Repo.User.Delete(user.IDelete{
-			ID: suite.MockUsers[index].ID,
-		})
-
-		if deleteErr != nil {
-			panic(deleteErr)
-		}
-	}
-
-	for index := range suite.MockTasks {
-		_, deleteErr := suite.Repo.Task.Delete(task.IDelete{
-			ID: suite.MockTasks[index].ID,
-		})
-
-		if deleteErr != nil {
-			panic(deleteErr)
-		}
-	}
-}
-
 func (suite *TaskRepoTestSuite) SetupMocks() {
 	for index := 0; index < 2; index++ {
 		user, createErr := suite.Repo.User.Create(user.ICreate{
@@ -85,4 +62,27 @@ func (suite *TaskRepoTestSuite) SetupMocks() {
 	}
 
 	suite.MockTasks[0] = *task
+}
+
+// Executed after all tests
+func (suite *TaskRepoTestSuite) TearDownSuite() {
+	for index := range suite.MockUsers {
+		_, deleteErr := suite.Repo.User.Delete(user.IDelete{
+			ID: suite.MockUsers[index].ID,
+		})
+
+		if deleteErr != nil {
+			panic(deleteErr)
+		}
+	}
+
+	for index := range suite.MockTasks {
+		_, deleteErr := suite.Repo.Task.Delete(task.IDelete{
+			ID: suite.MockTasks[index].ID,
+		})
+
+		if deleteErr != nil {
+			panic(deleteErr)
+		}
+	}
 }

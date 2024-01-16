@@ -1,8 +1,6 @@
 package relation
 
 import (
-	"github.com/bxcodec/faker/v4"
-	"github.com/stretchr/testify/suite"
 	"math/rand"
 	"orb-api/config"
 	"orb-api/models"
@@ -11,6 +9,9 @@ import (
 	"orb-api/repositories/role"
 	"orb-api/repositories/user"
 	userrole "orb-api/repositories/user_role"
+
+	"github.com/bxcodec/faker/v4"
+	"github.com/stretchr/testify/suite"
 )
 
 const (

@@ -46,5 +46,6 @@ type (
 		ReadBy(IReadBy) ([]models.Task, error)
 		Update(IUpdate) (*models.Task, error)
 		Delete(IDelete) (*models.Task, error)
+		Sort([]models.Task) ([]models.Task, error)
 	}
 )

@@ -2,9 +2,10 @@ package task
 
 import (
 	"errors"
-	"gorm.io/gorm"
 	"orb-api/models"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 func NewTaskRepository(db *gorm.DB) Repository {
@@ -34,6 +35,18 @@ func (r *Repository) ValidUser(id uint) bool {
 	verifyUser := r.GetDB().First(&user).Error
 
 	if verifyUser != nil {
+		return false
+	}
+
+	return true
+}
+
+func (r *Repository) ValidTask(id uint) bool {
+	task := models.Task{ID: id}
+
+	verifyTask := r.GetDB().First(&task).Error
+
+	if verifyTask != nil{
 		return false
 	}
 
@@ -146,6 +159,10 @@ func (r *Repository) Update(updateData IUpdate) (*models.Task, error) {
 		return nil, errors.New("No fields to update")
 	}
 
+	if !r.ValidTask(updateData.ID) {
+		return nil, errors.New("Invalid task ID")
+	}
+
 	if updateData.Description != nil {
 		fieldMap["description"] = *updateData.Description
 	}
@@ -209,4 +226,34 @@ func (r *Repository) Delete(deleteData IDelete) (*models.Task, error) {
 	}
 
 	return &task, nil
+}
+
+func partition(arr []models.Task, low, high int) ([]models.Task, int){
+	pivot := arr[high].Deadline
+
+	i := low
+
+	for j := low; j < high; j++{
+		if arr[j].Deadline.Before(pivot) {
+			arr[i], arr[j] = arr[j], arr[i]
+			i++
+		}
+	}
+
+	arr[i], arr[high] = arr[high], arr[i]
+	return arr, i
+}
+
+func quickSort(arr []models.Task, low, high int) []models.Task {
+	if low < high {
+		var p int
+		arr, p = partition(arr, low, high)
+		arr = quickSort(arr, low, p-1)
+		arr = quickSort(arr, p+1, high)
+	}
+	return arr
+}
+
+func (r *Repository) Sort(arr []models.Task) ([]models.Task) {
+	return quickSort(arr, 0, len(arr)-1)
 }

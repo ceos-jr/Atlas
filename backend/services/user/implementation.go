@@ -1,21 +1,31 @@
 package user
 
+
 import (
 	"errors"
 	"orb-api/models"
 	"orb-api/repositories/user"
+	"orb-api/repositories/userproject"
+	"orb-api/repositories/project"
 )
 
-func SetupService(repository *user.Repository) *Service {
+func SetupService(repository1 *user.Repository, repository2 *userproject.Repository, repository3 *project.Repository) *Service {
 	return &Service{
-		UserRepo: repository,
+		UserRepo: 			repository1,
+		UserProjectRepo:	repository2,
+		ProjectRepo:		repository3,
 	}
 }
 
-func (service *Service) CreateNewUser(credentials ICreateUser) (*models.User, error) {
+func (service *Service) CreateUser(
+	name string,
+	email string,
+	password string,
+) (*models.User, error) {
 	// Check if the email is not being used by anyone else
 	userArray, readErr := service.UserRepo.ReadBy(user.IReadBy{
-		Email: &credentials.Email,
+		Email: &email,
+
 	})
 
 	if readErr != nil {
@@ -28,7 +38,9 @@ func (service *Service) CreateNewUser(credentials ICreateUser) (*models.User, er
 
 	// Check if the username is not being used by anyone else
 	userArray, readErr = service.UserRepo.ReadBy(user.IReadBy{
-		Name: &credentials.Name,
+
+		Name: &name,
+
 	})
 
 	if readErr != nil {
@@ -40,28 +52,34 @@ func (service *Service) CreateNewUser(credentials ICreateUser) (*models.User, er
 	}
 
 	// Check email, username and password length
-	if !user.ValidUserName(credentials.Name) {
+
+	if !user.ValidUserName(name) {
 		return nil, errors.New("Invalid username size")
 	}
 
-	if !user.ValidUserEmail(credentials.Email) {
+	if !user.ValidUserEmail(email) {
 		return nil, errors.New("Invalid email size")
 	}
 
-	if !user.ValidUserPassword(credentials.Password) {
+	if !user.ValidUserPassword(password) {
+
 		return nil, errors.New("Invalid password size")
 	}
 
 	// Hash the password to prevent security vulnerabilities
-	hashedPassword, hashErr := HashPassword(credentials.Password)
+
+	hashedPassword, hashErr := HashPassword(password)
+
 
 	if hashErr != nil {
 		return nil, hashErr
 	}
 
 	newUser, createErr := service.UserRepo.Create(user.ICreate{
-		Name:     credentials.Name,
-		Email:    credentials.Email,
+
+		Name:     name,
+		Email:    email,
+
 		Password: hashedPassword,
 		Status:   models.UStatusProcessing,
 	})
@@ -73,7 +91,9 @@ func (service *Service) CreateNewUser(credentials ICreateUser) (*models.User, er
 	return newUser, nil
 }
 
+
 func (service *Service) UpdateName(id uint, name string) (*models.User, error) {
+
 	// Check if name has a valid length
 	if !user.ValidUserName(name) {
 		return nil, errors.New("Invalid username size")
@@ -84,7 +104,9 @@ func (service *Service) UpdateName(id uint, name string) (*models.User, error) {
 		return nil, errors.New("Invalid user id")
 	}
 
-	// Check if the email is not being used by anyone else and different by current
+
+	// Check if the name is not being used by anyone else and different by current
+
 	userArray, readErr := service.UserRepo.ReadBy(user.IReadBy{
 		Name: &name,
 	})
@@ -93,7 +115,9 @@ func (service *Service) UpdateName(id uint, name string) (*models.User, error) {
 		return nil, readErr
 	}
 
-	if len(userArray) > 0 {
+
+	if len(userArray) == 1 {
+
 		return nil, errors.New("This name is already being used")
 	}
 
@@ -110,7 +134,9 @@ func (service *Service) UpdateName(id uint, name string) (*models.User, error) {
 	return updatedUser, nil
 }
 
+
 func (service *Service) UpdatePassword(id uint, password string) (*models.User, error) {
+
 	// Check if it is password has a valid length
 	if !user.ValidUserPassword(password) {
 		return nil, errors.New("Invalid password size")
@@ -140,7 +166,13 @@ func (service *Service) UpdatePassword(id uint, password string) (*models.User, 
 	return updatedUser, nil
 }
 
+
 func (service *Service) UpdateEmail(id uint, email string) (*models.User, error) {
+	if !user.ValidUserEmail(email) {
+		return nil, errors.New("Invalid email size")
+	}
+
+
 	// Check if the id belongs a valid user
 	if !service.UserRepo.ValidUser(id) {
 		return nil, errors.New("Invalid user id")
@@ -155,7 +187,9 @@ func (service *Service) UpdateEmail(id uint, email string) (*models.User, error)
 		return nil, readErr
 	}
 
-	if len(userArray) > 0 {
+
+	if len(userArray) == 1 {
+
 		return nil, errors.New("This email is already being used")
 	}
 
@@ -172,7 +206,9 @@ func (service *Service) UpdateEmail(id uint, email string) (*models.User, error)
 	return userUpdate, nil
 }
 
+
 func (service *Service) UpdateStatus(id uint, status uint) (*models.User, error) {
+
 	// Check if the status is valid
 	if !user.ValidUserStatus(status) {
 		return nil, errors.New("Invalid status")
@@ -194,4 +230,84 @@ func (service *Service) UpdateStatus(id uint, status uint) (*models.User, error)
 	}
 
 	return userUpdate, nil
+}
+
+func (service *Service) DeleteUser(id uint) (*models.User, error) {
+	if !service.UserRepo.ValidUser(id) {
+		return nil, errors.New("Invalid user id")
+	}
+
+	userArray, readErr := service.UserRepo.ReadBy(user.IReadBy{
+		ID: &id,
+	})
+
+	if readErr != nil {
+		return nil, readErr
+	}
+
+	if userArray[0].Status == uint(1) {
+		return nil, errors.New("User already disabled")
+	}
+	
+	status := uint(1)
+
+	userUpdate, updateErr := service.UserRepo.Update(user.IUpdate{
+		ID:     id,
+		Status: &status,
+	})
+
+	if updateErr != nil {
+		return nil, updateErr
+	}
+
+	return userUpdate, nil
+
+}
+func (service *Service) SortProjects(UserID uint) ([]models.Project, error){
+	UserProjects, ReadErr := service.UserProjectRepo.ReadBy(userproject.IReadBy{
+		UserID: &UserID,
+	})
+
+	if ReadErr != nil {
+		return nil, ReadErr
+	}
+
+	Projects := []models.Project{}
+
+	for i := 0; i < len(UserProjects); i++{
+		App, Err := service.ProjectRepo.ReadBy(project.IReadBy{
+			ID: &(UserProjects[i].ProjectID),
+		})
+
+		if Err != nil {
+			return nil, Err
+		}
+
+		Projects = append(Projects, App...)
+	}
+
+	return Projects, nil
+
+}
+
+func (service *Service) ReadUser(read user.IReadBy) ([]models.User, error) {
+	if  read.ID == nil &&
+		read.Name == nil &&
+		read.Email == nil &&
+		read.Status == nil &&
+		read.Limit == nil {
+		usersArray, readErr := service.UserRepo.ReadAll(user.IReadAll{})
+
+		if readErr != nil{
+			return nil, readErr
+		}
+		return usersArray, nil
+	} 
+
+	usersArray, readErr := service.UserRepo.ReadBy(read)
+	
+	if readErr != nil{
+		return nil, readErr
+	}
+	return usersArray, nil
 }
