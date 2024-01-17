@@ -189,6 +189,40 @@ func (handler *BaseHandler) DeleteUser(context *fiber.Ctx) error {
 	})
 }
 
+func (handler *BaseHandler) SortProjects(context *fiber.Ctx) error {
+	body := new(CreateUserRequestBody)
+	if parseError := context.BodyParser(body); parseError != nil {
+		return context.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Invalid request body",
+			"error":   parseError.Error(),
+		})
+	}
 
+	validationErrors := handler.Validator.Validate(body)
+	if validationErrors != nil {
 
+		errorMessages := make([]string, len(validationErrors))
 
+		for index := range validationErrors {
+			errorMessages[index] = validationErrors[index].Message
+		}
+		return context.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Invalid request body",
+			"errors":  errorMessages,
+		})
+	}
+
+	ProjectArrays, serviceError := handler.Service.SortProjects(body.ID)
+
+	if serviceError != nil {
+		return context.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "user read error",
+			"error":   serviceError.Error(),
+		})
+	}
+
+	return context.Status(fiber.StatusCreated).JSON(fiber.Map{
+		"message": "Projects sorted by user succresfully",
+		"array":    ProjectArray,
+	})
+}

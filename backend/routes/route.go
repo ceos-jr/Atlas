@@ -10,4 +10,5 @@ func Setup(app *fiber.App, controllers *controllers.Controllers) {
 
 	api.Post("/register", controllers.User.CreateUser)
 	api.Delete("user/disable/:id", controllers.User.DeleteUser)
+	api.Sort("/sortProjects", controllers.User.SortProjects)
 }
