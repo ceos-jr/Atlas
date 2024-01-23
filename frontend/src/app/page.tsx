@@ -13,9 +13,6 @@ const Home: React.FC = () => {
   const goToSignupPage = () => {
     router.push("/sign"); 
   };
-  const gotoDelete = () => {
-    router.push("/telaAdm"); 
-  };
 
   return (
     <div className="flex justify-center items-center h-screen text-center font-quick">
@@ -35,12 +32,6 @@ const Home: React.FC = () => {
         </button>
         <button
           onClick={goToSignupPage}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300"
-        >
-          Cadastre-se
-        </button>
-        <button
-          onClick={gotoDelete}
           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300"
         >
           Cadastre-se

@@ -1,16 +1,25 @@
 package main
 
 import (
-	"github.com/gofiber/fiber/v2"
-	"orb-api/routes"
 	"log"
 	"orb-api/config"
 	"orb-api/controllers"
+	"orb-api/routes"
 	"orb-api/services"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 )
 
 func main() {
 	server := fiber.New()
+
+	server.Use(cors.New(cors.Config{
+        AllowOrigins: "http://localhost:3000",
+        AllowHeaders: "Origin, Content-Type, Accept",
+        AllowCredentials: true,
+    }))
+
 	repository, setupError := config.SetupDB(".env")
 
 	if setupError != nil {
