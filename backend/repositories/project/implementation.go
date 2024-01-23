@@ -76,6 +76,19 @@ func (r *Repository) Create(createData ICreate) (*models.Project, error){
 	
 	return &project, nil
 }
+
+func (r *Repository) ReadAll() ([]models.Project, error) {
+	var projectArray []models.Project
+
+	result := r.GetDB().Find(&projectArray)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return projectArray, nil
+}
+
 func (r *Repository) ReadBy(readBy IReadBy) ([]models.Project, error) {
 	var fieldMap = make(map[string]interface{})
 	var projectArray []models.Project

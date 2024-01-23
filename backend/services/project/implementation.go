@@ -122,17 +122,14 @@ func (service *Service) UpdateProject(updateData Update ) (*models.Project, erro
 	}
 
 	return updateProject, nil
+}
 
-	
+func (service *Service) ListProject() ([]models.Project, error) {
+	projectArr, readErr := service.ReadAll()
 
-	
+	if readErr == nil {
+		return nil, readErr
+	}
 
-	
-
-
-
-
-
-
-
+	return projectArr, nil
 }

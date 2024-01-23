@@ -29,5 +29,6 @@ type (
 		AssignTask(ProjectID uint, TaskID uint) (*models.TasksProject, error)
 		SortTaskByDeadline(ProjectID uint) ([]models.Task, error)
 		UpdateProject(Update) (*models.Project, error)
+		ListProject() ([]models.Project, error)
 	}
 )
