@@ -14,4 +14,4 @@ export async function deleteUser(userId: string) {
 
       return { ok: false, err: error };
     }
-  }
+}
