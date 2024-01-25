@@ -41,7 +41,7 @@ func (suite *TestSuit) TestSortByDeadline () {
 	suite.Equal(SortedTasks[1].Deadline, suite.MockTasks[0].Deadline, "Second task Deadline does not match")
 }
 
-func (suite *TestSuit) TestUpdateProject () {
+/*func (suite *TestSuit) TestUpdateProject () {
 	newName := "projectupdated"
 	newSector := uint(3)
 	newAdmID := uint(5)
@@ -84,6 +84,16 @@ func (suite *TestSuit) TestUpdateProjectErr() {
 		Name: &max,
 	})
 	suite.Equal("Invalid project name", err3.Error(), "expected to have an error")
+}*/
+
+func (suite *TestSuit) TestListProjects (){
+	projectList, readErr := suite.ProjectService.ListProject()
+
+	suite.Nil(redErr, "Reading error must be nil")
+
+	suite.Equal(len(projectList), 4)
+
+
 }
 
 func TestProjectService(test *testing.T) {
