@@ -182,7 +182,7 @@ func (handler *BaseHandler) SortTaskByDeadline(context *fiber.Ctx) error{
 		})
 	}
 
-	sortedtask, serviceError := handler.Service.SortTaskByDeadline(
+	sortedtask, serviceError := handler.Service.SortByDeadline(
 		body.ProjectID,
 	)
 
