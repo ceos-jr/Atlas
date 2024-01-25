@@ -35,10 +35,10 @@ func (suite *TestSuit) SetupSuite() {
 	}
 
 	suite.Repo = repository
-  	suite.ProjectService = project.SetupProjectService(&repository.Project, &repository.UserProject, &repository.TaskProject, &repository.Task)
-	suite.MockProjects = make([]models.Project, 4)
+  	suite.ProjectService = project.SetupProjectService(&repository.Project, &repository.UserProject, &repository.TaskProject, &repository.Task, &repository.User)
+	suite.MockProjects = make([]models.Project, 6)
 	suite.MockTasks = make([]models.Task, 2)
-	suite.MockUsers = make([]models.User, 3)
+	suite.MockUsers = make([]models.User, 4)
 	suite.SetupMocks()
 }
 
@@ -70,6 +70,32 @@ func (suite *TestSuit) SetupMocks() {
 	}
 
 	suite.MockUsers[1] = *NewUser2
+
+	NewUser3, createuserErr3 := suite.Repo.User.Create(userrepo.ICreate{
+		Name:     fmt.Sprintf("Gabrigas %v", 3),
+		Email:    fmt.Sprintf("example0%v@example.com", 3),
+		Password: "gabrigas123",
+		Status:   2,
+	})
+
+	if createuserErr3 != nil {
+		panic(createuserErr3)
+	}
+
+	suite.MockUsers[2] = *NewUser3
+
+	NewUser4, createuserErr4 := suite.Repo.User.Create(userrepo.ICreate{
+		Name:     fmt.Sprintf("Gabrigas %v", 4),
+		Email:    fmt.Sprintf("example0%v@example.com", 4),
+		Password: "gabrigas123",
+		Status:   2,
+	})
+
+	if createuserErr4 != nil {
+		panic(createuserErr4)
+	}
+
+	suite.MockUsers[3] = *NewUser4
 
 	NewTask, createErr := suite.Repo.Task.Create(taskrepo.ICreate{
 		Description: "Uma tarefa",
@@ -147,6 +173,31 @@ func (suite *TestSuit) SetupMocks() {
 	}
 
 	suite.MockProjects[3] = *NewProject4
+
+	NewProject5, createErr5 := suite.Repo.Project.Create(projectrepo.ICreate{
+		Name: fmt.Sprintf("Projeto5"),
+		Sector: 2,
+		AdmID: 2,
+	})
+
+	if createErr5 != nil {
+		panic(createErr5)
+	}
+
+	suite.MockProjects[4] = *NewProject5
+
+	NewProject6, createErr6 := suite.Repo.Project.Create(projectrepo.ICreate{
+		Name: fmt.Sprintf("Projeto6"),
+		Sector: 2,
+		AdmID: 2,
+	})
+
+	if createErr6 != nil {
+		panic(createErr6)
+	}
+
+	suite.MockProjects[5] = *NewProject6
+
 
 }
 

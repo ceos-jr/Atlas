@@ -244,3 +244,45 @@ func (handler *BaseHandler) UpdateProject(context *fiber.Ctx) error{
 	})
 }
 
+
+func (handler *BaseHandler) ListProjectbyUser(context *fiber.Ctx) error{
+	body := new(CreateUserProjectRequestBody)
+
+	if parseError := context.BodyParser(body); parseError != nil {
+		return context.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Invalid request body",
+			"error":   parseError.Error(),
+		})
+	}
+
+	validationErrors := handler.Validator.Validate(body)
+
+	if validationErrors != nil {
+		errorMessages := make([]string, len(validationErrors))
+
+		for index := range validationErrors {
+			errorMessages[index] = validationErrors[index].Message
+		}
+
+		return context.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Invalid request body",
+			"errors":  errorMessages,
+		})
+	}
+
+	listedprojects, serviceError := handler.Service.ListProjectbyUser(
+		body.UserID,
+	)
+
+	if serviceError != nil {
+		return context.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "error while listing user",
+			"error":   serviceError.Error(),
+		})
+	}
+
+	return context.Status(fiber.StatusCreated).JSON(fiber.Map{
+		"message": "listed projects successfully",
+		"project":    listedprojects,
+	})
+}

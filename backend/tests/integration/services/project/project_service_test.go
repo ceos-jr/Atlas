@@ -86,6 +86,29 @@ func (suite *TestSuit) TestUpdateProjectErr() {
 	suite.Equal("Invalid project name", err3.Error(), "expected to have an error")
 }
 
+func (suite *TestSuit) TestListUsersById () {
+	_, assignErr1 := suite.ProjectService.AssignUser(suite.MockProjects[4].ID, suite.MockUsers[2].ID)
+	_, assignErr2 := suite.ProjectService.AssignUser(suite.MockProjects[5].ID, suite.MockUsers[2].ID)
+	suite.Nil(assignErr1, "Assign error must be nil")
+	suite.Nil(assignErr2, "Assign error must be nil")
+
+	println()
+	ListedProjectsArray, listingErr := suite.ProjectService.ListProjectbyUser(suite.MockUsers[2].ID)
+
+	ListedProjectsArray2, _ := suite.ProjectService.ListProjectbyUser(suite.MockUsers[3].ID)
+
+	suite.Nil(listingErr, "Listing error must be nil")
+	suite.Equal(ListedProjectsArray[0].ProjectID, suite.MockProjects[4].ID)
+	suite.Equal(ListedProjectsArray[1].ProjectID, suite.MockProjects[5].ID)
+	suite.Equal(len(ListedProjectsArray2), 0)
+}
+
+func (suite *TestSuit) TestListUserByIdErr () {
+	userID := uint(9000)
+	_, listingErr := suite.ProjectService.ListProjectbyUser(userID)
+	suite.Equal(listingErr.Error(), "Invalid user id", "expected to have an error")
+}
+
 func TestProjectService(test *testing.T) {
 	suite.Run(test, new(TestSuit))
 }

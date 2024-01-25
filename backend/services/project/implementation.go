@@ -4,17 +4,19 @@ import (
 	"errors"
 	"orb-api/models"
 	"orb-api/repositories/project"
+	"orb-api/repositories/user"
 	"orb-api/repositories/task"
 	"orb-api/repositories/taskproject"
 	"orb-api/repositories/userproject"
 )
 
-func SetupProjectService(repository1 *project.Repository, repository2 *userproject.Repository, repository3 *taskproject.Repository, repository4 *task.Repository) *Service {
+func SetupProjectService(repository1 *project.Repository, repository2 *userproject.Repository, repository3 *taskproject.Repository, repository4 *task.Repository, repository5 *user.Repository) *Service {
 	return &Service{
 		ProjectRepo: repository1,
 		UserProjectRepo: repository2,
 		TaskProjectRepo: repository3,
 		TaskRepo: repository4,
+		UserRepo: repository5,
 	}
 }
 
@@ -123,16 +125,23 @@ func (service *Service) UpdateProject(updateData Update ) (*models.Project, erro
 
 	return updateProject, nil
 
-	
 
 	
+}
 
+func (service *Service) ListProjectbyUser(UserID uint ) ([]models.UsersProject, error) {
+	if !service.UserRepo.ValidUser(UserID){
+		return nil, errors.New(("Invalid user id"))
+	}
+
+	projectArray, readErr := service.UserProjectRepo.ReadBy(userproject.IReadBy{
+		UserID: &UserID,
+	})
 	
 
+	if readErr != nil {
+		return nil, readErr
+	}
 
-
-
-
-
-
+	return projectArray, readErr
 }
