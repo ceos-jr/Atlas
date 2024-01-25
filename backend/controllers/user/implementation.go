@@ -190,6 +190,7 @@ func (handler *BaseHandler) DeleteUser(context *fiber.Ctx) error {
 }
 
 func (handler *BaseHandler) SortProjects(context *fiber.Ctx) error {
+	
 	body := new(CreateUserRequestBody)
 	if parseError := context.BodyParser(body); parseError != nil {
 		return context.Status(fiber.StatusBadRequest).JSON(fiber.Map{
