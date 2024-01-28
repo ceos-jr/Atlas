@@ -4,7 +4,7 @@ import UserList from "./UserList";
 
 export default function User() {
     return (
-        <div className="h-screen bg-slate-300">
+        <div className="h-screen bg-white text-black">
             Hello Atlas
             <UserList/>
         </div>
