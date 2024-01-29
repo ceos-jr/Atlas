@@ -32,5 +32,6 @@ type (
 		SortTaskByDeadline(ProjectID uint) ([]models.Task, error)
 		UpdateProject(Update) (*models.Project, error)
 		ListProjectbyUser(UserID uint ) ([]models.Project, error)
+		ListProject() ([]models.Project, error)
 	}
 )
