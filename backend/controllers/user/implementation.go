@@ -15,8 +15,6 @@ type CreateUserRequestBody struct {
 	Status   uint   `json:"status" validate:"required"`
 }
 
-
-
 func (handler *BaseHandler) CreateUser(context *fiber.Ctx) error {
 	body := new(CreateUserRequestBody)
 
@@ -87,9 +85,9 @@ func (handler *BaseHandler) ReadUser(context *fiber.Ctx) error {
 	}
 
 	ReadUser, serviceError := handler.Service.ReadUser(user.IReadBy{
-		ID: &body.ID,
-		Name: &body.Name,
-		Email: &body.Email,
+		ID:     &body.ID,
+		Name:   &body.Name,
+		Email:  &body.Email,
 		Status: &body.Status,
 	})
 
@@ -150,11 +148,9 @@ func (handler *BaseHandler) UpdateUser(context *fiber.Ctx) error {
 
 	return context.Status(fiber.StatusOK).JSON(fiber.Map{
 		"message": "User updated successfully",
-		"user":    updateParams, 
+		"user":    updateParams,
 	})
 }
-
-
 
 func (handler *BaseHandler) DeleteUser(context *fiber.Ctx) error {
 	userIDstr := context.Params("id")
@@ -190,7 +186,7 @@ func (handler *BaseHandler) DeleteUser(context *fiber.Ctx) error {
 }
 
 func (handler *BaseHandler) SortProjects(context *fiber.Ctx) error {
-	
+
 	body := new(CreateUserRequestBody)
 	if parseError := context.BodyParser(body); parseError != nil {
 		return context.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -224,6 +220,6 @@ func (handler *BaseHandler) SortProjects(context *fiber.Ctx) error {
 
 	return context.Status(fiber.StatusCreated).JSON(fiber.Map{
 		"message": "Projects sorted by user succresfully",
-		"array":    ProjectArray,
+		"array":   ProjectArrays,
 	})
 }
