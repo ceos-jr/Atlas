@@ -286,3 +286,19 @@ func (handler *BaseHandler) ListProjectbyUser(context *fiber.Ctx) error{
 		"project":    listedprojects,
 	})
 }
+
+func (handler *BaseHandler) readProjects(context *fiber.Ctx) error{
+	projectArr, serviceErr := handler.Service.ListProject()
+
+	if serviceError != nil {
+		return context.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "error while listing projects",
+			"error": serviceErr.Error(),
+		})
+	}
+
+	return context.Status(fiber.StatusCreated).JSON(fiber,Map{
+		"message": "Projects listed succesfully",
+		"array": projectArr 
+	})
+}

@@ -145,3 +145,13 @@ func (service *Service) ListProjectbyUser(UserID uint ) ([]models.UsersProject, 
 
 	return projectArray, readErr
 }
+
+func (service *Service) ListProject() ([]models.Project, error) {
+	projectArr, readErr := service.ProjectRepo.ReadAll()
+
+	if readErr != nil {
+		return nil, readErr
+	}
+
+	return projectArr, nil
+}
