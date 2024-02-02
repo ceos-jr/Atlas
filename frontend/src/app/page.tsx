@@ -11,32 +11,39 @@ const Home: React.FC = () => {
   };
 
   const goToSignupPage = () => {
-    router.push("/sign"); 
+    router.push("/sign");
   };
 
   return (
-    <div className="flex justify-center items-center h-screen text-center font-quick">
-      <div className="card bg-white rounded-lg shadow-md p-6">
-        <h1 className="text-3xl font-semibold mb-4 text-primary-blue">
-          Boas vindas ao Atlas!
-        </h1>
-        <p className="text-lg text-gray-600">
-          Uma plataforma para gerenciamento de demandas e equipes.
-        </p>
-        <div className="space-x-4 space-y-4">
-        <button
-          onClick={goToLoginPage}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300 mb-2"
-        >
-          Login
-        </button>
-        <button
-          onClick={goToSignupPage}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300"
-        >
-          Cadastre-se
-        </button>
+    <div className="h-screen text-center font-quick bg-white text-black flex flex-col lg:flex-row">
+      <div className="flex flex-col flex-grow items-center justify-evenly">
+        <div>
+          Atlas
         </div>
+        <div className="flex gap-y-4 flex-col px-10">
+          <h1 className="text-secondary-orange text-5xl font-bold lg:text-[70px]">Fortaleça os laços do seu time.</h1>
+          <p className="text-[20px] text-gray-700 px-10 lg:text-[25px]">Otimize o desempenho da sua equipe com o Atlas.</p>
+        </div>
+        <div className="space-x-4 space-y-4">
+          <button
+            onClick={goToSignupPage}
+            className="px-3 py-2 bg-secondary-orange text-white rounded-2xl transition-transform transform hover:scale-110 hover:bg-white hover:text-secondary-orange hover:outline focus:outline-none focus:ring focus:ring-secondary-orange"
+          >
+            Cadastre-se
+          </button>
+          <button
+            onClick={goToLoginPage}
+            className="text-secondary-blue rounded-2xl underline transition-transform transform hover:scale-110">
+            Faça Login
+          </button>
+        </div>
+      </div>
+
+      <div className="lg:w-1/3 w-full h-[100px] flex flex-row lg:flex lg:flex-col lg:h-full">
+        <div className="bg-primary-blue flex-1 lg:w-7/12 lg:h-1/4 lg:flex-none"></div>
+        <div className="bg-secondary-blue flex-1 lg:w-7/12 lg:h-1/4 lg:flex-none"></div>
+        <div className="bg-primary-orange flex-1 w-7/12 lg:h-1/4 lg:flex-none"></div>
+        <div className="bg-primary-yellow flex-1 w-7/12 lg:h-1/4 lg:flex-none"></div>
       </div>
     </div>
   );

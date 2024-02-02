@@ -17,6 +17,7 @@ const config: Config = {
         'primary-blue': '#2860FF',
         'secondary-blue': '#2196F2',
         'primary-orange': '#FF9100',
+        'secondary-orange': '#FF8A00',
         'primary-yellow': '#FFC107'
       },
       fontFamily: {
