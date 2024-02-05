@@ -11,7 +11,7 @@ const Home: React.FC = () => {
   };
 
   const goToSignupPage = () => {
-    router.push("/sign");
+    router.push("/sign"); 
   };
 
   return (
@@ -27,7 +27,7 @@ const Home: React.FC = () => {
         <div className="space-x-4 space-y-4 lg:pl-10">
           <button
             onClick={goToSignupPage}
-            className="px-3 py-2 bg-secondary-orange text-white rounded-2xl transition-transform transform hover:scale-110 hover:bg-white hover:text-secondary-orange hover:outline focus:outline-none focus:ring focus:ring-secondary-orange"
+            className="px-3 py-2 lg:px-4 lg:py-3 lg:rounded-md bg-secondary-orange text-white rounded-2xl transition-transform transform hover:scale-110 hover:bg-white hover:text-secondary-orange hover:outline focus:outline-none focus:ring focus:ring-secondary-orange"
           >
             Cadastre-se
           </button>
