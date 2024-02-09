@@ -20,14 +20,14 @@ const Home: React.FC = () => {
         <div className="lg:h-[10%] lg:pl-10 lg:pt-5">
           Atlas
         </div>
-        <div className="flex gap-y-4 flex-col px-10 lg:h-2/4 lg:px-0 lg:items-start lg:justify-end lg:pt-10 lg:pb-16 lg:pl-10 lg:mt-10">
-          <h1 className="text-secondary-orange text-5xl font-bold lg:text-[67px]">Fortaleça os laços do seu time.</h1>
-          <p className="text-[20px] text-gray-700 px-10 lg:text-[25px] lg:px-0 lg:text-gray-800">Otimize o desempenho da sua equipe com o Atlas.</p>
+        <div className="flex gap-y-4 flex-col px-10 lg:h-2/4 lg:px-0 lg:items-start lg:justify-end lg:pt-10 lg:pb-14 lg:mb-4 lg:pl-10 lg:mt-28">
+          <h1 className="text-secondary-orange text-5xl font-bold lg:text-[100px] lg:text-left lg:leading-[117.19px]">Fortaleça os laços do seu time.</h1>
+          <p className="text-[20px] text-gray-600 px-10 lg:text-[35px] lg:px-0 lg:text-left">Otimize o desempenho da sua equipe com o Atlas.</p>
         </div>
         <div className="space-x-4 space-y-4 lg:pl-10">
           <button
             onClick={goToSignupPage}
-            className="px-3 py-2 lg:px-4 lg:py-3 lg:rounded-md bg-secondary-orange text-white rounded-2xl transition-transform transform hover:scale-110 hover:bg-white hover:text-secondary-orange hover:outline focus:outline-none focus:ring focus:ring-secondary-orange"
+            className="px-3 py-2 lg:px-4 lg:mr-5 lg:py-3 lg:rounded-[10px] bg-secondary-orange text-white rounded-2xl transition-transform transform hover:scale-110 hover:bg-white hover:text-secondary-orange hover:outline focus:outline-none focus:ring focus:ring-secondary-orange"
           >
             Cadastre-se
           </button>
