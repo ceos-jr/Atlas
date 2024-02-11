@@ -21,7 +21,7 @@ const config: Config = {
       },
       fontFamily: {
         'quick' : ['Quicksand', 'sans-serif']
-      }
+      },
     },
   },
   plugins: [],
