@@ -16,12 +16,17 @@ const config: Config = {
       colors: {
         'primary-blue': '#2860FF',
         'secondary-blue': '#2196F2',
+        'terciary-blue': '#2196F2',
         'primary-orange': '#FF9100',
         'secondary-orange': '#FF8A00',
-        'primary-yellow': '#FFC107'
+        'primary-yellow': '#FFC107',
+        'primary-gray': '#F4F9FF',
+        'secondary-gray': '#727272',
       },
       fontFamily: {
-        'quick' : ['Quicksand', 'sans-serif']
+        'quick' : ['Quicksand', 'sans-serif'],
+        'roboto' : ['Roboto', 'sans-serif'],
+        'roboto-bold' : ['Roboto-bold', 'sans-serif']
       }
     },
   },
