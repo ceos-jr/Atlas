@@ -7,7 +7,8 @@ import smGreet from "./images/Group.png"
 import greet from "./images/Welcome.png"
 import {z, ZodType} from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
-import {useForm} from "react-hook-form"
+import {useForm} from "react-hook-form";
+import axios from 'axios';
 
 type formData = {
   userName: string,
@@ -15,12 +16,8 @@ type formData = {
   whatsapp: string,
 }
 
-
 const LoginPage = () => {
   const router = useRouter();
-
-  const [email, setEmail] = useState("");
-  const [whatsapp, setWhatsapp] = useState("");
 
   const [hover, setHover] = useState(false);
 
@@ -44,7 +41,7 @@ const LoginPage = () => {
     email: z.string().
       min(3, {message: "email muito curto!"}).
       max(128, {message: "email muito grande!"}).
-      email({message: "Não é um Email Válido!"}),
+      email({message: "Não é um email Válido!"}),
   
     whatsapp: z.string().regex(whatsappRegex, {message: "Não é um número válido!"}),
   })
@@ -53,6 +50,7 @@ const LoginPage = () => {
     register,
     handleSubmit,
     formState: { errors },
+    getValues,
   } = useForm<formData>({
     resolver: zodResolver(formSchema),
   });
@@ -66,7 +64,17 @@ const LoginPage = () => {
             >cadastro de usuário</p>
           
           <div className="card flex flex-col justify-around bg-[#f4f9ff] rounded-lg shadow-[0px_4px_4px_0px_#00000040] px-6 py-4 w-full xl:w-2/3 md:mx-5">
-            <form onSubmit={handleSubmit((d) => console.log(d))}>
+            <form onSubmit={handleSubmit(() => {
+              axios.post("/register", {
+                Name: getValues("userName"),
+                Email: getValues("email"),
+              })
+              .then((response) => {
+                console.log(response.data)
+              }, (error) => {
+                console.log(error.message)
+              })
+            })}>
               <input
                 type="text"
                 placeholder="Nome completo"
