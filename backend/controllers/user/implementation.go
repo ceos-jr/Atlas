@@ -14,6 +14,13 @@ type CreateUserRequestBody struct {
 	Password string `json:"password" validate:"required"`
 	Status   uint   `json:"status" validate:"required"`
 }
+type UpdateUserRequestBody struct {
+	ID       uint    `json:"ID"`
+	Name     *string `json:"name"`
+	Email    *string `json:"email"`
+	Password *string `json:"password"`
+	Status   *uint   `json:"status"`
+}
 
 func (handler *BaseHandler) CreateUser(context *fiber.Ctx) error {
 	body := new(CreateUserRequestBody)
@@ -106,7 +113,7 @@ func (handler *BaseHandler) ReadUser(context *fiber.Ctx) error {
 
 func (handler *BaseHandler) UpdateUser(context *fiber.Ctx) error {
 	// Parse do corpo da solicitação para obter os dados de atualização
-	body := new(CreateUserRequestBody)
+	body := new(UpdateUserRequestBody)
 	if parseError := context.BodyParser(body); parseError != nil {
 		return context.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "Invalid request body",
@@ -130,20 +137,29 @@ func (handler *BaseHandler) UpdateUser(context *fiber.Ctx) error {
 		ID: body.ID,
 	}
 
-	if body.Email != "" {
-		handler.Service.UpdateEmail(updateParams.ID, body.Email)
+	if body.Email != nil {
+		println("deu bom email")
+		UpdateEmail := *body.Email
+		handler.Service.UpdateEmail(body.ID, UpdateEmail)
 	}
 
-	if body.Status != 0 {
-		handler.Service.UpdateStatus(updateParams.ID, body.Status)
+	if body.Status != nil {
+		println("deu bom status")
+		Updatestatus := *body.Status
+		handler.Service.UpdateStatus(updateParams.ID, Updatestatus)
 	}
 
-	if body.Password != "" {
-		handler.Service.UpdatePassword(updateParams.ID, body.Password)
+	if body.Password != nil {
+		println("deu bom senha")
+		UpdatePass := *body.Password
+		handler.Service.UpdatePassword(updateParams.ID, UpdatePass)
 	}
 
-	if body.Name != "" {
-		handler.Service.UpdateName(updateParams.ID, body.Name)
+	if body.Name != nil {
+		println("deu bom nome")
+		Updatename := *body.Name
+		println(Updatename)
+		handler.Service.UpdateName(updateParams.ID, Updatename)
 	}
 
 	return context.Status(fiber.StatusOK).JSON(fiber.Map{
