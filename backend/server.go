@@ -15,10 +15,11 @@ func main() {
 	server := fiber.New()
 
 	server.Use(cors.New(cors.Config{
-        AllowOrigins: "http://localhost:3000",
-        AllowHeaders: "Origin, Content-Type, Accept",
-        AllowCredentials: true,
-    }))
+		AllowOrigins:     "http://localhost:3000",
+		AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
+		AllowCredentials: true,
+		AllowMethods:     "GET, POST, PUT, DELETE, OPTIONS",
+	}))
 
 	repository, setupError := config.SetupDB(".env")
 

@@ -4,10 +4,10 @@ import React, { useState } from "react";
 import Image from "next/image";
 import smGreet from "./images/Group.png"
 import greet from "./images/Welcome.png"
-import {z, ZodType} from "zod";
+import {string, z, ZodType} from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
 import {useForm} from "react-hook-form";
-import { deleteUser } from "@/services/UserServices/User";
+import { createUser } from "@/services/UserServices/User";
 
 type formData = {
   userName: string,
@@ -61,7 +61,7 @@ const LoginPage = () => {
             >cadastro de usuário</p>
           
           <div className="card flex flex-col justify-around bg-[#f4f9ff] rounded-lg shadow-[0px_4px_4px_0px_#00000040] px-6 py-4 w-full xl:w-2/3 md:mx-5">
-            <form onSubmit={handleSubmit(() => deleteUser("1"))}>
+            <form onSubmit={handleSubmit(() => createUser("0", getValues("userName"), getValues("email"), "1"))}>
               <input
                 type="text"
                 placeholder="Nome completo"
