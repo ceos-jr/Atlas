@@ -65,49 +65,52 @@ func (handler *BaseHandler) CreateUser(context *fiber.Ctx) error {
 		"user":    newUser,
 	})
 }
-
 func (handler *BaseHandler) ReadUser(context *fiber.Ctx) error {
-	body := new(CreateUserRequestBody)
+	idParam := context.Params("id")
 
-	if parseError := context.BodyParser(body); parseError != nil {
-		return context.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "Invalid request body",
-			"error":   parseError.Error(),
-		})
-	}
+	var id uint
+    if idParam != "" {
+        idValue, err := strconv.ParseUint(idParam, 10, 64)
+        if err != nil {
+            return context.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+                "message": "Erro durante a leitura de usuários",
+                "error":   "ID inválido",
+            })
+        }
+        id = uint(idValue)
+    }
 
-	validationErrors := handler.Validator.Validate(body)
+    readUserParams := user.IReadBy{
+		ID: &id,
+    }
 
-	if validationErrors != nil {
-		errorMessages := make([]string, len(validationErrors))
+    usersArray, serviceError := handler.Service.ReadUser(readUserParams)
 
-		for index := range validationErrors {
-			errorMessages[index] = validationErrors[index].Message
-		}
+    if serviceError != nil {
+        return context.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+            "message": "Erro durante a leitura de usuários",
+            "error":   serviceError.Error(),
+        })
+    }
+    return context.Status(fiber.StatusOK).JSON(fiber.Map{
+        "message": "Leitura de usuários bem-sucedida",
+        "users":   usersArray,
+    })
+}
 
-		return context.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "Invalid request body",
-			"errors":  errorMessages,
-		})
-	}
 
-	ReadUser, serviceError := handler.Service.ReadUser(user.IReadBy{
-		ID:     &body.ID,
-		Name:   &body.Name,
-		Email:  &body.Email,
-		Status: &body.Status,
-	})
+func (handler *BaseHandler) ReadAllUsers(context *fiber.Ctx) error {
+	usersArray, serviceError := handler.Service.ReadUser(user.IReadBy{})
 
 	if serviceError != nil {
-		return context.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "user read error",
+		return context.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Erro durante a leitura de usuários",
 			"error":   serviceError.Error(),
 		})
 	}
-
-	return context.Status(fiber.StatusCreated).JSON(fiber.Map{
-		"message": "user read successfully",
-		"user":    ReadUser,
+	return context.Status(fiber.StatusOK).JSON(fiber.Map{
+		"message": "Leitura de todos os usuários bem-sucedida",
+		"users":   usersArray,
 	})
 }
 
@@ -138,28 +141,47 @@ func (handler *BaseHandler) UpdateUser(context *fiber.Ctx) error {
 	}
 
 	if body.Email != nil {
-		println("deu bom email")
 		UpdateEmail := *body.Email
-		handler.Service.UpdateEmail(body.ID, UpdateEmail)
+		_, err := handler.Service.UpdateEmail(body.ID, UpdateEmail)
+		if err != nil {
+			return context.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"message": "Erro ao atualizar o e-mail",
+				"error":   err.Error(),
+			})
+		}
 	}
 
 	if body.Status != nil {
-		println("deu bom status")
 		Updatestatus := *body.Status
-		handler.Service.UpdateStatus(updateParams.ID, Updatestatus)
+		_, err := handler.Service.UpdateStatus(updateParams.ID, Updatestatus)
+		if err != nil {
+			return context.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"message": "Erro ao atualizar o status",
+				"error":   err.Error(),
+			})
+		}
 	}
 
 	if body.Password != nil {
-		println("deu bom senha")
 		UpdatePass := *body.Password
-		handler.Service.UpdatePassword(updateParams.ID, UpdatePass)
+		_, err := handler.Service.UpdatePassword(updateParams.ID, UpdatePass)
+		if err != nil {
+			return context.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"message": "Erro ao atualizar a senha",
+				"error":   err.Error(),
+			})
+		}
 	}
 
 	if body.Name != nil {
-		println("deu bom nome")
 		Updatename := *body.Name
-		println(Updatename)
-		handler.Service.UpdateName(updateParams.ID, Updatename)
+		_, err := handler.Service.UpdateName(updateParams.ID, Updatename)
+		if err != nil {
+			return context.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"message": "Erro ao atualizar o nome",
+				"error":   err.Error(),
+			})
+		}
 	}
 
 	return context.Status(fiber.StatusOK).JSON(fiber.Map{
