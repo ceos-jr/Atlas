@@ -18,7 +18,7 @@ type formData = {
 const SignInPage = () => {
   const router = useRouter();
 
-  const [hover, setHover] = useState(false);
+   const [hover, setHover] = useState(false);
 
   const handleMouseEnter = () => {
     setHover(true);
@@ -63,7 +63,7 @@ const SignInPage = () => {
             >cadastro de usuário</p>
           
           <div className="card flex flex-col justify-around bg-[#f4f9ff] rounded-lg shadow-[0px_4px_4px_0px_#00000040] px-6 py-4 w-full xl:w-2/3 md:mx-5">
-            <form onSubmit={handleSubmit(() => console.log("oi"))}>
+            <form onSubmit={handleSubmit(() => createUser("0", getValues("userName"), getValues("email"), "1"))}>
               <input
                 type="text"
                 placeholder="Nome completo"
