@@ -97,9 +97,16 @@ type UsersProject struct {
 	ProjectID uint     `json:"project_id"` 
 }
 
+type Sector struct {
+	ID   uint   `json:"id" gorm:"primaryKey"`
+	Name string `json:"name" gorm:"size:128;not null;"`
+	Description string `json:"description" gorm:"not null"`
+	AdmID uint `json:"adm_id" gorm:"not null"`
+	Members []User `json:"members" gorm:"many2many:users_sectors;"`
+}
+
 // *********** IMPORTANTE ***************
 //Precisamos criar:
-//	-Model de setores
 //	-Conexão com mensagens do whatsapp em projects
 //	-Calendário
 //	-Avisos: model (notificação)
