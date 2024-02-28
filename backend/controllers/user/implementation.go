@@ -11,7 +11,7 @@ type CreateUserRequestBody struct {
 	ID       uint   `json:"ID" validate:"required"`
 	Name     string `json:"name" validate:"required"`
 	Email    string `json:"email" validate:"required"`
-	//Password string `json:"password" validate:"required"`
+	Password string `json:"password" validate:"required"`
 	Status   uint   `json:"status" validate:"required"`
 }
 
