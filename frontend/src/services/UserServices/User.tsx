@@ -15,13 +15,14 @@ export async function deleteUser(userId: string) {
       return { ok: false, err: error };
     }
 }
-export async function createUser(userId: string, userName: string, userEmail: string, userStatus: string) {
+export async function createUser(userId: string, userName: string, userEmail: string, userPassword: string, userStatus: string) {
   try{
     const path = "register";
     const data = {
       ID: userId,
       name: userName,
       email: userEmail,
+      password: userPassword,
       status: userStatus,
     }
 
