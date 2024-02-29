@@ -58,7 +58,7 @@ func (r *Repository) Create(createData ICreate) (*models.User, error) {
 	var user = models.User{
 		Name:      createData.Name,
 		Email:     createData.Email,
-		Password:  createData.Password,
+		//Password:  createData.Password,
 		Status:    createData.Status,
 		UpdatedAt: time.Now(),
 	}
@@ -71,9 +71,9 @@ func (r *Repository) Create(createData ICreate) (*models.User, error) {
 		return nil, errors.New("invalid name value")
 	}
 
-	if !ValidUserPassword(createData.Password) {
+	/*if !ValidUserPassword(createData.Password) {
 		return nil, errors.New("invalid password value")
-	}
+	}*/
 
 	if !ValidUserStatus(createData.Status) {
 		return nil, errors.New("invalid status")
