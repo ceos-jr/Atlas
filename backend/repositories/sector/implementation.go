@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm"	
 )
 
-func newSectorRepository(db *gorm.DB) Repository {
+func NewSectorRepository(db *gorm.DB) Repository {
 	return Repository{
 		GetDB: func() *gorm.DB {
 			return db
@@ -191,7 +191,13 @@ func (r *Repository) Update(updateData IUpdate) (*models.Sector, error){
 
 		fieldMap["projects"] = *updateData.Projects
 	}
-	
+
+	result := r.GetDB().Model(&sector).Updates(fieldMap)
+
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
 	return &sector, nil
 }
 
