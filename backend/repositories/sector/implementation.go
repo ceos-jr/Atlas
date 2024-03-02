@@ -57,11 +57,22 @@ func ValidUserName(name string) bool {
 	return true
 }
 
+func ValidSectorName(name string) bool {
+	if len(name) < nameMinLen || len(name) > nameMaxLen {
+		return false
+	}
+	return true
+}
+
 func (r * Repository) Create(createData ICreate) (*models.Sector, error){
 	var sector = models.Sector{
 		Name: createData.Name,
 		Description: createData.Description,
 		AdmID: createData.AdmID,
+	}
+
+	if !ValidSectorName(createData.Name) {
+		return nil, errors.New("Invalid name")
 	}
 
 	if !r.ValidUser(createData.AdmID){
