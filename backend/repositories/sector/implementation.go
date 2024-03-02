@@ -71,10 +71,6 @@ func (r * Repository) Create(createData ICreate) (*models.Sector, error){
 		AdmID: createData.AdmID,
 	}
 
-	if !ValidSectorName(createData.Name) {
-		return nil, errors.New("Invalid name")
-	}
-
 	if !r.ValidUser(createData.AdmID){
 		return nil, errors.New("Invalid user passed to AdmID")
 	}
