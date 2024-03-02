@@ -43,7 +43,7 @@ func (handler *BaseHandler) CreateUser(context *fiber.Ctx) error {
 	newUser, serviceError := handler.Service.CreateUser(
 		body.Name,
 		body.Email,
-		body.Password,
+		//body.Password,
 	)
 
 	if serviceError != nil {
@@ -138,9 +138,9 @@ func (handler *BaseHandler) UpdateUser(context *fiber.Ctx) error {
 		handler.Service.UpdateStatus(updateParams.ID, body.Status)
 	}
 
-	if body.Password != "" {
+	/*if body.Password != "" {
 		handler.Service.UpdatePassword(updateParams.ID, body.Password)
-	}
+	}*/
 
 	if body.Name != "" {
 		handler.Service.UpdateName(updateParams.ID, body.Name)

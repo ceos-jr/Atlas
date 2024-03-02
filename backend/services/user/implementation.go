@@ -20,7 +20,7 @@ func SetupService(repository1 *user.Repository, repository2 *userproject.Reposit
 func (service *Service) CreateUser(
 	name string,
 	email string,
-	password string,
+	//password string,
 ) (*models.User, error) {
 	// Check if the email is not being used by anyone else
 	userArray, readErr := service.UserRepo.ReadBy(user.IReadBy{
@@ -61,7 +61,7 @@ func (service *Service) CreateUser(
 		return nil, errors.New("Invalid email size")
 	}
 
-	if !user.ValidUserPassword(password) {
+	/*if !user.ValidUserPassword(password) {
 
 		return nil, errors.New("Invalid password size")
 	}
@@ -73,7 +73,7 @@ func (service *Service) CreateUser(
 
 	if hashErr != nil {
 		return nil, hashErr
-	}
+	}*/
 
 	newUser, createErr := service.UserRepo.Create(user.ICreate{
 
