@@ -3,11 +3,12 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import smGreet from "./images/Group.png";
-import greet from "./images/Welcome.png";
+import smGreet from "./images/Group.svg";
+import greet from "./images/Welcome.svg";
 import {z, ZodType} from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
 import {useForm} from "react-hook-form";
+import {createUser} from "../../services/UserServices/User"
 
 type formData = {
   userName: string,
@@ -43,7 +44,7 @@ const SignInPage = () => {
       email({message: "Não é um email Válido!"}),
   
     whatsapp: z.string().regex(whatsappRegex, {message: "Não é um número válido!"}),
-  })
+  });
 
   const {
     register,
@@ -55,15 +56,14 @@ const SignInPage = () => {
   });
 
   return (
-    <div className="flex flex-col md:flex-row justify-between items-center h-screen text-center font-quick mx-4 md:mx-0 lg:mx-12">
-      <div className="flex flex-col items-center mt-10 w-5/6 md:w-1/2 mb-12 l:h-full">
+      <div className="flex flex-col md:flex-row justify-between items-center h-screen text-center font-quick mx-4 md:mx-0 lg:mx-12">
+        <div className="flex flex-col items-center mt-10 w-5/6 md:w-1/2 mb-12 l:h-full">
           <p 
             className="text-gray-700 text-30 leading-35 mt-20 mb-10 color-[#727272] :hidden font-bold md:mb-3 xl:mb-10 xl:mt-2"
             style={{textShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)"}}
             >cadastro de usuário</p>
-          
           <div className="card flex flex-col justify-around bg-[#f4f9ff] rounded-lg shadow-[0px_4px_4px_0px_#00000040] px-6 py-4 w-full xl:w-2/3 md:mx-5">
-            <form onSubmit={handleSubmit(() => createUser("0", getValues("userName"), getValues("email"), "123456" "1"))}>
+            <form onSubmit={handleSubmit(() => createUser("1", getValues('userName'), getValues('email'), "1234", "1"))}>
               <input
                 type="text"
                 placeholder="Nome completo"
@@ -110,8 +110,8 @@ const SignInPage = () => {
         <Image 
           src={greet}
           alt="boas vindas ao ATLAS"
-          width={660}
-          height={630}
+          width={600}
+          height={600}
           layout="responsive"
           className="hidden md:block xl:hidden"
           />
