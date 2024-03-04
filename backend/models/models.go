@@ -103,7 +103,9 @@ type Sector struct {
 	Description string `json:"description" gorm:"not null"`
 	AdmID uint `json:"adm_id" gorm:"not null"`
 	Members []User `json:"members" gorm:"many2many:users_sectors;"`
+	//Projects []Project `json:"projects" gorm:"foreignKey:sector"`
 }
+
 
 // *********** IMPORTANTE ***************
 //Precisamos criar:

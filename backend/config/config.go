@@ -61,6 +61,7 @@ func MigrateDB(database *gorm.DB) error {
 		&models.Project{},
 		&models.UsersProject{},
 		&models.TasksProject{},
+		&models.Sector{},
 	)
 }
 
