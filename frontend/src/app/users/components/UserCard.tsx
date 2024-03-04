@@ -1,11 +1,11 @@
-"use client";
-
+"use Client";
 
 import Link from "next/link";
 import { FaWhatsapp } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
 import { IoMdClose } from "react-icons/io";
-import { User, deleteUser } from "@/services/UserServices/User";
+import { User, deleteUser} from "@/services/UserServices/User";
+import UpdateUser from "./UpdateUser";
 
 type UserCardProps = { user: User };
 export default function UserCard({ user }: UserCardProps) {
@@ -21,7 +21,7 @@ export default function UserCard({ user }: UserCardProps) {
     
     <div className="flex m-2 max-h-14 lg:max-h-24 2xl:max-h-32 justify-evenly rounded  bg-slate-400 text-black font-sans  text-center text-md">
       
-      <CgProfile className="m-3 md:m-2 lg:my-4 md:w-10 lg:w-12 xl:w-16 2xl:w-20 md:h-10 lg:h-12 xl:h-16 2xl:h-20 text-black bg-white rounded-full  " />
+      <CgProfile className="m-3 md:m-2 lg:my-4 md:w-10 lg:w-12 xl:w-16 2xl:w-20 md:h-10 lg:h-12 xl:h-16 2xl:h-20 text-black bg-white rounded-full  "/>
 
       <div className="flex-col my-4 md:my-2.5 lg:my-4">
         <h1 className="text-sm lg:text-lg xl:text-xl 2xl:text-3xl font-bold  text-left">{user.name}</h1>
