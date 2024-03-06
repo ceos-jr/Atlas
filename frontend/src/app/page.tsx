@@ -11,7 +11,7 @@ const Home: React.FC = () => {
   };
 
   const goToSignupPage = () => {
-    router.push("/admSign"); 
+    router.push("/sign"); 
   };
 
   return (
