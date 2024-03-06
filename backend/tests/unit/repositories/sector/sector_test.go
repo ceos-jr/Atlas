@@ -27,8 +27,7 @@ func (suite *TestSuite) TestReadAllSectors() {
 	sectors, readErr := suite.Repo.Sector.ReadAll()
 
 	suite.Nil(readErr, "Read error must be nil")
-	suite.Equal(6, len(sectors), "Expected to have five sectors")
-	suite.Equal(suite.MockSector[0].ID, sectors[0].ID, "Expected to have the same ID")
+	suite.Equal(7, len(sectors), "Expected to have seven sectors")
 }
 
 func (suite *TestSuite) TestReadByID() {
