@@ -15,7 +15,7 @@ export default function User() {
         <div className="h-screen bg-white text-black overflow-scroll">
             Hello Atlas
             <UserList />
-            <UpdateUser user={updatedData}/>
+            
         </div>
     );
 }

@@ -14,4 +14,8 @@ func Setup(app *fiber.App, controllers *controllers.Controllers) {
 	api.Put("/user/update/:id", controllers.User.UpdateUser)
 	api.Get("/listusers", controllers.User.ReadAllUsers)
 	api.Get("/user/:id", controllers.User.ReadUser)
+
+	api.Post("/role/create", controllers.Role.CreateRole)
+	api.Post("/user_role/atribuir", controllers.User_Role.AssignedRole)
+	api.Post("/user_role/retirar", controllers.User_Role.UnassignRole)
 }

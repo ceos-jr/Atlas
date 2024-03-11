@@ -1,6 +1,7 @@
 "use Client";
 
 import Link from "next/link";
+import React, { useState, useEffect } from "react";
 import { FaWhatsapp } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
 import { IoMdClose } from "react-icons/io";
@@ -9,6 +10,16 @@ import UpdateUser from "./UpdateUser";
 
 type UserCardProps = { user: User };
 export default function UserCard({ user }: UserCardProps) {
+    const [isModal, setIsModal] = useState(false);
+    const openModal = () => {
+      setIsModal(true);
+    };
+  
+    const closeModal = () => {
+      if (isModal) {
+        setIsModal(false);
+      }
+    };
     const DisableUser = async (userId:string) => {
             try{
                 await deleteUser(userId);
@@ -21,7 +32,10 @@ export default function UserCard({ user }: UserCardProps) {
     
     <div className="flex m-2 max-h-14 lg:max-h-24 2xl:max-h-32 justify-evenly rounded  bg-slate-400 text-black font-sans  text-center text-md">
       
-      <CgProfile className="m-3 md:m-2 lg:my-4 md:w-10 lg:w-12 xl:w-16 2xl:w-20 md:h-10 lg:h-12 xl:h-16 2xl:h-20 text-black bg-white rounded-full  "/>
+      <CgProfile
+      onClick={openModal} 
+      className="m-3 md:m-2 lg:my-4 md:w-10 lg:w-12 xl:w-16 2xl:w-20 md:h-10 lg:h-12 xl:h-16 2xl:h-20 text-black bg-white rounded-full  "
+      />
 
       <div className="flex-col my-4 md:my-2.5 lg:my-4">
         <h1 className="text-sm lg:text-lg xl:text-xl 2xl:text-3xl font-bold  text-left">{user.name}</h1>
@@ -39,6 +53,14 @@ export default function UserCard({ user }: UserCardProps) {
         <IoMdClose className="my-1 md:my-0 xl:-my-1 2xl:my-1 md:w-6 lg:w-8 xl:w-12 2xl:w-16 md:h-6 lg:h-8 xl:h-12 2xl:h-16 " />
         <button className="text-base xl:text-lg 2xl:text-3xl" onClick={() => DisableUser(`${user.id}`)}>Desabilitar</button>
       </a>
+
+      {isModal && (
+        <div className="modal-overlay">
+          <div className="modal">
+            <UpdateUser user={user} closeModal={closeModal} />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

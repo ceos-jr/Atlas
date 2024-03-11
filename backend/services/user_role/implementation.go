@@ -45,7 +45,7 @@ func (service *Service) AssigneRole(IdUser uint, IdRole uint) (*models.UserRole,
 		return nil, readErr
 	}
 
-	if len(userroleArray) == 0 {
+	if len(userroleArray) != 0 {//Ponto a ser analisado sobre não ter duas pessoas com o mesmo cargo
 		return nil, errors.New("this role is already assigne")
 	}
 
@@ -74,6 +74,7 @@ func (service *Service) UnassignRole(IdUser uint, IdRole uint) (*models.UserRole
 
 	userroleArray, readErr := service.UserRoleRepo.ReadBy(userrole.IReadBy{
 		UserID: &IdUser,
+		RoleID: &IdRole,
 	})
 
 	if readErr != nil{

@@ -3,14 +3,15 @@
 
 import React, { useState, useEffect } from "react";
 import { updateUserBody, updateUser } from "@/services/UserServices/User";
+import { type } from "os";
 
 interface UserProps {
     user: updateUserBody;
+    closeModal: () => void;
 }
 
-const UpdateUser: React.FC<UserProps> = ({ user }) => {
+const UpdateUser: React.FC<UserProps> = ({ user, closeModal }) => {
     const [userData, setUserData] = useState(user);
-
     const handleUpdateUser = async () => {
         const updatedData: updateUserBody = {
             id: userData.id,
@@ -22,13 +23,12 @@ const UpdateUser: React.FC<UserProps> = ({ user }) => {
         const result = await updateUser(userData.id.toString(), updatedData);
     };
 
-    const handleInputChange = (field: keyof updateUserBody, value: string) => {
+    const handleInputChange = (field: keyof updateUserBody, value: string | Number) => {
         setUserData((prevData) => {
             const newValue = value !== "" && value !== prevData[field] ? value : null;
-    
             return {
                 ...prevData,
-                [field]: newValue !== undefined ? newValue: "",
+                [field]: newValue !== undefined ? newValue : "",
             };
         });
     };
@@ -36,50 +36,84 @@ const UpdateUser: React.FC<UserProps> = ({ user }) => {
     useEffect(() => {
         setUserData(user);
     }, [user]);
+    const convertS = (value: string): number | "" => {
+        return value !== "" ? parseInt(value, 10) : "";
+      };
+
 
     return (
-        <div className="h-screen bg-white text-black overflow-scroll">
-            <div>
-                <label>
-                    UserID:
-                    <input
-                        type="text"
-                        value={userData.id}
-                        onChange={(e) => handleInputChange("id", e.target.value)}
-                    />
-                </label>
-                <br />
-                <label>
-                    Name:
-                    <input
-                        type="text"
-                        value={userData.name??undefined }
-                        onChange={(e) => handleInputChange("name", e.target.value)}
-                    />
-                </label>
-                <br />
-                <label>
-                    Email:
-                    <input
-                        type="text"
-                        value={userData.email??undefined}
-                        onChange={(e) => handleInputChange("email", e.target.value)}
-                    />
-                </label>
-                <br />
-                <label>
-                    Status:
-                    <input
-                        type="text"
-                        value={userData.status??undefined}
-                        onChange={(e) => handleInputChange("status", e.target.value)}
-                    />
-                </label>
-                <br />
-                <a href=""><button onClick={handleUpdateUser}>Atualizar Usuário</button></a>
+        <div className="fixed z-10 inset-0 overflow-y-auto">
+            <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                <div className="fixed inset-0 transition-opacity" aria-hidden="true">
+                    <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+                </div>
+
+                <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">
+                    &#8203;
+                </span>
+
+                <div
+                    className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="modal-headline"
+                >
+                    <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                        <div className="mb-4">
+                            <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">
+                                Nome:
+                            </label>
+                            <input
+                                type="text"
+                                value={userData.name ?? undefined}
+                                onChange={(e) => handleInputChange("name", e.target.value)}
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">
+                                Email:
+                            </label>
+                            <input
+                                type="text"
+                                value={userData.email ?? undefined}
+                                onChange={(e) => handleInputChange("email", e.target.value)}
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            />
+                        </div>
+                        <div>
+                            <label htmlFor="status" className="block text-gray-700 text-sm font-bold mb-2">
+                                Status
+                            </label>
+                            <select
+                                id="status"
+                                value={userData.status?.toString() ?? ""}
+                                onChange={(e) => handleInputChange("status", Number(e.target.value))}
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            >
+                                <option value="">Selecione o status</option>
+                                <option value="1">Opção 1</option>
+                                <option value="2">Opção 2</option>
+                                <option value="3">Opção 3</option>
+                            </select>
+                        </div>
+
+
+                        <button
+                            onClick={() => {
+                                handleUpdateUser();
+                                closeModal();
+                            }}
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        >
+                            Atualizar Usuário
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     );
 };
+
 
 export default UpdateUser;

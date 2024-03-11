@@ -5,7 +5,7 @@ import (
 )
 
 type CreateUserRoleRequestBodyId struct {
-	Id      uint `json:"id" validate:"required"`
+	Id      uint `json:"id"`
 	UserId	uint `json:"user_id" validate:"required"`
 	RoleId	uint `json:"role_id" validate:"required"`
 }
