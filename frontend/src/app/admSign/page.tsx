@@ -16,17 +16,27 @@ type formData = {
   whatsapp: string,
 }
 
-const SignInPage = () => {
+const admSign = () => {
   const router = useRouter();
 
-   const [hover, setHover] = useState(false);
+   const [hoverSub, setHoverSub] = useState(false);
 
-  const handleMouseEnter = () => {
-    setHover(true);
+  const handleMouseEnterSub = () => {
+    setHoverSub(true);
   };
 
-  const handleMouseLeave = () => {
-    setHover(false);
+  const handleMouseLeaveSub = () => {
+    setHoverSub(false);
+  };
+
+   const [hoverBack, setHoverBack] = useState(false);
+
+  const handleMouseEnterBack = () => {
+    setHoverBack(true);
+  };
+
+  const handleMouseLeaveBack = () => {
+    setHoverBack(false);
   };
 
   const whatsappRegex = new RegExp(
@@ -61,7 +71,7 @@ const SignInPage = () => {
           <p 
             className="text-gray-700 text-30 leading-35 mt-20 mb-10 color-[#727272] :hidden font-bold md:mb-3 xl:mb-10 xl:mt-2"
             style={{textShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)"}}
-            >cadastro de usuário</p>
+            >Informe os dados do usuário</p>
           <div className="card flex flex-col justify-around bg-[#f4f9ff] rounded-lg shadow-[0px_4px_4px_0px_#00000040] px-6 py-4 w-full xl:w-2/3 md:mx-5">
             <form onSubmit={handleSubmit(() => createUser("1", getValues('userName'), getValues('email'), "1234", "1"))}>
               <input
@@ -85,15 +95,26 @@ const SignInPage = () => {
                 {...register('whatsapp')}
               />
               {errors.whatsapp?.message && <p className="text-sm font-bold color-[#ab0303]">{errors.whatsapp?.message}</p>}
+              <div className='flex py-5'>
               <button
-                type="submit"
-                className='px-4 py-2 w-1/2 xl:w-1/2 xl:py-5 xl:scale-5 mx-auto my-7 text-white rounded-[10px] text-center hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300 text-lg xl:text-3xl font-bold'
-                style={{textShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)", backgroundColor : hover ? '#ff3d00' : '#ff8a00'}}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-              >
-                cadastrar
-              </button>
+                    type="button"
+                    className='px-4 py-2 w-1/2 xl:w-1/2 xl:py-3 xl:scale-5 my-7 text-white rounded-[10px] text-center hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300 text-lg xl:text-3xl font-bold mr-5'
+                    style={{textShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)", backgroundColor : hoverBack ? '#ff3d00' : '#ff8a00'}}
+                    onMouseEnter={handleMouseEnterBack}
+                    onMouseLeave={handleMouseLeaveBack}
+                >
+                    retornar
+                </button>
+                <button
+                    type="submit"
+                    className='px-4 py-2 w-1/2 xl:w-1/2 xl:py-3 xl:scale-5 my-7 text-white rounded-[10px] text-center hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300 text-lg xl:text-3xl font-bold'
+                    style={{textShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)", backgroundColor : hoverSub ? '#ff3d00' : '#ff8a00'}}
+                    onMouseEnter={handleMouseEnterSub}
+                    onMouseLeave={handleMouseLeaveSub}
+                >
+                    cadastrar
+                </button>
+            </div>
             </form>
           </div>
         </div>
@@ -103,7 +124,6 @@ const SignInPage = () => {
           alt="boas vindas ao ATLAS"
           width={360}
           height={430}
-          layout="responsive"
           className="md:hidden"
           />
           {/*imagem média e grande*/}
@@ -112,8 +132,7 @@ const SignInPage = () => {
           alt="boas vindas ao ATLAS"
           width={600}
           height={600}
-          layout="responsive"
-          className="hidden md:block xl:hidden"
+          className="hidden md:block xl:hidden md: w-300"
           />
           {/*imagem da tela do computador*/}
         <Image 
@@ -127,4 +146,4 @@ const SignInPage = () => {
   );
 };
 
-export default SignInPage;
+export default admSign;
