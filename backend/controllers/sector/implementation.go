@@ -8,7 +8,7 @@ type CreateSectorRequestBody struct {
 	AdmID       uint   `json:"adm_id"`
 }
 
-func (handler *BaseHandler) CreateUser(context *fiber.Ctx) error {
+func (handler *BaseHandler) CreateSector(context *fiber.Ctx) error {
 	body := new(CreateSectorRequestBody)
 
 	if parseError := context.BodyParser(body); parseError != nil {
