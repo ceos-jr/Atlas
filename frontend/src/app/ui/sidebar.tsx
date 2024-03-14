@@ -13,14 +13,14 @@ const SideBar = () => {
   return (
 
     <section className="flex gap-10">
-      <div className="bg-white min-h-screen w-72 px-4">
-        <div className="py-10 m-4 flex justify-end">
+      <div className="bg-white min-h-screen w-64 md:w-auto px-4">
+        <div className="py-10 m-4 flex justify-end md:hidden">
           <HiMenuAlt3 size={26} className="cursor-pointer bg-black" />
         </div>
         <div>
           <a
             href="#logo"
-            className="flex aspect-square min-h-[32px] w-24 flex-col items-center justify-center gap-2 m-10 rounded-md p-10 bg-primary-gray shadow-md"
+            className="sidebar-link"
         />
         </div>
         <div>
