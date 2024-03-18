@@ -1,7 +1,7 @@
 package role
 
 import (
-	"errors"
+	"errors"	
 	"orb-api/models"
 	"orb-api/repositories/role"
 )
@@ -81,4 +81,13 @@ func (s *Service) UpdateDescription(id uint, description string) (*models.Role, 
 	}
 
 	return updateDescription, nil
+}
+
+func (service *Service) ReadAllRoles(read role.IReadBy) ([]models.Role, error) {
+	roleArray, readErr := service.RoleRepo.ReadAll(role.IReadAll{})
+	if readErr != nil {
+		println(readErr)
+		return nil, readErr
+	}
+	return roleArray, nil
 }

@@ -115,7 +115,6 @@ func (handler *BaseHandler) ReadAllUsers(context *fiber.Ctx) error {
 }
 
 func (handler *BaseHandler) UpdateUser(context *fiber.Ctx) error {
-	// Parse do corpo da solicitação para obter os dados de atualização
 	body := new(UpdateUserRequestBody)
 	if parseError := context.BodyParser(body); parseError != nil {
 		return context.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -163,9 +162,12 @@ func (handler *BaseHandler) UpdateUser(context *fiber.Ctx) error {
 	}
 
 	if body.Password != nil {
+		println("Entrou senha")
 		UpdatePass := *body.Password
 		_, err := handler.Service.UpdatePassword(updateParams.ID, UpdatePass)
 		if err != nil {
+			println("Deu merda na senha")
+			println(err.Error())
 			return context.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 				"message": "Erro ao atualizar a senha",
 				"error":   err.Error(),

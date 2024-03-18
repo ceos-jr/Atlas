@@ -1,6 +1,8 @@
 package role
 
 import (
+	"orb-api/repositories/role"
+
 	"github.com/gofiber/fiber/v2"
 )
 type CreateRoleRequestBody struct {
@@ -49,5 +51,20 @@ func (handler *BaseHandler) CreateRole(context *fiber.Ctx) error {
 	return context.Status(fiber.StatusCreated).JSON(fiber.Map{
 		"message": "Role created successfully",
 		"user":    newRole,
+	})
+}
+
+func (handler *BaseHandler) ReadAllRoles(context *fiber.Ctx) error {
+	rolesArray, serviceError := handler.Service.ReadAllRoles(role.IReadBy{})
+
+	if serviceError != nil {
+		return context.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Erro durante a leitura de cargos",
+			"error":   serviceError.Error(),
+		})
+	}
+	return context.Status(fiber.StatusOK).JSON(fiber.Map{
+		"message": "Leitura de todos os cargos bem-sucedida",
+		"roles":   rolesArray,
 	})
 }

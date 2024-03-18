@@ -16,6 +16,7 @@ func Setup(app *fiber.App, controllers *controllers.Controllers) {
 	api.Get("/user/:id", controllers.User.ReadUser)
 
 	api.Post("/role/create", controllers.Role.CreateRole)
+	api.Get("/role/listroles", controllers.Role.ReadAllRoles)
 	api.Post("/user_role/atribuir", controllers.User_Role.AssignedRole)
 	api.Post("/user_role/retirar", controllers.User_Role.UnassignRole)
 }

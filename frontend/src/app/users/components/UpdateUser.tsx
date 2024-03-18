@@ -1,9 +1,9 @@
 "use client";
 
-
 import React, { useState, useEffect } from "react";
 import { updateUserBody, updateUser } from "@/services/UserServices/User";
-import { type } from "os";
+import UpdateUserRole from "./UpdateUserRole";
+
 
 interface UserProps {
     user: updateUserBody;
@@ -17,7 +17,7 @@ const UpdateUser: React.FC<UserProps> = ({ user, closeModal }) => {
             id: userData.id,
             email: userData.email !== user.email ? userData.email : null,
             name: userData.name !== user.name ? userData.name : null,
-            status: userData.status !== user.status ? userData.status : null,
+            password: userData.password !== user.password ? userData.password : null,
         };
 
         const result = await updateUser(userData.id.toString(), updatedData);
@@ -36,9 +36,6 @@ const UpdateUser: React.FC<UserProps> = ({ user, closeModal }) => {
     useEffect(() => {
         setUserData(user);
     }, [user]);
-    const convertS = (value: string): number | "" => {
-        return value !== "" ? parseInt(value, 10) : "";
-      };
 
 
     return (
@@ -81,21 +78,39 @@ const UpdateUser: React.FC<UserProps> = ({ user, closeModal }) => {
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             />
                         </div>
+                        <div className="mb-4">
+                            <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">
+                                password:
+                            </label>
+                            <input
+                                type="text"
+                                value={userData.password ?? ""}
+                                onChange={(e) => handleInputChange("password", e.target.value)}
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                            />
+                        </div>
+
+
+
+
                         <div>
                             <label htmlFor="status" className="block text-gray-700 text-sm font-bold mb-2">
                                 Status
                             </label>
                             <select
                                 id="status"
-                                value={userData.status?.toString() ?? ""}
-                                onChange={(e) => handleInputChange("status", Number(e.target.value))}
+                                value={userData.name?.toString() ?? ""}
+                                onChange={(e) => handleInputChange("name", e.target.value)}
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                             >
                                 <option value="">Selecione o status</option>
-                                <option value="1">Opção 1</option>
-                                <option value="2">Opção 2</option>
-                                <option value="3">Opção 3</option>
+                                <option value="1">Diretor de Projetos</option>
+                                <option value="2">Presidente</option>
+                                <option value="3">Gerente Atlas</option>
                             </select>
+                        </div>
+                        <div>
+                            <UpdateUserRole/>
                         </div>
 
 

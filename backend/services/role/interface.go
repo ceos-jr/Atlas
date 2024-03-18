@@ -14,5 +14,6 @@ type (
 		NewRole(name, description string) (*models.Role, error)
 		UpdateName(id uint, name string) (*models.Role, error)
 		UpdateDescription(id uint, description string) (*models.Role, error)
+		ReadAllRoles(read role.IReadBy) ([]models.User, error)
 	}
 )
